@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "common/page/pageable.proto";
+import "common/type/types.proto";
+
+package org.rococo.grpc.museums;
+
+option java_multiple_files = true;
+option java_package = "org.rococo.grpc.museums";
+option java_outer_classname = "RococoMuseumsProto";
+
+service MuseumsService {
+  rpc Add(AddMuseumGrpcRequest) returns (MuseumGrpcResponse){}
+  rpc FindById(common.type.IdType) returns (MuseumGrpcResponse){}
+  rpc FindByTitle(common.type.NameType) returns (MuseumGrpcResponse){}
+  rpc FindAllByTitles(common.type.NameListType) returns (MuseumListGrpcResponse){}
+  rpc FindAllByIds(common.type.IdsType) returns (MuseumListGrpcResponse){}
+  rpc FindAll(MuseumsFilterGrpcRequest) returns (MuseumsGrpcResponse){}
+  rpc Update(UpdateMuseumGrpcRequest) returns (MuseumGrpcResponse){}
+  rpc RemoveById(common.type.IdType) returns (google.protobuf.Empty){}
+}
+
+message AddMuseumGrpcRequest {
+  string title = 1;
+  string description = 2;
+  string country_id = 3;
+  string city = 4;
+}
+
+message MuseumsFilterGrpcRequest {
+  string query = 1;
+  string country_id = 2;
+  string city = 3;
+  common.page.PageableGrpc pageable = 4;
+}
+
+message UpdateMuseumGrpcRequest {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string country_id = 4;
+  string city = 5;
+}
+
+message MuseumGrpcResponse {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string country_id = 4;
+  string city = 5;
+}
+
+message MuseumListGrpcResponse {
+  repeated MuseumGrpcResponse museums = 1;
+}
+
+message MuseumsGrpcResponse {
+  uint32 current_page = 1;
+  uint32 total_pages = 2;
+  uint32 items_per_page = 3;
+  uint64 total_items = 4;
+  repeated MuseumGrpcResponse data = 5;
+}
