@@ -35,13 +35,13 @@ public class TestUserInitializer {
     @Profile({"local", "docker"})
     @EventListener(ApplicationReadyEvent.class)
     public void createTestUser() {
-        
+
         userRepository.findByUsername(username)
                 .ifPresent(user -> {
                     userRepository.delete(user);
                     LOG.info("Successfully removed default user: username = [{}]", username);
                 });
-        
+
         userService.registerUser(username, password);
         LOG.info("Successfully created default user: username = [{}], password = [{}]", username, password);
     }
