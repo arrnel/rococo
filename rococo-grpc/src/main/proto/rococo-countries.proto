@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+import "common/page/pageable.proto";
+import "common/type/types.proto";
+
+package org.rococo.grpc.countries;
+
+option java_multiple_files = true;
+option java_package = "org.rococo.grpc.countries";
+option java_outer_classname = "RococoCountriesProto";
+
+service CountriesService {
+  rpc FindById(common.type.IdType) returns (CountryGrpcResponse){}
+  rpc FindByCode(common.type.NameType) returns (CountryGrpcResponse){}
+  rpc FindAllByIds(common.type.IdsType) returns (CountryListGrpcResponse){}
+  rpc FindAll(CountryFilterGrpcRequest) returns (CountriesGrpcResponse){}
+}
+
+message CountryFilterGrpcRequest {
+  string name = 1;
+  common.page.PageableGrpc pageable = 2;
+}
+
+message CountryGrpcResponse {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+}
+
+message CountryListGrpcResponse {
+  repeated CountryGrpcResponse countries = 1;
+}
+
+message CountriesGrpcResponse {
+  uint32 current_page = 1;
+  uint32 total_pages = 2;
+  uint32 items_per_page = 3;
+  int64 total_items = 4;
+  repeated CountryGrpcResponse data = 5;
+}

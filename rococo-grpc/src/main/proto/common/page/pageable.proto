@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package org.rococo.grpc.common.page;
+
+option java_multiple_files = true;
+option java_package = "org.rococo.grpc.common.page";
+option java_outer_classname = "RococoPageableProto";
+
+enum DirectionGrpc {
+  DEFAULT = 0;
+  ASC = 1;
+  DESC = 2;
+}
+
+message SortGrpc {
+  reserved 1;
+  string order = 2;
+  DirectionGrpc direction = 3;
+}
+
+message PageableGrpc {
+  uint32 page = 1;
+  uint32 size = 2;
+  SortGrpc sort = 3;
+}
