@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: rococo-paintings
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    generate-ddl: true
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    schemas: flyway
+    locations: classpath:db/migration/rococo-paintings
+
+logging:
+  file:
+    path: ./logs/rococo-paintings
+  level:
+    root: INFO
+    org.springframework.kafka: INFO
+    org.springframework.web: INFO
+    org.springframework.ws: INFO
+    org.springframework.boot.autoconfigure: INFO
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'local'
+  datasource:
+    url: 'jdbc:postgresql://localhost:${ROCOCO_DB_PORT:5432}/rococo-paintings'
+    username: ${ROCOCO_DB_USER:postgres}
+    password: ${ROCOCO_DB_PASSWORD:secret}
+
+grpc:
+  server:
+    port: ${ROCOCO_PAINTINGS_PORT:9006}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  datasource:
+    url: 'jdbc:postgresql://rococo-db:5432/rococo-paintings'
+    username: postgres
+    password: secret
+
+grpc:
+  server:
+    port: 9006
+
+---

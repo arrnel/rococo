@@ -1,0 +1,59 @@
+package org.rococo.paintings.data;
+
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.Accessors;
+import org.hibernate.proxy.HibernateProxy;
+
+import java.util.Objects;
+import java.util.UUID;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
+@ToString(onlyExplicitlyIncluded = true)
+@Entity
+@Table(schema = "rococo", name = "paintings")
+public class PaintingEntity {
+
+    @ToString.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
+    @ToString.Include
+    @Column(name = "title", nullable = false, unique = true)
+    private String title;
+
+    @ToString.Include
+    @Column(name = "description")
+    private String description;
+
+    @ToString.Include
+    @Column(name = "artist_id", nullable = false)
+    private UUID artistId;
+
+    @ToString.Include
+    @Column(name = "museum_id", nullable = false)
+    private UUID museumId;
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy proxy ? proxy.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy proxy ? proxy.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        PaintingEntity that = (PaintingEntity) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy proxy ? proxy.getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+}
