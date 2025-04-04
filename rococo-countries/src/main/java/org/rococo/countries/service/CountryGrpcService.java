@@ -62,8 +62,6 @@ public class CountryGrpcService extends CountriesServiceGrpc.CountriesServiceImp
                                         .asRuntimeException())
                 );
 
-        responseObserver.onCompleted();
-
     }
 
     @Override
