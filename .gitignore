@@ -1,0 +1,66 @@
+### Project Data ###
+env/config/config.env
+
+### FRONT ###
+**/.DS_Store
+**/node_modules
+**/.svelte-kit
+**/package
+**/!.env.example
+**/vite.config.js.timestamp-*
+**/vite.config.ts.timestamp-*git
+
+### BACK
+HELP.md
+.gradle
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+**/logs/
+!**/src/main/**/logs/
+!**/src/test/**/logs/
+**/out
+**/build
+!**/src/main/**/build/
+!**/src/test/**/build/
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# gRPC generated files
+/niffler-grpc-common/src/generated/**
+
+# Log files
+*.log
+*.lck
+
+# Amplicode
+/amplicode.xml
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IDE ###
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+**/out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+**/.vscode/
