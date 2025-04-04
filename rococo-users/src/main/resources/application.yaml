@@ -1,0 +1,64 @@
+grpc:
+  server:
+    port: ${ROCOCO_USERS_PORT:9007}
+
+spring:
+  application:
+    name: rococo-users
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    generate-ddl: true
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    schemas: flyway
+    locations: classpath:db/migration/rococo-users
+
+logging:
+  #file:
+  #path: ./logs/rococo-users
+  level:
+    root: INFO
+    org.springframework.kafka: INFO
+    org.springframework.web: INFO
+    org.springframework.ws: INFO
+    org.springframework.boot.autoconfigure: INFO
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'local'
+  kafka:
+    bootstrap-servers: 'localhost:${ROCOCO_KAFKA_PORT:9092}'
+    consumer:
+      group-id: 'userdata'
+      auto-offset-reset: earliest
+  datasource:
+    url: 'jdbc:postgresql://localhost:${ROCOCO_DB_PORT:5432}/rococo-users'
+    username: ${ROCOCO_DB_USER:postgres}
+    password: ${ROCOCO_DB_PASSWORD:secret}
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  kafka:
+    bootstrap-servers: 'kafka:9092'
+    consumer:
+      group-id: 'userdata'
+      auto-offset-reset: earliest
+  datasource:
+    url: 'jdbc:postgresql://rococo-db:${ROCOCO_DB_PORT:5432}/rococo-users'
+    username: ${ROCOCO_DB_USER:postgres}
+    password: ${ROCOCO_DB_PASSWORD:secret}
+---

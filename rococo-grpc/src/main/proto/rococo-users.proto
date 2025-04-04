@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "common/page/pageable.proto";
+import "common/type/types.proto";
+
+package org.rococo.grpc.users;
+
+option java_multiple_files = true;
+option java_package = "org.rococo.grpc.users";
+option java_outer_classname = "RococoUsersProto";
+
+service UsersService {
+  rpc Create(CreateUserGrpcRequest) returns (UserGrpcResponse){}
+  rpc FindById(common.type.IdType) returns (UserGrpcResponse){}
+  rpc FindByUsername(common.type.NameType) returns (UserGrpcResponse){}
+  rpc FindAllByUsernames(common.type.NameListType) returns (UserListGrpcResponse){}
+  rpc FindAll(UsersFilterGrpcRequest) returns (UsersGrpcResponse){}
+  rpc Update(UpdateUserGrpcRequest) returns (UserGrpcResponse){}
+  rpc RemoveById(common.type.IdType) returns (google.protobuf.Empty){}
+}
+
+message CreateUserGrpcRequest {
+  string username = 1;
+  string firstName = 2;
+  string lastName = 3;
+  bytes photo = 4;
+}
+
+message UsersFilterGrpcRequest {
+  common.page.PageableGrpc pageable = 3;
+}
+
+message UpdateUserGrpcRequest {
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  bytes photo = 4;
+}
+
+message UserGrpcResponse {
+  string id = 1;
+  string username = 2;
+  string firstName = 3;
+  string lastName = 4;
+  bytes photo = 5;
+}
+
+message UserListGrpcResponse {
+  repeated UserGrpcResponse museums = 1;
+}
+
+message UsersGrpcResponse {
+  uint32 current_page = 1;
+  uint32 total_pages = 2;
+  uint32 items_per_page = 3;
+  uint64 total_items = 4;
+  repeated UserGrpcResponse data = 5;
+}
