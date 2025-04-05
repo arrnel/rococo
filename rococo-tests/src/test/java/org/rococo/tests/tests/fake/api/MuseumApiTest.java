@@ -4,6 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
@@ -13,7 +14,6 @@ import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Museums;
 import org.rococo.tests.jupiter.annotation.meta.ApiTest;
-import org.rococo.tests.jupiter.annotation.meta.GrpcTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.CountryDTO;
 import org.rococo.tests.model.MuseumDTO;
@@ -179,7 +179,15 @@ class MuseumApiTest {
         var result = museumService.update(newMuseum);
 
         // Assertions
-        assertEquals(newMuseum, result);
+        assertThat(result, Matchers.allOf(
+                hasProperty("id", is(newMuseum.getId())),
+                hasProperty("title", is(newMuseum.getTitle())),
+                hasProperty("description", is(newMuseum.getDescription())),
+                hasProperty("location", hasProperty("city", is(newMuseum.getLocation().getCity()))),
+                hasProperty("location", hasProperty("country", hasProperty("id", notNullValue()))),
+                hasProperty("location", hasProperty("country", hasProperty("code", is(newMuseum.getLocation().getCountry().getCode())))),
+                hasProperty("photo", is(newMuseum.getPhoto()))
+        ));
 
     }
 

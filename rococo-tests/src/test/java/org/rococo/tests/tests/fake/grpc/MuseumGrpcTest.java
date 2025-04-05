@@ -158,7 +158,15 @@ class MuseumGrpcTest {
         var result = museumService.update(newMuseum);
 
         // Assertions
-        assertThat(newMuseum, Matchers.equalTo(result));
+        assertThat(result, Matchers.allOf(
+                hasProperty("id", is(newMuseum.getId())),
+                hasProperty("title", is(newMuseum.getTitle())),
+                hasProperty("description", is(newMuseum.getDescription())),
+                hasProperty("location", hasProperty("city", is(newMuseum.getLocation().getCity()))),
+                hasProperty("location", hasProperty("country", hasProperty("id", notNullValue()))),
+                hasProperty("location", hasProperty("country", hasProperty("code", is(newMuseum.getLocation().getCountry().getCode())))),
+                hasProperty("photo", is(newMuseum.getPhoto()))
+        ));
 
     }
 

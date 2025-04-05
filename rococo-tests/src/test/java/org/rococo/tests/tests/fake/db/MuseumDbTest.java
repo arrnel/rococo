@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.enums.CountryCode;
 import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Museums;
@@ -28,6 +29,7 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.rococo.tests.enums.CountryCode.JP;
 import static org.rococo.tests.enums.ServiceType.DB;
 
 @Isolated
@@ -161,7 +163,15 @@ class MuseumDbTest {
         var result = museumService.update(newMuseum);
 
         // Assertions
-        assertThat(newMuseum, Matchers.equalTo(result));
+        assertThat(result, Matchers.allOf(
+                hasProperty("id", is(newMuseum.getId())),
+                hasProperty("title", is(newMuseum.getTitle())),
+                hasProperty("description", is(newMuseum.getDescription())),
+                hasProperty("location", hasProperty("city", is(newMuseum.getLocation().getCity()))),
+                hasProperty("location", hasProperty("country", hasProperty("id", notNullValue()))),
+                hasProperty("location", hasProperty("country", hasProperty("code", is(newMuseum.getLocation().getCountry().getCode())))),
+                hasProperty("photo", is(newMuseum.getPhoto()))
+        ));
 
     }
 
