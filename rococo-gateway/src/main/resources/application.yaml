@@ -1,0 +1,94 @@
+spring:
+  application:
+    name: rococo-gateway
+
+logging:
+  file:
+    path: ./logs/rococo-gateway
+  level:
+    root: INFO
+    org.springframework.kafka: INFO
+    org.springframework.web: INFO
+    org.springframework.ws: INFO
+    org.springframework.boot.autoconfigure: INFO
+
+app:
+  api:
+    version: '0.0.1'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'local'
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: 'http://127.0.0.1:${ROCOCO_AUTH_PORT:9000}'
+
+server:
+  port: ${ROCOCO_GATEWAY_PORT:9001}
+
+
+rococo-front:
+  base-uri: http://127.0.0.1:${ROCOCO_FRONT_PORT:3000}
+
+grpc:
+  client:
+    grpcArtistsClient:
+      address: 'static://localhost:${ROCOCO_ARTISTS_PORT:9002}'
+      negotiationType: PLAINTEXT
+    grpcCountriesClient:
+      address: 'static://localhost:${ROCOCO_COUNTRIES_PORT:9003}'
+      negotiationType: PLAINTEXT
+    grpcFilesClient:
+      address: 'static://localhost:${ROCOCO_FILES_PORT:9004}'
+      negotiationType: PLAINTEXT
+    grpcMuseumsClient:
+      address: 'static://localhost:${ROCOCO_MUSEUMS_PORT:9005}'
+      negotiationType: PLAINTEXT
+    grpcPaintingsClient:
+      address: 'static://localhost:${ROCOCO_PAINTINGS_PORT:9006}'
+      negotiationType: PLAINTEXT
+    grpcUsersClient:
+      address: 'static://localhost:${ROCOCO_USERS_PORT:9007}'
+      negotiationType: PLAINTEXT
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: 'http://auth.rococo.dc:9000'
+
+server:
+  port: 9001
+
+rococo-front:
+  base-uri: 'http://frontend.rococo.dc'
+
+grpc:
+  client:
+    grpcArtistsClient:
+      address: 'static://artists.rococo.dc:9002'
+      negotiationType: PLAINTEXT
+    grpcCountriesClient:
+      address: 'static://countries.rococo.dc:9003'
+      negotiationType: PLAINTEXT
+    grpcFilesClient:
+      address: 'static://files.rococo.dc:9004'
+      negotiationType: PLAINTEXT
+    grpcMuseumsClient:
+      address: 'static://museums.rococo.dc:9005'
+      negotiationType: PLAINTEXT
+    grpcPaintingsClient:
+      address: 'static://paintings.rococo.dc:9006'
+      negotiationType: PLAINTEXT
+    grpcUsersClient:
+      address: 'static://users.rococo.dc:9007'
+      negotiationType: PLAINTEXT
+---
