@@ -8,7 +8,6 @@
         "tmpfs": {
           "/tmp": "size=512m"
         },
-        "path": "/wd/hub",
         "env": [
           "TZ=Europe/Moscow"
         ],
@@ -21,7 +20,6 @@
         "tmpfs": {
           "/tmp": "size=512m"
         },
-        "path": "/wd/hub",
         "env": [
           "TZ=Europe/Moscow"
         ],
@@ -39,7 +37,6 @@
         "tmpfs": {
           "/tmp": "size=512m"
         },
-        "path": "/wd/hub",
         "env": [
           "TZ=Europe/Moscow"
         ],
