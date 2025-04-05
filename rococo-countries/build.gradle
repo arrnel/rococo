@@ -38,7 +38,7 @@ dependencies {
 
 jib {
     container {
-        ports = ['9003']
+        ports = ["${System.getenv('ROCOCO_COUNTRIES_PORT') ?: '9003'}".toString()]
         jvmFlags = ["-Dspring.profiles.active=${System.env.PROFILE}"]
         environment = ['TZ': 'Europe/Moscow']
         creationTime = 'USE_CURRENT_TIMESTAMP'
