@@ -26,7 +26,7 @@ import static com.codeborne.selenide.Selenide.open;
 
 @WebTest
 @Feature("WEB")
-@Story("[Web] Paintings tests")
+@Story("[WEB] Paintings tests")
 @DisplayName("[WEB] Paintings tests")
 @ParametersAreNonnullByDefault
 class PaintingsWebTests {
@@ -258,7 +258,7 @@ class PaintingsWebTests {
 
         // Steps
         open(PaintingsPage.URL, PaintingsPage.class)
-                .updatePainting(painting.getTitle(), painting);
+                .updatePaintingWithError(painting.getTitle(), painting);
 
         // Assertions
         paintingForm.shouldPaintingPhotoErrorHaveText("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");

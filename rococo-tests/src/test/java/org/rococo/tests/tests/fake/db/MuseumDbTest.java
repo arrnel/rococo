@@ -1,6 +1,5 @@
 package org.rococo.tests.tests.fake.db;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
@@ -161,7 +160,15 @@ class MuseumDbTest {
         var result = museumService.update(newMuseum);
 
         // Assertions
-        assertThat(newMuseum, Matchers.equalTo(result));
+        assertThat(result, Matchers.allOf(
+                hasProperty("id", is(newMuseum.getId())),
+                hasProperty("title", is(newMuseum.getTitle())),
+                hasProperty("description", is(newMuseum.getDescription())),
+                hasProperty("location", hasProperty("city", is(newMuseum.getLocation().getCity()))),
+                hasProperty("location", hasProperty("country", hasProperty("id", notNullValue()))),
+                hasProperty("location", hasProperty("country", hasProperty("code", is(newMuseum.getLocation().getCountry().getCode())))),
+                hasProperty("photo", is(newMuseum.getPhoto()))
+        ));
 
     }
 

@@ -20,7 +20,7 @@ import static com.codeborne.selenide.Selenide.open;
 
 @WebTest
 @Feature("WEB")
-@Story("[Web] Login tests")
+@Story("[WEB] Login tests")
 @DisplayName("[WEB] Login tests")
 @ParametersAreNonnullByDefault
 class LoginWebTest {
