@@ -10,6 +10,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Tag("Fake")
 @Tag("Api")
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

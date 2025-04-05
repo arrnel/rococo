@@ -22,7 +22,7 @@ import static org.rococo.tests.util.DataGenerator.generateUsername;
 
 @WebTest
 @Feature("WEB")
-@Story("[Web] Registration tests")
+@Story("[WEB] Registration tests")
 @DisplayName("[WEB] Registration tests")
 @ParametersAreNonnullByDefault
 class RegistrationWebTest {

@@ -29,7 +29,6 @@ import static org.rococo.tests.enums.ServiceType.API;
 
 @Isolated
 @GrpcTest
-@Feature("FAKE")
 @Story("[API] Artists tests")
 @DisplayName("[API] Artists tests")
 @ParametersAreNonnullByDefault

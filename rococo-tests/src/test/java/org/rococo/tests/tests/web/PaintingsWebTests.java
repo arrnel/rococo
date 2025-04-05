@@ -26,7 +26,7 @@ import static com.codeborne.selenide.Selenide.open;
 
 @WebTest
 @Feature("WEB")
-@Story("[Web] Paintings tests")
+@Story("[WEB] Paintings tests")
 @DisplayName("[WEB] Paintings tests")
 @ParametersAreNonnullByDefault
 class PaintingsWebTests {
