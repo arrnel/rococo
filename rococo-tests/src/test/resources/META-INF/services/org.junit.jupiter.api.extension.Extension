@@ -1,6 +1,5 @@
 org.rococo.tests.jupiter.extension.DatabasesExtension
 org.rococo.tests.jupiter.extension.TestMethodContextExtension
-org.rococo.tests.jupiter.extension.IssueExtension
 org.rococo.tests.jupiter.extension.AllureBackendLogsExtension
 org.rococo.tests.jupiter.extension.CookieJarExtension
 org.rococo.tests.jupiter.extension.KafkaExtension
