@@ -1,0 +1,77 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.2'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.google.cloud.tools.jib' version '3.4.1'
+}
+
+group = 'org.rococo'
+version = '0.0.1'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+ext {
+    thumbnailatorVersion = '0.4.20'
+}
+
+dependencies {
+    implementation project(':rococo-grpc')
+
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.flywaydb:flyway-core"
+    implementation "org.flywaydb:flyway-database-postgresql"
+    implementation "net.devh:grpc-server-spring-boot-starter:${project.ext.springGrpcVersion}"
+    implementation "net.coobird:thumbnailator:${thumbnailatorVersion}"
+    testImplementation "org.springframework.boot:spring-boot-testcontainers"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${project.ext.junitJupiterVersion}"
+    testImplementation "org.testcontainers:postgresql"
+    compileOnly "org.projectlombok:lombok"
+    runtimeOnly "org.postgresql:postgresql"
+    annotationProcessor "org.projectlombok:lombok"
+}
+
+jib {
+    container {
+        ports = ["${System.getenv('ROCOCO_FILES_PORT') ?: '9004'}".toString()]
+        jvmFlags = ["-Dspring.profiles.active=${System.env.PROFILE}"]
+        environment = ['TZ': 'Europe/Moscow']
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+        labels = [
+                'maintainer': 'Romanov Dmitriy @arrnel',
+                'version'   : "${project.version}".toString()
+        ]
+    }
+    from {
+        image = "${project.ext.dockerImage}"
+        platforms {
+            platform {
+                architecture = "${project.ext.dockerArch}"
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = "${project.ext.dockerHubName}/${project.name}-${System.env.PROFILE}"
+        tags = ['latest', "${project.version}"]
+    }
+}
+
+tasks.jib.dependsOn test
+tasks.jibDockerBuild.dependsOn test
+
+tasks.register('printVersion') {
+    doLast {
+        println project.version
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
