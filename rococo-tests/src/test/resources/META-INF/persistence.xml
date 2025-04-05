@@ -1,0 +1,113 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <!--    rococo-artists    -->
+    <!--    <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/rococo-artists" transaction-type="JTA">-->
+    <persistence-unit name="rococo-artists" transaction-type="JTA">
+        <jta-data-source>java:comp/env/jdbc/rococo-artists</jta-data-source>
+        <class>org.rococo.tests.data.entity.ArtistEntity</class>
+
+        <properties>
+            <property name="hibernate.transaction.jta.platform"
+                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode"
+                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
+
+    <!--    rococo-auth    -->
+    <!--    <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/rococo-auth" transaction-type="JTA">-->
+    <persistence-unit name="rococo-auth" transaction-type="JTA">
+        <jta-data-source>java:comp/env/jdbc/rococo-auth</jta-data-source>
+        <class>org.rococo.tests.data.entity.AuthorityEntity</class>
+        <class>org.rococo.tests.data.entity.AuthUserEntity</class>
+
+        <properties>
+            <property name="hibernate.transaction.jta.platform"
+                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode"
+                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
+
+    <!--    rococo-countries    -->
+    <!--    <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/rococo-countries" transaction-type="JTA">-->
+    <persistence-unit name="rococo-countries" transaction-type="JTA">
+        <jta-data-source>java:comp/env/jdbc/rococo-countries</jta-data-source>
+        <class>org.rococo.tests.data.entity.CountryEntity</class>
+
+        <properties>
+            <property name="hibernate.transaction.jta.platform"
+                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode"
+                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
+
+    <!--    rococo-files    -->
+    <!--    <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/rococo-files" transaction-type="JTA">-->
+    <persistence-unit name="rococo-files" transaction-type="JTA">
+        <jta-data-source>java:comp/env/jdbc/rococo-files</jta-data-source>
+        <class>org.rococo.tests.data.entity.ImageMetadataEntity</class>
+        <class>org.rococo.tests.data.entity.ImageContentEntity</class>
+
+        <properties>
+            <property name="hibernate.transaction.jta.platform"
+                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode"
+                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
+
+    <!--    rococo-museums    -->
+    <!--    <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/rococo-museums" transaction-type="JTA">-->
+    <persistence-unit name="rococo-museums" transaction-type="JTA">
+        <jta-data-source>java:comp/env/jdbc/rococo-museums</jta-data-source>
+        <class>org.rococo.tests.data.entity.MuseumEntity</class>
+
+        <properties>
+            <property name="hibernate.transaction.jta.platform"
+                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode"
+                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
+
+    <!--    rococo-paintings    -->
+    <!--    <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/rococo-paintings" transaction-type="JTA">-->
+    <persistence-unit name="rococo-paintings" transaction-type="JTA">
+        <jta-data-source>java:comp/env/jdbc/rococo-paintings</jta-data-source>
+        <class>org.rococo.tests.data.entity.PaintingEntity</class>
+
+        <properties>
+            <property name="hibernate.transaction.jta.platform"
+                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode"
+                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
+
+    <!--    rococo-user    -->
+    <!--    <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/rococo-users" transaction-type="JTA">&lt;!&ndash;  name=jdbc-url   &ndash;&gt;-->
+    <persistence-unit name="rococo-users" transaction-type="JTA"><!--  name=jdbc-url   -->
+        <jta-data-source>java:comp/env/jdbc/rococo-users</jta-data-source><!--  should contain db name   -->
+        <class>org.rococo.tests.data.entity.UserEntity</class>
+
+        <properties>
+            <property name="hibernate.transaction.jta.platform"
+                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode"
+                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
