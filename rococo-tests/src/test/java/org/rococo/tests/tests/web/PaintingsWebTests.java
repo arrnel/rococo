@@ -258,7 +258,7 @@ class PaintingsWebTests {
 
         // Steps
         open(PaintingsPage.URL, PaintingsPage.class)
-                .updatePainting(painting.getTitle(), painting);
+                .updatePaintingWithError(painting.getTitle(), painting);
 
         // Assertions
         paintingForm.shouldPaintingPhotoErrorHaveText("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
