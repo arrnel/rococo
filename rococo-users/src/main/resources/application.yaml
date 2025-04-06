@@ -24,8 +24,6 @@ spring:
     locations: classpath:db/migration/rococo-users
 
 logging:
-  #file:
-  #path: ./logs/rococo-users
   level:
     root: INFO
     org.springframework.kafka: INFO

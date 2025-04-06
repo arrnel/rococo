@@ -33,8 +33,6 @@ spring:
     open-in-view: false
 
 logging:
-  file:
-    path: ./logs/rococo-files
   level:
     root: INFO
     org.springframework.kafka: INFO

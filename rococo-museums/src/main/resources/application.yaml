@@ -24,8 +24,6 @@ spring:
     locations: classpath:db/migration/rococo-museums
 
 logging:
-  file:
-    path: ./logs/rococo-museums
   level:
     root: INFO
     org.springframework.kafka: INFO
