@@ -58,8 +58,8 @@ public class DatabasesExtension implements SuiteExtension, AfterEachCallback {
     void createTestUser() {
         new UserServiceDb().create(
                 new UserDTO()
-                        .setUsername("test_user")
-                        .password("12345"));
+                        .setUsername(CFG.testUserName())
+                        .password(CFG.testUserPassword()));
     }
 
 }
