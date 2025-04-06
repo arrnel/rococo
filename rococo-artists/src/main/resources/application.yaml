@@ -20,8 +20,6 @@ spring:
     locations: classpath:db/migration/rococo-artists
 
 logging:
-  file:
-    path: ./logs/rococo-artists
   level:
     root: INFO
     org.springframework.kafka: INFO
