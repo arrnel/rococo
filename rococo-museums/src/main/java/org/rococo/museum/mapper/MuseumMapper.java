@@ -2,6 +2,7 @@ package org.rococo.museum.mapper;
 
 import org.rococo.grpc.common.page.DirectionGrpc;
 import org.rococo.grpc.common.page.PageableGrpc;
+import org.rococo.grpc.countries.CountryGrpcResponse;
 import org.rococo.grpc.museums.*;
 import org.rococo.museum.data.MuseumEntity;
 import org.rococo.museum.model.MuseumFilter;
@@ -67,9 +68,12 @@ public class MuseumMapper {
                 .setDescription(entity.getDescription() == null
                         ? ""
                         : entity.getDescription())
-                .setCountryId(entity.getCountryId() == null
-                        ? ""
-                        : entity.getCountryId().toString())
+                .setCountry(
+                        CountryGrpcResponse.newBuilder()
+                                .setId(entity.getCountryId() == null
+                                        ? ""
+                                        : entity.getCountryId().toString())
+                                .build())
                 .setCity(entity.getCity() == null
                         ? ""
                         : entity.getCity())

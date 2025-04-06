@@ -3,6 +3,8 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "common/page/pageable.proto";
 import "common/type/types.proto";
+import "rococo-artists.proto";
+import "rococo-museums.proto";
 
 package org.rococo.grpc.paintings;
 
@@ -48,8 +50,8 @@ message PaintingGrpcResponse {
   string id = 1;
   string title = 2;
   string description = 3;
-  string artist_id = 4;
-  string museum_id = 5;
+  artists.ArtistGrpcResponse artist = 4;
+  museums.MuseumGrpcResponse museum = 5;
   bytes photo = 6;
 }
 

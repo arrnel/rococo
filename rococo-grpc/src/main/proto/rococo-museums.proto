@@ -3,6 +3,7 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "common/page/pageable.proto";
 import "common/type/types.proto";
+import "rococo-countries.proto";
 
 package org.rococo.grpc.museums;
 
@@ -47,7 +48,7 @@ message MuseumGrpcResponse {
   string id = 1;
   string title = 2;
   string description = 3;
-  string country_id = 4;
+  countries.CountryGrpcResponse country = 4;
   string city = 5;
 }
 
