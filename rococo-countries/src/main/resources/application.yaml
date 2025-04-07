@@ -20,8 +20,6 @@ spring:
     locations: classpath:db/migration/rococo-countries
 
 logging:
-  file:
-    path: ./logs/rococo-countries
   level:
     root: INFO
     org.springframework.kafka: INFO

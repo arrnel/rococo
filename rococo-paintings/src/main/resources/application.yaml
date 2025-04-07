@@ -20,8 +20,6 @@ spring:
     locations: classpath:db/migration/rococo-paintings
 
 logging:
-  file:
-    path: ./logs/rococo-paintings
   level:
     root: INFO
     org.springframework.kafka: INFO

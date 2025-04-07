@@ -37,8 +37,6 @@ spring:
     open-in-view: false
 
 logging:
-  file:
-    path: ./logs/rococo-auth
   level:
     root: INFO
     org.springframework.kafka: INFO
