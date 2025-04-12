@@ -64,12 +64,11 @@ public class UserGrpcService extends UsersServiceGrpc.UsersServiceImplBase {
         log.info("Find user by id: {}", request.getId());
 
         userRepository.findById(UUID.fromString(request.getId()))
-                .ifPresentOrElse(
-                        user -> {
+                .ifPresentOrElse(user -> {
                             var photo = filesClient.findImage(user.getId())
                                     .orElse(ImageGrpcResponse.getDefaultInstance());
-                            responseObserver.onNext(
-                                    UserMapper.toGrpcResponse(user, photo.getContent().toStringUtf8()));
+                            responseObserver.onNext(UserMapper.toGrpcResponse(user, photo.getContent().toStringUtf8()));
+                            responseObserver.onCompleted();
                         },
                         () -> {
                             throw new UserNotFoundException(UUID.fromString(request.getId()));
@@ -87,12 +86,10 @@ public class UserGrpcService extends UsersServiceGrpc.UsersServiceImplBase {
         log.info("Find user by username: {}", request.getName());
 
         userRepository.findByUsername(request.getName())
-                .ifPresentOrElse(
-                        user -> {
+                .ifPresentOrElse(user -> {
                             var photo = filesClient.findImage(user.getId())
                                     .orElse(ImageGrpcResponse.getDefaultInstance());
-                            responseObserver.onNext(
-                                    UserMapper.toGrpcResponse(user, photo.getContent().toStringUtf8()));
+                            responseObserver.onNext(UserMapper.toGrpcResponse(user, photo.getContent().toStringUtf8()));
                             responseObserver.onCompleted();
                         },
                         () -> {
