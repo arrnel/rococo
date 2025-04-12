@@ -16,7 +16,7 @@ public class ExternalServiceExceptionHandler {
 
     @GrpcExceptionHandler(ServiceUnavailableException.class)
     public StatusRuntimeException handleServiceUnavailableException(ServiceUnavailableException ex) {
-        log.error(ex.getMessage());
+        log.error("{}.\nStack trace: {}", ex.getMessage(), ex.getStackTrace());
         return Status.UNAVAILABLE
                 .withDescription(ex.getMessage())
                 .withCause(ex)
