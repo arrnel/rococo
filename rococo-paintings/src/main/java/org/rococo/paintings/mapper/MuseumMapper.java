@@ -28,9 +28,9 @@ public class MuseumMapper {
                                         ? null
                                         : grpcResponseModel.getCity())
                                 .country(CountryDTO.builder()
-                                        .id(grpcResponseModel.getCountryId().isEmpty()
+                                        .id(grpcResponseModel.getCountry().getId().isEmpty()
                                                 ? null
-                                                : UUID.fromString(grpcResponseModel.getCountryId()))
+                                                : UUID.fromString(grpcResponseModel.getCountry().getId()))
                                         .build())
                                 .build()
                 )

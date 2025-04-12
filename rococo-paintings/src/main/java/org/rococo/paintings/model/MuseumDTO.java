@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.rococo.gateway.model.countries.LocationResponseDTO;
 
 import java.io.Serializable;
 import java.util.Objects;

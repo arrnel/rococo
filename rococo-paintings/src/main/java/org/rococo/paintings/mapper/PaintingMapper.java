@@ -1,7 +1,13 @@
 package org.rococo.paintings.mapper;
 
+import org.rococo.grpc.artists.ArtistGrpcResponse;
+import org.rococo.grpc.artists.ArtistShortGrpcResponse;
 import org.rococo.grpc.common.page.DirectionGrpc;
 import org.rococo.grpc.common.page.PageableGrpc;
+import org.rococo.grpc.countries.CountryGrpcResponse;
+import org.rococo.grpc.files.ImageGrpcResponse;
+import org.rococo.grpc.museums.MuseumGrpcResponse;
+import org.rococo.grpc.museums.MuseumShortGrpcResponse;
 import org.rococo.grpc.paintings.*;
 import org.rococo.paintings.data.PaintingEntity;
 import org.rococo.paintings.model.PaintingFilter;
@@ -12,6 +18,7 @@ import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Map;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
@@ -46,15 +53,28 @@ public class PaintingMapper {
     }
 
     @Nonnull
-    public static PaintingGrpcResponse toGrpcResponse(PaintingEntity entity) {
+    public static PaintingGrpcResponse toGrpcResponse(PaintingEntity entity, ArtistGrpcResponse artist, MuseumGrpcResponse museum, String photo) {
         return PaintingGrpcResponse.newBuilder()
                 .setId(entity.getId().toString())
                 .setTitle(entity.getTitle())
                 .setDescription(entity.getDescription() == null
                         ? ""
                         : entity.getDescription())
-                .setArtistId(entity.getArtistId().toString())
-                .setMuseumId(entity.getMuseumId().toString())
+                .setArtist(
+                        ArtistShortGrpcResponse.newBuilder()
+                                .setId(artist.getId())
+                                .setName(artist.getName())
+                                .setBiography(artist.getBiography())
+                                .build())
+                .setMuseum(
+                        MuseumShortGrpcResponse.newBuilder()
+                                .setId(museum.getId())
+                                .setTitle(museum.getTitle())
+                                .setDescription(museum.getDescription())
+                                .setCity(museum.getCity())
+                                .setCountry(museum.getCountry())
+                                .build())
+                .setPhoto(photo)
                 .build();
     }
 
@@ -74,31 +94,14 @@ public class PaintingMapper {
     }
 
     @Nonnull
-    public static Pageable fromPageableGrpc(PageableGrpc pageable) {
-
-        final var grpcDirection = pageable.getSort().getDirection();
-        final var direction = (grpcDirection == DirectionGrpc.DEFAULT || grpcDirection == DirectionGrpc.ASC)
-                ? Sort.Direction.ASC
-                : Sort.Direction.DESC;
-
-        return PageRequest.of(
-                pageable.getPage(),
-                pageable.getSize(),
-                pageable.getSort().getOrder().isEmpty()
-                        ? Sort.unsorted()
-                        : Sort.by(direction, pageable.getSort().getOrder().split(","))
-        );
-    }
-
-    @Nonnull
-    public static PaintingsGrpcResponse toPageGrpc(Page<PaintingEntity> page) {
+    public static PaintingsGrpcResponse toPageGrpc(Page<PaintingEntity> page, Map<UUID, ArtistGrpcResponse> artists, Map<UUID, MuseumGrpcResponse> museums, Map<UUID, String> photos) {
         return PaintingsGrpcResponse.newBuilder()
                 .setCurrentPage(page.getPageable().getPageNumber())
                 .setItemsPerPage(page.getSize())
                 .setTotalItems(page.getTotalElements())
                 .setTotalPages(page.getTotalPages())
                 .addAllData(page.getContent().stream()
-                        .map(PaintingMapper::toGrpcResponse)
+                        .map(painting -> PaintingMapper.toGrpcResponse(painting, artists.get(painting.getArtistId()), museums.get(painting.getMuseumId()), photos.get(painting.getId())))
                         .toList())
                 .build();
     }

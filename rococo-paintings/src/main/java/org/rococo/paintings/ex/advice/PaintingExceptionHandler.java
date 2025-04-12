@@ -14,8 +14,8 @@ import org.springframework.core.annotation.Order;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class PaintingExceptionHandler {
 
-    @GrpcExceptionHandler(PaintingAlreadyExistException.class)
-    public StatusRuntimeException handlePaintingAlreadyExistException(PaintingAlreadyExistException ex) {
+    @GrpcExceptionHandler({PaintingAlreadyExistsException.class, ImageAlreadyExistsException.class})
+    public StatusRuntimeException handleAlreadyExistsExceptions(Exception ex) {
         log.info(ex.getMessage());
         return Status.ALREADY_EXISTS
                 .withDescription(ex.getMessage())
@@ -27,9 +27,9 @@ public class PaintingExceptionHandler {
             ArtistNotFoundException.class,
             MuseumNotFoundException.class,
             PaintingNotFoundException.class,
-            PaintingImageNotFoundException.class
+            ImageNotFoundException.class
     })
-    public StatusRuntimeException handleNotFoundException(Exception ex) {
+    public StatusRuntimeException handleNotFoundExceptions(Exception ex) {
         log.info(ex.getMessage());
         return Status.NOT_FOUND
                 .withDescription(ex.getMessage())

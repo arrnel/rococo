@@ -5,16 +5,23 @@ import io.grpc.StatusRuntimeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.rococo.grpc.artists.ArtistGrpcResponse;
+import org.rococo.grpc.artists.ArtistsByIdsGrpcRequest;
 import org.rococo.grpc.common.type.IdType;
+import org.rococo.grpc.common.type.IdsType;
+import org.rococo.grpc.museums.MuseumGrpcResponse;
+import org.rococo.grpc.museums.MuseumsByIdsGrpcRequest;
 import org.rococo.grpc.museums.MuseumsServiceGrpc;
 import org.rococo.paintings.ex.MuseumNotFoundException;
 import org.rococo.paintings.ex.ServiceUnavailableException;
 import org.rococo.paintings.mapper.MuseumMapper;
-import org.rococo.paintings.model.MuseumDTO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -29,7 +36,7 @@ public class MuseumsGrpcClient {
     private MuseumsServiceGrpc.MuseumsServiceBlockingStub museumsServiceStub;
 
     @Nonnull
-    public MuseumDTO findById(UUID id) {
+    public Optional<MuseumGrpcResponse> findById(UUID id) {
 
         log.info("Find museum by id: %s".formatted(id));
 
@@ -37,14 +44,35 @@ public class MuseumsGrpcClient {
             var idType = IdType.newBuilder()
                     .setId(id.toString())
                     .build();
-            return MuseumMapper.toDTO(
-                    museumsServiceStub.findById(idType));
+            return Optional.of(museumsServiceStub.findById(idType));
         } catch (StatusRuntimeException ex) {
             if (ex.getStatus().getCode() == Status.Code.NOT_FOUND)
-                throw new MuseumNotFoundException(id);
+                return Optional.empty();
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
 
     }
 
+    public List<MuseumGrpcResponse> findAllByIds(List<UUID> ids) {
+
+        log.info("Find all museums by ids: {}", ids);
+
+        try {
+            var idsText = ids.stream()
+                    .map(UUID::toString)
+                    .toList();
+            var response = museumsServiceStub.findAllByIds(
+                    MuseumsByIdsGrpcRequest.newBuilder()
+                            .setIds(
+                                    IdsType.newBuilder()
+                                            .addAllId(idsText)
+                                            .build())
+                            .setOriginalPhoto(false)
+                            .build());
+            return response.getMuseumsList();
+        } catch (StatusRuntimeException ex) {
+            throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
+        }
+
+    }
 }
