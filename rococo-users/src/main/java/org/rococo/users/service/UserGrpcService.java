@@ -109,7 +109,7 @@ public class UserGrpcService extends UsersServiceGrpc.UsersServiceImplBase {
         var isOriginalText = request.getOriginalPhoto()
                 ? "original"
                 : "thumbnail";
-        log.info("Find all artists with {} photos by params: {}", isOriginalText, request);
+        log.info("Find all users with {} photos by params: {}", isOriginalText, request);
 
         var userEntities = userRepository.findAll();
 
@@ -182,11 +182,12 @@ public class UserGrpcService extends UsersServiceGrpc.UsersServiceImplBase {
         log.info("Delete user by id: {}", request.getId());
 
         userRepository.findById(UUID.fromString(request.getId()))
-                .ifPresent(artist -> {
-                    filesClient.delete(artist.getId());
-                    userRepository.delete(artist);
+                .ifPresent(user -> {
+                    userRepository.delete(user);
+                    filesClient.delete(user.getId());
                 });
 
+        responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
 
     }
