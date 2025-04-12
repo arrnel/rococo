@@ -3,7 +3,7 @@ package org.rococo.gateway.ex.handler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.rococo.gateway.ex.PaintingAlreadyExistException;
+import org.rococo.gateway.ex.PaintingAlreadyExistsException;
 import org.rococo.gateway.ex.PaintingNotFoundException;
 import org.rococo.gateway.model.ApiError;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,8 +76,8 @@ public class PaintingsExceptionHandler {
     }
 
     @Nonnull
-    @ExceptionHandler(PaintingAlreadyExistException.class)
-    public ResponseEntity<ApiError> handlePaintingAlreadyExistsException(final PaintingAlreadyExistException ex,
+    @ExceptionHandler(PaintingAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handlePaintingAlreadyExistsException(final PaintingAlreadyExistsException ex,
                                                                          final HttpServletRequest request,
                                                                          final Locale locale
     ) {

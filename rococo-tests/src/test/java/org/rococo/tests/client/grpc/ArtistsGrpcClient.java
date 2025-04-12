@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.rococo.grpc.artists.ArtistsServiceGrpc;
 import org.rococo.grpc.common.type.IdType;
 import org.rococo.grpc.common.type.NameType;
-import org.rococo.tests.ex.ArtistAlreadyExistException;
+import org.rococo.tests.ex.ArtistAlreadyExistsException;
 import org.rococo.tests.ex.ArtistNotFoundException;
 import org.rococo.tests.ex.ServiceUnavailableException;
 import org.rococo.tests.mapper.ArtistMapper;
@@ -39,7 +39,7 @@ public class ArtistsGrpcClient extends GrpcClient {
                             ArtistMapper.toGrpcRequest(requestDTO)));
         } catch (StatusRuntimeException ex) {
             if (ex.getStatus().getCode() == Code.ALREADY_EXISTS) {
-                throw new ArtistAlreadyExistException(requestDTO.getName());
+                throw new ArtistAlreadyExistsException(requestDTO.getName());
             }
             log.error("Unexpected response status: code = [{}], description = [{}]", ex.getStatus().getCode(), ex.getStatus().getDescription());
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
@@ -105,7 +105,7 @@ public class ArtistsGrpcClient extends GrpcClient {
                 throw new ArtistNotFoundException(requestDTO.getId());
 
             if (ex.getStatus().getCode() == Code.ALREADY_EXISTS)
-                throw new ArtistAlreadyExistException(requestDTO.getName());
+                throw new ArtistAlreadyExistsException(requestDTO.getName());
 
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
 

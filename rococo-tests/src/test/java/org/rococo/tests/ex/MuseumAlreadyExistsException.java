@@ -6,9 +6,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @Getter
 @ParametersAreNonnullByDefault
-public class MuseumAlreadyExistException extends RuntimeException {
+public class MuseumAlreadyExistsException extends RuntimeException {
 
-    public MuseumAlreadyExistException(final String title) {
+    public MuseumAlreadyExistsException(final String title) {
         super("Museum with title = [%s] already exists".formatted(title));
     }
 

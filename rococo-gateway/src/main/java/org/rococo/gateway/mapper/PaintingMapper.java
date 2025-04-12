@@ -1,11 +1,10 @@
 package org.rococo.gateway.mapper;
 
-import com.google.protobuf.ByteString;
 import org.rococo.gateway.model.artists.ArtistDTO;
 import org.rococo.gateway.model.museums.MuseumDTO;
 import org.rococo.gateway.model.paintings.AddPaintingRequestDTO;
-import org.rococo.gateway.model.paintings.PaintingFindAllParamsValidationObject;
 import org.rococo.gateway.model.paintings.PaintingDTO;
+import org.rococo.gateway.model.paintings.PaintingFindAllParamsValidationObject;
 import org.rococo.gateway.model.paintings.UpdatePaintingRequestDTO;
 import org.rococo.grpc.paintings.*;
 import org.springframework.data.domain.Page;
@@ -42,8 +41,8 @@ public class PaintingMapper {
                         ? ""
                         : requestDTO.museum().id().toString())
                 .setPhoto(requestDTO.photo() == null
-                        ? ByteString.EMPTY
-                        : ByteString.copyFrom(requestDTO.photo(), StandardCharsets.UTF_8))
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -67,8 +66,8 @@ public class PaintingMapper {
                         ? ""
                         : requestDTO.museum().id().toString())
                 .setPhoto(requestDTO.photo() == null
-                        ? ByteString.EMPTY
-                        : ByteString.copyFrom(requestDTO.photo(), StandardCharsets.UTF_8))
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -85,18 +84,18 @@ public class PaintingMapper {
                         ? null
                         : grpcResponseModel.getDescription())
                 .artist(ArtistDTO.builder()
-                        .id(grpcResponseModel.getArtistId().isEmpty()
+                        .id(grpcResponseModel.getArtist().getId().isEmpty()
                                 ? null
-                                : UUID.fromString(grpcResponseModel.getArtistId()))
+                                : UUID.fromString(grpcResponseModel.getArtist().getId()))
                         .build())
                 .museum(MuseumDTO.builder()
-                        .id(grpcResponseModel.getMuseumId().isEmpty()
+                        .id(grpcResponseModel.getMuseum().getId().isEmpty()
                                 ? null
-                                : UUID.fromString(grpcResponseModel.getMuseumId()))
+                                : UUID.fromString(grpcResponseModel.getMuseum().getId()))
                         .build())
                 .photo(grpcResponseModel.getPhoto().isEmpty()
                         ? null
-                        : grpcResponseModel.getPhoto().toString(StandardCharsets.UTF_8))
+                        : grpcResponseModel.getPhoto())
                 .build();
     }
 

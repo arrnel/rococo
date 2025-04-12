@@ -10,7 +10,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
-import org.rococo.tests.ex.MuseumAlreadyExistException;
+import org.rococo.tests.ex.MuseumAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Museums;
@@ -64,7 +64,7 @@ class MuseumGrpcTest {
     void canNotCreateMuseumWithExistsTitleTest(MuseumDTO museum) {
 
         // Steps
-        var result = assertThrows(MuseumAlreadyExistException.class, () -> museumService.add(museum));
+        var result = assertThrows(MuseumAlreadyExistsException.class, () -> museumService.add(museum));
 
         // Assertions
         assertEquals("Museum with title = [%s] already exists".formatted(museum.getTitle()), result.getMessage());
@@ -180,7 +180,7 @@ class MuseumGrpcTest {
                 .setTitle(museums.getLast().getTitle());
 
         // Steps & Assertions
-        var result = assertThrows(MuseumAlreadyExistException.class, () -> museumService.update(museum));
+        var result = assertThrows(MuseumAlreadyExistsException.class, () -> museumService.update(museum));
 
         // Assertions
         assertEquals("Museum with title = [%s] already exists".formatted(museum.getTitle()), result.getMessage());

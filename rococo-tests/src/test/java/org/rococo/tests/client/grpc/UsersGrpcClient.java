@@ -7,7 +7,7 @@ import org.rococo.grpc.common.type.IdType;
 import org.rococo.grpc.common.type.NameType;
 import org.rococo.grpc.users.UsersServiceGrpc;
 import org.rococo.tests.ex.ServiceUnavailableException;
-import org.rococo.tests.ex.UserAlreadyExistException;
+import org.rococo.tests.ex.UserAlreadyExistsException;
 import org.rococo.tests.ex.UserNotFoundException;
 import org.rococo.tests.mapper.UserMapper;
 import org.rococo.tests.model.UserDTO;
@@ -40,7 +40,7 @@ public class UsersGrpcClient extends GrpcClient {
                             UserMapper.toGrpcRequest(requestDTO)));
         } catch (StatusRuntimeException ex) {
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
-                throw new UserAlreadyExistException(requestDTO.getUsername());
+                throw new UserAlreadyExistsException(requestDTO.getUsername());
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
 
@@ -113,7 +113,7 @@ public class UsersGrpcClient extends GrpcClient {
                 throw new UserNotFoundException(requestDTO.getId());
 
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
-                throw new UserAlreadyExistException(requestDTO.getUsername());
+                throw new UserAlreadyExistsException(requestDTO.getUsername());
 
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
 

@@ -125,15 +125,15 @@ public class PaintingMapper {
                 .description(grpcResponse.getDescription().isBlank()
                         ? null
                         : grpcResponse.getDescription())
-                .artist(grpcResponse.getMuseumId().isBlank()
+                .artist(grpcResponse.getArtist().getId().isBlank()
                         ? null
                         : ArtistDTO.builder()
-                        .id(UUID.fromString(grpcResponse.getArtistId()))
+                        .id(UUID.fromString(grpcResponse.getArtist().getId()))
                         .build())
-                .museum(grpcResponse.getMuseumId().isBlank()
+                .museum(grpcResponse.getMuseum().getId().isBlank()
                         ? null
                         : MuseumDTO.builder()
-                        .id(UUID.fromString(grpcResponse.getMuseumId()))
+                        .id(UUID.fromString(grpcResponse.getMuseum().getId()))
                         .build())
                 .build();
     }

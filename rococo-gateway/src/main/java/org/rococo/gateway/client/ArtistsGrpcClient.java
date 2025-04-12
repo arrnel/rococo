@@ -5,7 +5,7 @@ import io.grpc.StatusRuntimeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.rococo.gateway.ex.ArtistAlreadyExistException;
+import org.rococo.gateway.ex.ArtistAlreadyExistsException;
 import org.rococo.gateway.ex.ArtistNotFoundException;
 import org.rococo.gateway.ex.ServiceUnavailableException;
 import org.rococo.gateway.mapper.ArtistMapper;
@@ -43,7 +43,7 @@ public class ArtistsGrpcClient {
                             ArtistMapper.toGrpcModel(requestDTO)));
         } catch (StatusRuntimeException ex) {
             if (ex.getStatus().getCode() == ALREADY_EXISTS)
-                throw new ArtistAlreadyExistException(requestDTO.name());
+                throw new ArtistAlreadyExistsException(requestDTO.name());
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
 
@@ -89,7 +89,7 @@ public class ArtistsGrpcClient {
                 throw new ArtistNotFoundException(requestDTO.id());
 
             if (ex.getStatus().getCode() == ALREADY_EXISTS)
-                throw new ArtistAlreadyExistException(requestDTO.name());
+                throw new ArtistAlreadyExistsException(requestDTO.name());
 
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
 

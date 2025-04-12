@@ -35,8 +35,8 @@ public class UserMapper {
                         ? ""
                         : requestDTO.lastName())
                 .setPhoto(requestDTO.photo() == null
-                        ? ByteString.EMPTY
-                        : ByteString.copyFrom(requestDTO.photo(), StandardCharsets.UTF_8))
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -53,8 +53,8 @@ public class UserMapper {
                         ? ""
                         : requestDTO.lastName())
                 .setPhoto(requestDTO.photo() == null
-                        ? ByteString.EMPTY
-                        : ByteString.copyFrom(requestDTO.photo(), StandardCharsets.UTF_8))
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -75,7 +75,7 @@ public class UserMapper {
                         : grpcResponseModel.getLastName())
                 .photo(grpcResponseModel.getPhoto().isEmpty()
                         ? null
-                        : grpcResponseModel.getPhoto().toString(StandardCharsets.UTF_8))
+                        : grpcResponseModel.getPhoto())
                 .build();
     }
 

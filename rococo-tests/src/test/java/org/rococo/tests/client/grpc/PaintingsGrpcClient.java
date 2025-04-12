@@ -4,7 +4,7 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.rococo.grpc.common.type.IdType;
 import org.rococo.grpc.paintings.PaintingsServiceGrpc;
-import org.rococo.tests.ex.PaintingAlreadyExistException;
+import org.rococo.tests.ex.PaintingAlreadyExistsException;
 import org.rococo.tests.ex.PaintingNotFoundException;
 import org.rococo.tests.ex.ServiceUnavailableException;
 import org.rococo.tests.mapper.PaintingMapper;
@@ -37,7 +37,7 @@ public class PaintingsGrpcClient extends GrpcClient {
                             PaintingMapper.toGrpcRequest(requestDTO)));
         } catch (StatusRuntimeException ex) {
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
-                throw new PaintingAlreadyExistException(requestDTO.getTitle());
+                throw new PaintingAlreadyExistsException(requestDTO.getTitle());
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
 
         }
@@ -93,7 +93,7 @@ public class PaintingsGrpcClient extends GrpcClient {
                 throw new PaintingNotFoundException(requestDTO.getId());
 
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
-                throw new PaintingAlreadyExistException(requestDTO.getTitle());
+                throw new PaintingAlreadyExistsException(requestDTO.getTitle());
 
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
 

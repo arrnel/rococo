@@ -7,7 +7,7 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
-import org.rococo.tests.ex.UserAlreadyExistException;
+import org.rococo.tests.ex.UserAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.User;
 import org.rococo.tests.jupiter.annotation.Users;
 import org.rococo.tests.jupiter.annotation.meta.GrpcTest;
@@ -57,7 +57,7 @@ class UserGrpcTest {
     void canNotCreateUserWithExistsUsernameTest(UserDTO user) {
 
         // Steps
-        var result = assertThrows(UserAlreadyExistException.class, () -> userService.create(user));
+        var result = assertThrows(UserAlreadyExistsException.class, () -> userService.create(user));
 
         // Assertions
         assertEquals("User with username = [%s] already exists".formatted(user.getUsername()), result.getMessage());

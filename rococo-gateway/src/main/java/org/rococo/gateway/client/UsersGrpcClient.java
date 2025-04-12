@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.rococo.gateway.ex.ServiceUnavailableException;
-import org.rococo.gateway.ex.UserAlreadyExistException;
+import org.rococo.gateway.ex.UserAlreadyExistsException;
 import org.rococo.gateway.ex.UserNotFoundException;
 import org.rococo.gateway.mapper.UserMapper;
 import org.rococo.gateway.model.users.CreateUserRequestDTO;
@@ -115,7 +115,7 @@ public class UsersGrpcClient {
                 throw new UserNotFoundException(id);
 
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
-                throw new UserAlreadyExistException(requestDTO.username());
+                throw new UserAlreadyExistsException(requestDTO.username());
 
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
 

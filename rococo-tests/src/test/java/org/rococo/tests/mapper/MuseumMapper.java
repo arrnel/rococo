@@ -142,9 +142,9 @@ public class MuseumMapper {
                 .location(
                         new LocationDTO(grpcResponse.getCity(),
                                 new CountryDTO(
-                                        grpcResponse.getCountryId().isEmpty()
+                                        grpcResponse.getCountry().getId().isEmpty()
                                                 ? null
-                                                : UUID.fromString(grpcResponse.getCountryId()),
+                                                : UUID.fromString(grpcResponse.getCountry().getId()),
                                         null,
                                         null)))
                 .build();

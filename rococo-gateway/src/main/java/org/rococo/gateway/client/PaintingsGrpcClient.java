@@ -4,7 +4,7 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.rococo.gateway.ex.PaintingAlreadyExistException;
+import org.rococo.gateway.ex.PaintingAlreadyExistsException;
 import org.rococo.gateway.ex.PaintingNotFoundException;
 import org.rococo.gateway.ex.ServiceUnavailableException;
 import org.rococo.gateway.mapper.PaintingMapper;
@@ -43,7 +43,7 @@ public class PaintingsGrpcClient {
 
         } catch (StatusRuntimeException ex) {
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
-                throw new PaintingAlreadyExistException(requestDTO.title());
+                throw new PaintingAlreadyExistsException(requestDTO.title());
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
     }
@@ -98,7 +98,7 @@ public class PaintingsGrpcClient {
                 throw new PaintingNotFoundException(requestDTO.id());
 
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
-                throw new PaintingAlreadyExistException(requestDTO.title());
+                throw new PaintingAlreadyExistsException(requestDTO.title());
 
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
 

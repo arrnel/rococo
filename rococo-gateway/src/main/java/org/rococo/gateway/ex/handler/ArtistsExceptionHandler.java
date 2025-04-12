@@ -3,7 +3,7 @@ package org.rococo.gateway.ex.handler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.rococo.gateway.ex.ArtistAlreadyExistException;
+import org.rococo.gateway.ex.ArtistAlreadyExistsException;
 import org.rococo.gateway.ex.ArtistNotFoundException;
 import org.rococo.gateway.model.ApiError;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,8 +76,8 @@ public class ArtistsExceptionHandler {
     }
 
     @Nonnull
-    @ExceptionHandler(ArtistAlreadyExistException.class)
-    public ResponseEntity<ApiError> handleArtistAlreadyExistsException(final ArtistAlreadyExistException ex,
+    @ExceptionHandler(ArtistAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleArtistAlreadyExistsException(final ArtistAlreadyExistsException ex,
                                                                        final HttpServletRequest request,
                                                                        final Locale locale
     ) {

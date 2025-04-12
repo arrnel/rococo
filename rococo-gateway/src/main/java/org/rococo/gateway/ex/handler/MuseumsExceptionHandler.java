@@ -3,7 +3,7 @@ package org.rococo.gateway.ex.handler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.rococo.gateway.ex.MuseumAlreadyExistException;
+import org.rococo.gateway.ex.MuseumAlreadyExistsException;
 import org.rococo.gateway.ex.MuseumNotFoundException;
 import org.rococo.gateway.model.ApiError;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,8 +76,8 @@ public class MuseumsExceptionHandler {
     }
 
     @Nonnull
-    @ExceptionHandler(MuseumAlreadyExistException.class)
-    public ResponseEntity<ApiError> handleMuseumAlreadyExistsException(final MuseumAlreadyExistException ex,
+    @ExceptionHandler(MuseumAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleMuseumAlreadyExistsException(final MuseumAlreadyExistsException ex,
                                                                        final HttpServletRequest request,
                                                                        final Locale locale
     ) {

@@ -7,7 +7,7 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
-import org.rococo.tests.ex.PaintingAlreadyExistException;
+import org.rococo.tests.ex.PaintingAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Painting;
@@ -65,7 +65,7 @@ class PaintingGrpcTest {
     void canNotCreatePaintingWithExistsNameTest(PaintingDTO painting) {
 
         // Steps
-        var result = assertThrows(PaintingAlreadyExistException.class, () -> paintingService.add(painting));
+        var result = assertThrows(PaintingAlreadyExistsException.class, () -> paintingService.add(painting));
 
         // Assertions
         assertEquals("Painting with title = [%s] already exists".formatted(painting.getTitle()), result.getMessage());
@@ -228,7 +228,7 @@ class PaintingGrpcTest {
                 .setTitle(paintings.getLast().getTitle());
 
         // Steps & Assertions
-        var result = assertThrows(PaintingAlreadyExistException.class, () -> paintingService.update(painting));
+        var result = assertThrows(PaintingAlreadyExistsException.class, () -> paintingService.update(painting));
 
         // Assertions
         assertEquals("Painting with title = [%s] already exists".formatted(painting.getTitle()), result.getMessage());

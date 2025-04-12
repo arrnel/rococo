@@ -48,7 +48,7 @@ public class MuseumsApiClient extends RestClient {
                 case BAD_REQUEST -> new BadRequestException(method, path, message);
                 case UNAUTHORIZED -> new UnauthorizedException(method, path);
                 case NOT_FOUND -> new CountryNotFoundException(requestBody.getLocation().getCountry().getId());
-                case CONFLICT -> new MuseumAlreadyExistException(requestBody.getTitle());
+                case CONFLICT -> new MuseumAlreadyExistsException(requestBody.getTitle());
                 default -> new ServiceUnavailableException(SERVICE_NAME, call, response.code(), message);
             };
 
@@ -121,7 +121,7 @@ public class MuseumsApiClient extends RestClient {
                 case NOT_FOUND -> response.message().contains(requestBody.getId().toString())
                         ? new MuseumNotFoundException(requestBody.getId())
                         : new CountryNotFoundException(requestBody.getLocation().getCountry().getId());
-                case CONFLICT -> new MuseumAlreadyExistException(requestBody.getTitle());
+                case CONFLICT -> new MuseumAlreadyExistsException(requestBody.getTitle());
                 default -> new ServiceUnavailableException(SERVICE_NAME, call, response.code(), message);
             };
 

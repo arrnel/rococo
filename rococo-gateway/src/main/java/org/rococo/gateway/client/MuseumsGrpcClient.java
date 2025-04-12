@@ -4,7 +4,7 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.rococo.gateway.ex.MuseumAlreadyExistException;
+import org.rococo.gateway.ex.MuseumAlreadyExistsException;
 import org.rococo.gateway.ex.MuseumNotFoundException;
 import org.rococo.gateway.ex.ServiceUnavailableException;
 import org.rococo.gateway.mapper.MuseumMapper;
@@ -41,7 +41,7 @@ public class MuseumsGrpcClient {
                             MuseumMapper.toGrpcModel(requestDTO)));
         } catch (StatusRuntimeException ex) {
             if (ex.getStatus().getCode() == ALREADY_EXISTS)
-                throw new MuseumAlreadyExistException(requestDTO.title());
+                throw new MuseumAlreadyExistsException(requestDTO.title());
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
     }
@@ -86,7 +86,7 @@ public class MuseumsGrpcClient {
                 throw new MuseumNotFoundException(requestDTO.id());
 
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
-                throw new MuseumAlreadyExistException(requestDTO.title());
+                throw new MuseumAlreadyExistsException(requestDTO.title());
 
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
 
