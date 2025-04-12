@@ -68,7 +68,7 @@ public class CountryGrpcService extends CountriesServiceGrpc.CountriesServiceImp
     @Transactional(readOnly = true)
     public void findAllByIds(IdsType request, StreamObserver<CountryListGrpcResponse> responseObserver) {
 
-        log.info("Find all countries by params: {}", request);
+        log.info("Find all countries by ids: {}", request.getIdList());
 
         var countryIds = request.getIdList().stream()
                 .map(UUID::fromString)
