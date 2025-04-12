@@ -76,7 +76,7 @@ public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
                         UUID.fromString(request.getEntityId()))
                 .ifPresentOrElse(
                         metadata -> responseObserver.onNext(
-                                ImageMapper.toGrpcResponse(metadata, false)),
+                                ImageMapper.toGrpcResponse(metadata, true)),
                         () -> {
                             throw new ImageNotFoundException(
                                     EntityType.valueOf(request.getEntityType().name()),
