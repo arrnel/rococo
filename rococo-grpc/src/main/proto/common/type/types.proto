@@ -21,3 +21,7 @@ message NameType {
 message NameListType {
   repeated string name = 1;
 }
+
+message StatusType {
+  bool status = 1;
+}
