@@ -102,18 +102,18 @@ public class RococoServiceDb implements RococoService {
     @Override
     public PaintingDTO addPainting(PaintingDTO painting) {
 
-        var countryCode = painting.getMuseum().getLocation().getCountry().getCode();
-        if (countryCode == null || countryCode == CountryCode.EMPTY) {
-            throw new IllegalArgumentException("Museum country code cannot be null or equals EMPTY");
-        }
-
-        var country = countryService.findByCode(countryCode)
-                .orElseThrow(() -> new CountryNotFoundException(countryCode));
         var artist = artistService.findByName(painting.getArtist().getName())
                 .orElseGet(() -> artistService.add(painting.getArtist()));
         var museum = museumService.findByTitle(painting.getMuseum().getTitle())
-                .orElseGet(() -> museumService.add(painting.getMuseum()))
-                .setCountry(country);
+                .orElseGet(() -> {
+                    var countryCode = painting.getMuseum().getLocation().getCountry().getCode();
+                    if (countryCode == null || countryCode == CountryCode.EMPTY) {
+                        throw new IllegalArgumentException("Museum country code cannot be null or equals EMPTY");
+                    }
+                    var country = countryService.findByCode(countryCode)
+                            .orElseThrow(() -> new CountryNotFoundException(countryCode));
+                    return museumService.add(painting.getMuseum().setCountry(country)).setCountry(country);
+                });
 
         painting.setArtist(artist)
                 .setMuseum(museum);

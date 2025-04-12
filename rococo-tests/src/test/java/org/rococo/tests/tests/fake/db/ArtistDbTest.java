@@ -63,7 +63,7 @@ class ArtistDbTest {
 
         // Assertions
         assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
+                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
                 () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(artist.getName())))
         );
 
@@ -175,7 +175,7 @@ class ArtistDbTest {
 
         // Assertions
         assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
+                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
                 () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(artist.getName())))
         );
 

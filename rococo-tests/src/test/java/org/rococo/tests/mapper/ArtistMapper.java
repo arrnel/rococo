@@ -85,8 +85,15 @@ public class ArtistMapper {
     @Nonnull
     public static AddArtistGrpcRequest toGrpcRequest(ArtistDTO dto) {
         return AddArtistGrpcRequest.newBuilder()
-                .setName(dto.getName())
-                .setBiography(dto.getBiography())
+                .setName(dto.getName() == null
+                        ? ""
+                        : dto.getName())
+                .setBiography(dto.getBiography() == null
+                        ? ""
+                        : dto.getBiography())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
     }
 
@@ -96,8 +103,15 @@ public class ArtistMapper {
                 .setId(dto.getId() == null
                         ? ""
                         : dto.getId().toString())
-                .setName(dto.getName())
-                .setBiography(dto.getBiography())
+                .setName(dto.getName() == null
+                        ? ""
+                        : dto.getName())
+                .setBiography(dto.getBiography() == null
+                        ? ""
+                        : dto.getBiography())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
     }
 
@@ -107,8 +121,15 @@ public class ArtistMapper {
                 .id(grpcResponse.getId().isEmpty()
                         ? null
                         : UUID.fromString(grpcResponse.getId()))
-                .name(grpcResponse.getName())
-                .biography(grpcResponse.getBiography())
+                .name(grpcResponse.getName().isEmpty()
+                        ? null
+                        : grpcResponse.getName())
+                .biography(grpcResponse.getBiography().isEmpty()
+                        ? null
+                        : grpcResponse.getBiography())
+                .photo(grpcResponse.getPhoto().isEmpty()
+                        ? null
+                        : grpcResponse.getPhoto())
                 .build();
     }
 

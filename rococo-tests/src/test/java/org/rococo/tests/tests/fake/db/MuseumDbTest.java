@@ -68,7 +68,7 @@ class MuseumDbTest {
 
         // Assertions
         assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
+                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
                 () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(museum.getTitle())))
         );
 
@@ -186,7 +186,7 @@ class MuseumDbTest {
 
         // Assertions
         assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
+                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
                 () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(museum.getTitle())))
         );
 

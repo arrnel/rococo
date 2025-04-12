@@ -1,9 +1,7 @@
 package org.rococo.tests.tests.fake.grpc;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -145,14 +143,16 @@ class MuseumGrpcTest {
 
     }
 
+    @Country
     @Museum
     @Test
     @DisplayName("Can update museum")
-    void canUpdateMuseumTest(MuseumDTO oldMuseum) {
+    void canUpdateMuseumTest(MuseumDTO oldMuseum, CountryDTO country) {
 
         // Data
         var newMuseum = DataGenerator.generateMuseum()
-                .setId(oldMuseum.getId());
+                .setId(oldMuseum.getId())
+                .setCountry(country);
 
         // Steps
         var result = museumService.update(newMuseum);

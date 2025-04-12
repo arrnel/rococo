@@ -103,6 +103,9 @@ public class MuseumMapper {
                 .setCountryId(dto.getLocation().getCountry().getId() == null
                         ? ""
                         : dto.getLocation().getCountry().getId().toString())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
 
     }
@@ -126,6 +129,9 @@ public class MuseumMapper {
                 .setCountryId(dto.getLocation() == null || dto.getLocation().getCountry() == null || dto.getLocation().getCountry().getId() == null
                         ? ""
                         : dto.getLocation().getCountry().getId().toString())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
 
     }
@@ -137,16 +143,18 @@ public class MuseumMapper {
                 .id(grpcResponse.getId().isEmpty()
                         ? null
                         : UUID.fromString(grpcResponse.getId()))
-                .title(grpcResponse.getTitle())
-                .description(grpcResponse.getDescription())
-                .location(
-                        new LocationDTO(grpcResponse.getCity(),
-                                new CountryDTO(
-                                        grpcResponse.getCountry().getId().isEmpty()
-                                                ? null
-                                                : UUID.fromString(grpcResponse.getCountry().getId()),
-                                        null,
-                                        null)))
+                .title(grpcResponse.getTitle().isEmpty()
+                        ? null
+                        : grpcResponse.getTitle())
+                .description(grpcResponse.getDescription().isEmpty()
+                        ? null
+                        : grpcResponse.getDescription())
+                .location(new LocationDTO(
+                        grpcResponse.getCity(),
+                        CountryMapper.toDTO(grpcResponse.getCountry())))
+                .photo(grpcResponse.getPhoto().isEmpty()
+                        ? null
+                        : grpcResponse.getPhoto())
                 .build();
 
     }

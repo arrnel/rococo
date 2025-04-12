@@ -70,7 +70,7 @@ class PaintingDbTest {
 
         // Assertions
         assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
+                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
                 () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(painting.getTitle())))
         );
 
@@ -236,7 +236,7 @@ class PaintingDbTest {
 
         // Assertions
         assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
+                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
                 () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(painting.getTitle())))
         );
 

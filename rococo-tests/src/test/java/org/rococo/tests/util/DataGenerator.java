@@ -25,7 +25,6 @@ public class DataGenerator {
                 availableImagesFormats[FAKE.random().nextInt(availableImagesFormats.length)]);
     }
 
-
     public static ArtistDTO generateArtist() {
         return ArtistDTO.builder()
                 .name(FAKE.name().fullName())
@@ -40,10 +39,10 @@ public class DataGenerator {
         return MuseumDTO.builder()
                 .title(FAKE.book().author() + ". " + FAKE.book().title())
                 .description(FAKE.lorem().paragraph())
-                .photo(ImageUtil.generateImage())
                 .location(new LocationDTO(
                         FAKE.address().cityName(),
                         new CountryDTO(null, countryCode.getValue(), countryCode)))
+                .photo(ImageUtil.generateImage())
                 .pathToPhoto(randomImagePath())
                 .build();
     }

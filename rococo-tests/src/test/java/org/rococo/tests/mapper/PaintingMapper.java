@@ -119,22 +119,25 @@ public class PaintingMapper {
                 .id(grpcResponse.getId().isEmpty()
                         ? null
                         : UUID.fromString(grpcResponse.getId()))
-                .title(grpcResponse.getTitle().isBlank()
+                .title(grpcResponse.getTitle().isEmpty()
                         ? null
                         : grpcResponse.getTitle())
-                .description(grpcResponse.getDescription().isBlank()
+                .description(grpcResponse.getDescription().isEmpty()
                         ? null
                         : grpcResponse.getDescription())
-                .artist(grpcResponse.getArtist().getId().isBlank()
+                .artist(grpcResponse.getArtist().getId().isEmpty()
                         ? null
                         : ArtistDTO.builder()
                         .id(UUID.fromString(grpcResponse.getArtist().getId()))
                         .build())
-                .museum(grpcResponse.getMuseum().getId().isBlank()
+                .museum(grpcResponse.getMuseum().getId().isEmpty()
                         ? null
                         : MuseumDTO.builder()
                         .id(UUID.fromString(grpcResponse.getMuseum().getId()))
                         .build())
+                .photo(grpcResponse.getPhoto().isEmpty()
+                        ? null
+                        : grpcResponse.getPhoto())
                 .build();
     }
 
@@ -155,6 +158,9 @@ public class PaintingMapper {
                 .setMuseumId(dto.getMuseum() == null || dto.getMuseum().getId() == null
                         ? ""
                         : dto.getMuseum().getId().toString())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
     }
 
@@ -178,6 +184,9 @@ public class PaintingMapper {
                 .setMuseumId(dto.getMuseum() == null || dto.getMuseum().getId() == null
                         ? ""
                         : dto.getMuseum().getId().toString())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
     }
 

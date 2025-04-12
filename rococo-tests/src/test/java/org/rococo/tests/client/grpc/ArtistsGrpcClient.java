@@ -37,7 +37,6 @@ public class ArtistsGrpcClient extends GrpcClient {
     }
 
     public ArtistDTO add(ArtistDTO requestDTO) {
-
         try {
             return ArtistMapper.toDTO(
                     artistsServiceStub.add(
@@ -46,10 +45,8 @@ public class ArtistsGrpcClient extends GrpcClient {
             if (ex.getStatus().getCode() == Code.ALREADY_EXISTS) {
                 throw new ArtistAlreadyExistsException(requestDTO.getName());
             }
-            log.error("Unexpected response status: code = [{}], description = [{}]", ex.getStatus().getCode(), ex.getStatus().getDescription());
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
-
     }
 
     public Optional<ArtistDTO> findById(UUID id) {
