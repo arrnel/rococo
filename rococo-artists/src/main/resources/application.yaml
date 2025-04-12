@@ -40,6 +40,12 @@ spring:
 grpc:
   server:
     port: ${ROCOCO_ARTISTS_PORT:9002}
+    max-inbound-message-size: 15728640
+  client:
+    grpcFilesClient:
+      address: 'static://localhost:${ROCOCO_FILES_PORT:9004}'
+      negotiationType: PLAINTEXT
+      max-inbound-message-size: 15728640
 
 ---
 spring:
@@ -54,5 +60,11 @@ spring:
 grpc:
   server:
     port: 9002
+    max-inbound-message-size: 15728640
+  client:
+    grpcFilesClient:
+      address: 'static://files.rococo.dc:9004'
+      negotiationType: PLAINTEXT
+      max-inbound-message-size: 15728640
 
 ---
