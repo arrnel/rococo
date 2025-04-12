@@ -14,7 +14,6 @@ import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Painting;
 import org.rococo.tests.jupiter.annotation.Paintings;
 import org.rococo.tests.jupiter.annotation.meta.ApiTest;
-import org.rococo.tests.jupiter.annotation.meta.GrpcTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.model.MuseumDTO;

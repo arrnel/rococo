@@ -1,6 +1,5 @@
 package org.rococo.tests.tests.fake.api;
 
-import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.ex.ArtistAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Artists;
-import org.rococo.tests.jupiter.annotation.meta.ApiTest;
 import org.rococo.tests.jupiter.annotation.meta.GrpcTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.ArtistDTO;

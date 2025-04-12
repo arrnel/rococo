@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.rococo.tests.jupiter.annotation.*;
-import org.rococo.tests.jupiter.annotation.ApiLogin;
 import org.rococo.tests.jupiter.annotation.meta.WebTest;
 import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.model.MuseumDTO;

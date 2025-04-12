@@ -3,9 +3,7 @@ package org.rococo.tests.service.grpc;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.tests.client.grpc.ArtistsGrpcClient;
-import org.rococo.tests.client.grpc.FilesGrpcClient;
 import org.rococo.tests.model.ArtistDTO;
-import org.rococo.tests.model.ImageDTO;
 import org.rococo.tests.service.ArtistService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,10 +12,10 @@ import org.springframework.data.domain.Pageable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.rococo.tests.enums.EntityType.ARTIST;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @ParametersAreNonnullByDefault

@@ -2,7 +2,6 @@ package org.rococo.tests.page;
 
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import org.rococo.tests.config.Config;
 import org.rococo.tests.page.component.HeaderComponent;
 
 import static com.codeborne.selenide.Condition.visible;

@@ -36,7 +36,7 @@ public enum DefaultUserTokenUpdater implements Runnable {
                 Thread.currentThread().interrupt();
                 break;
             } catch (Exception ex) {
-               log.error("Failed to update token: {}", ex.getMessage());
+                log.error("Failed to update token: {}", ex.getMessage());
             }
         }
     }

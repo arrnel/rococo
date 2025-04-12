@@ -3,7 +3,6 @@ package org.rococo.tests.service.grpc;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.tests.client.grpc.FilesGrpcClient;
 import org.rococo.tests.client.grpc.PaintingsGrpcClient;
-import org.rococo.tests.model.ImageDTO;
 import org.rococo.tests.model.PaintingDTO;
 import org.rococo.tests.service.PaintingService;
 import org.springframework.data.domain.Page;
@@ -13,8 +12,10 @@ import org.springframework.data.domain.Pageable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.rococo.tests.enums.EntityType.PAINTING;
 

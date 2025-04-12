@@ -9,8 +9,6 @@ import org.rococo.tests.enums.CountryCode;
 import org.rococo.tests.enums.ServiceType;
 import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.meta.ApiTest;
-import org.rococo.tests.jupiter.annotation.meta.DbTest;
-import org.rococo.tests.jupiter.annotation.meta.GrpcTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.CountryDTO;
 import org.rococo.tests.service.CountryService;

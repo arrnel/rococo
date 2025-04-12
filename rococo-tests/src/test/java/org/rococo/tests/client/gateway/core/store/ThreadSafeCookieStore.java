@@ -1,19 +1,10 @@
 package org.rococo.tests.client.gateway.core.store;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.rococo.tests.enums.CookieType;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.net.CookieManager;
 import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public enum ThreadSafeCookieStore implements CookieStore {
     INSTANCE;

@@ -8,7 +8,6 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import org.openqa.selenium.Cookie;
 import org.rococo.tests.client.gateway.AuthApiClient;
 import org.rococo.tests.client.gateway.core.store.ThreadSafeCookieStore;
-import org.rococo.tests.config.Config;
 import org.rococo.tests.enums.CookieType;
 import org.rococo.tests.jupiter.annotation.ApiLogin;
 import org.rococo.tests.model.UserDTO;
@@ -24,7 +23,6 @@ import static org.rococo.tests.enums.CookieType.JSESSIONID;
 public class ApiLoginExtension implements BeforeEachCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ApiLoginExtension.class);
-    private static final Config CFG = Config.getInstance();
 
     private final UserService userService = new UserServiceDb();
 
