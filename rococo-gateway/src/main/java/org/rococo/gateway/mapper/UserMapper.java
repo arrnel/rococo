@@ -1,6 +1,5 @@
 package org.rococo.gateway.mapper;
 
-import com.google.protobuf.ByteString;
 import org.rococo.gateway.model.users.CreateUserRequestDTO;
 import org.rococo.gateway.model.users.UpdateUserRequestDTO;
 import org.rococo.gateway.model.users.UserDTO;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault

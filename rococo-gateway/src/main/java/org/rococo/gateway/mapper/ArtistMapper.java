@@ -31,6 +31,9 @@ public class ArtistMapper {
                 .setBiography(requestDTO.biography() == null
                         ? ""
                         : requestDTO.biography())
+                .setPhoto(requestDTO.photo() == null
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -46,6 +49,9 @@ public class ArtistMapper {
                 .setBiography(requestDTO.biography() == null
                         ? ""
                         : requestDTO.biography())
+                .setPhoto(requestDTO.photo() == null
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -61,16 +67,36 @@ public class ArtistMapper {
                 .biography(grpcResponseModel.getBiography().isEmpty()
                         ? null
                         : grpcResponseModel.getBiography())
+                .photo(grpcResponseModel.getPhoto().isEmpty()
+                        ? null
+                        : grpcResponseModel.getPhoto())
+                .build();
+    }
+
+    @Nonnull
+    public static ArtistDTO toDTO(final ArtistShortGrpcResponse grpcResponseModel) {
+        return ArtistDTO.builder()
+                .id(grpcResponseModel.getId().isEmpty()
+                        ? null
+                        : UUID.fromString(grpcResponseModel.getId()))
+                .name(grpcResponseModel.getName().isEmpty()
+                        ? null
+                        : grpcResponseModel.getName())
+                .biography(grpcResponseModel.getBiography().isEmpty()
+                        ? null
+                        : grpcResponseModel.getBiography())
                 .build();
     }
 
     @Nonnull
     public static ArtistsFilterGrpcRequest toFilter(@Nullable final String name,
+                                                    boolean isOriginalPhoto,
                                                     final Pageable pageable) {
         return ArtistsFilterGrpcRequest.newBuilder()
                 .setQuery(name == null
                         ? ""
                         : name)
+                .setOriginalPhoto(isOriginalPhoto)
                 .setPageable(
                         PageableMapper.toPageableGrpc(pageable))
                 .build();

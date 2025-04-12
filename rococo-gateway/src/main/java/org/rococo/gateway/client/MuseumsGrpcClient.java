@@ -4,6 +4,7 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.rococo.gateway.ex.CountryNotFoundException;
 import org.rococo.gateway.ex.MuseumAlreadyExistsException;
 import org.rococo.gateway.ex.MuseumNotFoundException;
 import org.rococo.gateway.ex.ServiceUnavailableException;
@@ -18,10 +19,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 import static io.grpc.Status.Code.ALREADY_EXISTS;
+import static io.grpc.Status.Code.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +37,6 @@ public class MuseumsGrpcClient {
     private MuseumsServiceGrpc.MuseumsServiceBlockingStub museumsServiceStub;
 
     public MuseumDTO add(AddMuseumRequestDTO requestDTO) {
-
         try {
             return MuseumMapper.toDTO(
                     museumsServiceStub.add(
@@ -42,12 +44,13 @@ public class MuseumsGrpcClient {
         } catch (StatusRuntimeException ex) {
             if (ex.getStatus().getCode() == ALREADY_EXISTS)
                 throw new MuseumAlreadyExistsException(requestDTO.title());
+            if (ex.getStatus().getCode() == NOT_FOUND)
+                throw new CountryNotFoundException(requestDTO.location().country().id());
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
     }
 
     public Optional<MuseumDTO> findById(UUID id) {
-
         try {
             var idType = IdType.newBuilder()
                     .setId(id.toString())
@@ -60,42 +63,36 @@ public class MuseumsGrpcClient {
                 return Optional.empty();
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
-
     }
 
     public Page<MuseumDTO> findAll(String title, Pageable pageable) {
-
         try {
             return MuseumMapper.toPageDTO(museumsServiceStub.findAll(
                     MuseumMapper.toFilter(title, pageable)));
         } catch (StatusRuntimeException ex) {
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
-
     }
 
     public MuseumDTO update(UpdateMuseumRequestDTO requestDTO) {
-
         try {
             return MuseumMapper.toDTO(
                     museumsServiceStub.update(
                             MuseumMapper.toGrpcModel(requestDTO)));
         } catch (StatusRuntimeException ex) {
-
-            if (ex.getStatus().getCode() == Status.Code.NOT_FOUND)
-                throw new MuseumNotFoundException(requestDTO.id());
-
+            if (ex.getStatus().getCode() == Status.Code.NOT_FOUND) {
+                throw Objects.requireNonNull(ex.getStatus().getDescription()).contains("Museum")
+                        ? new MuseumNotFoundException(requestDTO.id())
+                        : new CountryNotFoundException(requestDTO.location().country().id());
+            }
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
                 throw new MuseumAlreadyExistsException(requestDTO.title());
-
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
-
         }
 
     }
 
     public void delete(UUID id) {
-
         try {
             museumsServiceStub.removeById(
                     IdType.newBuilder()
@@ -104,7 +101,6 @@ public class MuseumsGrpcClient {
         } catch (StatusRuntimeException ex) {
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
-
     }
 
 }

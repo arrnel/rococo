@@ -4,13 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.gateway.client.ArtistsGrpcClient;
-import org.rococo.gateway.client.FilesGrpcClient;
 import org.rococo.gateway.ex.ArtistNotFoundException;
 import org.rococo.gateway.mapper.ArtistMapper;
 import org.rococo.gateway.model.artists.AddArtistRequestDTO;
 import org.rococo.gateway.model.artists.ArtistDTO;
 import org.rococo.gateway.model.artists.UpdateArtistRequestDTO;
-import org.rococo.gateway.model.files.ImageDTO;
 import org.rococo.gateway.service.ValidationService;
 import org.rococo.gateway.util.PageableUtil;
 import org.springframework.data.domain.Page;
@@ -21,10 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
-import static org.rococo.gateway.model.EntityType.*;
-import static org.rococo.gateway.model.EntityType.MUSEUM;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @Slf4j
@@ -35,7 +30,6 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class ArtistsController {
 
     private final ArtistsGrpcClient artistsClient;
-    private final FilesGrpcClient filesGrpcClient;
     private final ValidationService validationService;
 
     @PostMapping
@@ -44,12 +38,8 @@ public class ArtistsController {
                          BindingResult bindingResult
     ) {
         log.info("Add new artist: {}", requestDTO);
-
         validationService.throwBadRequestExceptionIfErrorsExist(bindingResult);
-
-        var artist = artistsClient.add(requestDTO);
-        filesGrpcClient.add(ARTIST, artist.getId(), requestDTO.photo());
-        return artist.setPhoto(requestDTO.photo());
+        return artistsClient.add(requestDTO);
     }
 
     @GetMapping
@@ -64,44 +54,19 @@ public class ArtistsController {
                 ArtistMapper.toRequestParamObj(requestParams, pageable),
                 "ArtistsFindAllParamsValidationObject");
 
-        var artists = artistsClient.findAll(name, pageable);
-        var images = filesGrpcClient.findAll(ARTIST, artists.map(ArtistDTO::getId).toList());
-
-        artists.getContent()
-                .forEach(artist -> artist.setPhoto(images.stream()
-                        .filter(image ->
-                                artist.getId().equals(image.entityId()))
-                        .findFirst()
-                        .orElse(ImageDTO.empty())
-                        .content()));
-
-        return artists;
-
+        return artistsClient.findAll(name, false, pageable);
     }
 
     @PatchMapping
     public ArtistDTO update(@Valid @RequestBody UpdateArtistRequestDTO requestDTO,
                             BindingResult bindingResult) {
-
         log.info("Update artist: {}", requestDTO);
 
         validationService.throwBadRequestExceptionIfErrorsExist(bindingResult);
 
-        var artist = artistsClient.findById(requestDTO.id())
+        artistsClient.findById(requestDTO.id())
                 .orElseThrow(() -> new ArtistNotFoundException(requestDTO.id()));
-
-        // If photo exists in request -> Update photo if exists in rococo-files service, else add new photo
-        // If photo not exists in request -> remove photo from rococo-files service
-        Optional.ofNullable(requestDTO.photo())
-                .ifPresentOrElse(
-                        photo -> filesGrpcClient.findImage(ARTIST, artist.getId())
-                                .ifPresentOrElse(image -> filesGrpcClient.update(ARTIST, artist.getId(), photo),
-                                        () -> filesGrpcClient.add(ARTIST, artist.getId(), photo)),
-                        () -> filesGrpcClient.delete(ARTIST, artist.getId()));
-
-        return artistsClient.update(requestDTO)
-                .setPhoto(requestDTO.photo());
-
+        return artistsClient.update(requestDTO);
     }
 
 }
