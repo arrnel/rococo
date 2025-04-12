@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
 
     @GrpcExceptionHandler(Exception.class)
     public StatusRuntimeException handleGlobalException(Exception ex) {
-        log.error(ex.getMessage());
+        log.error("Message: {}.\nStack trace: {}", ex.getMessage(), ex.getStackTrace());
         return Status.UNKNOWN
                 .withDescription(ex.getMessage())
                 .withCause(ex)

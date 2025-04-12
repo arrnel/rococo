@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
                                                           Locale locale
     ) {
 
-        log.error("INTERNAL SERVER ERROR. {}: uri = {}, itemMessage = {}", request.getMethod(), request.getRequestURI(), ex.getMessage());
+        log.error("INTERNAL SERVER ERROR. {}: uri = {}, itemMessage = {}.%nStack trace = {}", request.getMethod(), request.getRequestURI(), ex.getMessage(), ex.getStackTrace());
 
         final var reason = messageSource.getMessage(
                 INTERNAL_ERROR_REASON,
