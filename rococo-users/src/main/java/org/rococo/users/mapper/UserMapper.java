@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Map;
+import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public class UserMapper {
@@ -49,7 +51,7 @@ public class UserMapper {
     }
 
     @Nonnull
-    public static UserGrpcResponse toGrpcResponse(UserEntity entity) {
+    public static UserGrpcResponse toGrpcResponse(UserEntity entity, String photo) {
         return UserGrpcResponse.newBuilder()
                 .setId(entity.getId().toString())
                 .setUsername(entity.getUsername())
@@ -59,6 +61,9 @@ public class UserMapper {
                 .setLastName(entity.getLastName() == null
                         ? ""
                         : entity.getLastName())
+                .setPhoto(photo == null
+                        ? ""
+                        : photo)
                 .build();
     }
 
@@ -80,14 +85,14 @@ public class UserMapper {
     }
 
     @Nonnull
-    public static UsersGrpcResponse toPageGrpc(Page<UserEntity> page) {
+    public static UsersGrpcResponse toPageGrpc(Page<UserEntity> page, Map<UUID, String> photos) {
         return UsersGrpcResponse.newBuilder()
                 .setCurrentPage(page.getPageable().getPageNumber())
                 .setItemsPerPage(page.getSize())
                 .setTotalItems(page.getTotalElements())
                 .setTotalPages(page.getTotalPages())
                 .addAllData(page.getContent().stream()
-                        .map(UserMapper::toGrpcResponse)
+                        .map(user -> UserMapper.toGrpcResponse(user, photos.get(user.getId())))
                         .toList())
                 .build();
     }
