@@ -6,6 +6,7 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.ex.UserAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.User;
 import org.rococo.tests.jupiter.annotation.Users;
 import org.rococo.tests.jupiter.annotation.meta.DbTest;
@@ -13,7 +14,6 @@ import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.UserDTO;
 import org.rococo.tests.service.UserService;
 import org.rococo.tests.util.DataGenerator;
-import org.springframework.dao.DuplicateKeyException;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -54,14 +54,8 @@ class UserDbTest {
     @DisplayName("Can not create user with exists username")
     void canNotCreateUserWithExistsUsernameTest(UserDTO user) {
 
-        // Steps
-        var result = assertThrows(RuntimeException.class, () -> userService.create(user));
-
-        // Assertions
-        assertAll(
-                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(user.getUsername())))
-        );
+        // Steps & Assertions
+        assertThrows(UserAlreadyExistsException.class, () -> userService.create(user));
 
     }
 
@@ -134,6 +128,20 @@ class UserDbTest {
                 hasProperty("firstName", is(newUser.getFirstName())),
                 hasProperty("lastName", is(newUser.getLastName()))
         ));
+
+    }
+
+    @Users(count = 2)
+    @Test
+    @DisplayName("Can not update username to exist")
+    void canNotUpdateArtistNameToExistTest(List<UserDTO> users) {
+
+        // Data
+        var user = users.getFirst()
+                .setUsername(users.getLast().getUsername());
+
+        // Steps & Assertions
+        assertThrows(UserAlreadyExistsException.class, () -> userService.update(user));
 
     }
 

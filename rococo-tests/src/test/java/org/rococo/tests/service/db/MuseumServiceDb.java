@@ -3,6 +3,7 @@ package org.rococo.tests.service.db;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.tests.config.Config;
+import org.rococo.tests.data.entity.CountryEntity;
 import org.rococo.tests.data.entity.ImageMetadataEntity;
 import org.rococo.tests.data.entity.MuseumEntity;
 import org.rococo.tests.data.repository.CountryRepository;
@@ -12,6 +13,7 @@ import org.rococo.tests.data.repository.impl.springJdbc.CountryRepositorySpringJ
 import org.rococo.tests.data.repository.impl.springJdbc.FilesRepositorySpringJdbc;
 import org.rococo.tests.data.repository.impl.springJdbc.MuseumRepositorySpringJdbc;
 import org.rococo.tests.data.tpl.XaTransactionTemplate;
+import org.rococo.tests.ex.CountryNotFoundException;
 import org.rococo.tests.ex.MuseumNotFoundException;
 import org.rococo.tests.mapper.CountryMapper;
 import org.rococo.tests.mapper.ImageMapper;
@@ -30,7 +32,7 @@ import java.util.stream.Collectors;
 import static org.rococo.tests.enums.EntityType.MUSEUM;
 
 @Slf4j
-@SuppressWarnings("unchecked")
+@SuppressWarnings("ConstantConditions")
 @ParametersAreNonnullByDefault
 public class MuseumServiceDb implements MuseumService {
 
@@ -49,13 +51,17 @@ public class MuseumServiceDb implements MuseumService {
         log.info("Add new museum: {}", museum);
 
         return xaTxTemplate.execute(() -> {
+            var country = countryRepository.findById(museum.getLocation().getCountry().getId())
+                    .orElseThrow(() -> new CountryNotFoundException(museum.getLocation().getCountry().getId()));
             var museumEntity = museumRepository.add(MuseumMapper.fromDTO(museum));
             var imageMetadata = filesRepository.create(
                     ImageMapper.fromBase64Image(MUSEUM, museumEntity.getId(), museum.getPhoto()));
 
             return MuseumMapper.toDTO(
-                    museumEntity,
-                    imageMetadata.getContent().getData());
+                            museumEntity,
+                            country,
+                            imageMetadata.getContent().getData())
+                    .setCountry(CountryMapper.toDTO(country));
         });
     }
 
@@ -88,6 +94,7 @@ public class MuseumServiceDb implements MuseumService {
             var museums = museumRepository.findAllByPartialTitle(title);
             return enrichAndConvertAllToDTO(
                     museums,
+                    getMuseumsCountriesMap(),
                     getMuseumsImagesMap(museums));
         });
     }
@@ -101,6 +108,7 @@ public class MuseumServiceDb implements MuseumService {
             var museums = museumRepository.findAll();
             return enrichAndConvertAllToDTO(
                     museums,
+                    getMuseumsCountriesMap(),
                     getMuseumsImagesMap(museums));
         });
     }
@@ -118,6 +126,8 @@ public class MuseumServiceDb implements MuseumService {
                     .map(oldMuseum -> museumRepository.update(
                             MuseumMapper.updateFromDTO(oldMuseum, museum)))
                     .orElseThrow(() -> new MuseumNotFoundException(museum.getId()));
+            var country = countryRepository.findById(museum.getLocation().getCountry().getId())
+                    .orElseThrow(() -> new CountryNotFoundException(museum.getLocation().getCountry().getId()));
 
             var newMetadata = ImageMapper.fromBase64Image(MUSEUM, museum.getId(), museum.getPhoto());
             filesRepository.findByEntityTypeAndEntityId(MUSEUM, museum.getId())
@@ -129,7 +139,7 @@ public class MuseumServiceDb implements MuseumService {
                             () -> filesRepository.create(newMetadata)
                     );
 
-            return MuseumMapper.toDTO(museumEntity, newMetadata.getContent().getData());
+            return MuseumMapper.toDTO(museumEntity, country, newMetadata.getContent().getData());
 
         });
     }
@@ -165,17 +175,19 @@ public class MuseumServiceDb implements MuseumService {
                 .map(metadata -> metadata.getContent().getData())
                 .orElse(null);
         var country = countryRepository.findById(museumEntity.getCountryId())
-                .map(CountryMapper::toDTO)
                 .orElse(null);
-        return MuseumMapper.toDTO(museumEntity, photo)
-                .setCountry(country);
+        return MuseumMapper.toDTO(museumEntity, country, photo);
     }
 
     @Nonnull
-    private static List<MuseumDTO> enrichAndConvertAllToDTO(List<MuseumEntity> museums, Map<UUID, byte[]> museumsImagesMap) {
+    private static List<MuseumDTO> enrichAndConvertAllToDTO(List<MuseumEntity> museums,
+                                                            Map<UUID, CountryEntity> countriesMap,
+                                                            Map<UUID, byte[]> museumsImagesMap
+    ) {
         return museums.stream()
                 .map(museum -> MuseumMapper.toDTO(
                         museum,
+                        countriesMap.get(museum.getCountryId()),
                         museumsImagesMap.getOrDefault(museum.getId(), null)))
                 .toList();
     }
@@ -191,6 +203,15 @@ public class MuseumServiceDb implements MuseumService {
                 .collect(Collectors.toMap(
                         ImageMetadataEntity::getEntityId,
                         img -> img.getContent().getThumbnailData()));
+    }
+
+    @Nonnull
+    private Map<UUID, CountryEntity> getMuseumsCountriesMap() {
+        return countryRepository.findAll()
+                .stream()
+                .collect(Collectors.toMap(
+                        CountryEntity::getId,
+                        country -> country));
     }
 
 }

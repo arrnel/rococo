@@ -5,6 +5,8 @@ import org.rococo.tests.data.dao.UserDao;
 import org.rococo.tests.data.entity.UserEntity;
 import org.rococo.tests.data.rowMapper.UserRowMapper;
 import org.rococo.tests.data.tpl.DataSources;
+import org.rococo.tests.ex.UserAlreadyExistsException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,27 +27,31 @@ public class UserDaoSpringJdbc implements UserDao {
 
     @Override
     public @Nonnull UserEntity create(UserEntity user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-                    PreparedStatement ps = connection.prepareStatement("""
-                                    INSERT INTO rococo.users
-                                        (username, first_name, last_name)
-                                    VALUES
-                                        (?, ?, ?)""",
-                            Statement.RETURN_GENERATED_KEYS
-                    );
-                    ps.setString(1, user.getUsername());
-                    ps.setString(2, user.getFirstName());
-                    ps.setString(3, user.getLastName());
-                    return ps;
-                },
-                keyHolder
-        );
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                        PreparedStatement ps = connection.prepareStatement("""
+                                        INSERT INTO rococo.users
+                                            (username, first_name, last_name)
+                                        VALUES
+                                            (?, ?, ?)""",
+                                Statement.RETURN_GENERATED_KEYS
+                        );
+                        ps.setString(1, user.getUsername());
+                        ps.setString(2, user.getFirstName());
+                        ps.setString(3, user.getLastName());
+                        return ps;
+                    },
+                    keyHolder
+            );
 
-        final UUID generatedKey = (UUID) keyHolder.getKeys().get("id");
-        user.setId(generatedKey);
-        return user;
+            final UUID generatedKey = (UUID) keyHolder.getKeys().get("id");
+            user.setId(generatedKey);
+            return user;
+        } catch (DuplicateKeyException ex) {
+            throw new UserAlreadyExistsException(user.getUsername());
+        }
 
     }
 
@@ -100,26 +106,30 @@ public class UserDaoSpringJdbc implements UserDao {
 
     @Override
     public @Nonnull UserEntity update(UserEntity user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
-        jdbcTemplate.update(connection -> {
-                    PreparedStatement ps = connection.prepareStatement("""
-                            UPDATE
-                                rococo.users
-                            SET
-                                username = ?,
-                                first_name = ?,
-                                last_name = ?
-                            WHERE
-                                id = ?"""
-                    );
-                    ps.setString(1, user.getUsername());
-                    ps.setString(2, user.getFirstName());
-                    ps.setString(3, user.getLastName());
-                    ps.setObject(4, user.getId());
-                    return ps;
-                }
-        );
-        return user;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
+            jdbcTemplate.update(connection -> {
+                        PreparedStatement ps = connection.prepareStatement("""
+                                UPDATE
+                                    rococo.users
+                                SET
+                                    username = ?,
+                                    first_name = ?,
+                                    last_name = ?
+                                WHERE
+                                    id = ?"""
+                        );
+                        ps.setString(1, user.getUsername());
+                        ps.setString(2, user.getFirstName());
+                        ps.setString(3, user.getLastName());
+                        ps.setObject(4, user.getId());
+                        return ps;
+                    }
+            );
+            return user;
+        } catch (DuplicateKeyException ex) {
+            throw new UserAlreadyExistsException(user.getUsername());
+        }
     }
 
     @Override

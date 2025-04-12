@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.data.repository.impl.springJdbc.PaintingRepositorySpringJdbc;
+import org.rococo.tests.ex.PaintingAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Painting;
@@ -19,7 +21,6 @@ import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.model.PaintingDTO;
 import org.rococo.tests.service.PaintingService;
 import org.rococo.tests.util.DataGenerator;
-import org.springframework.dao.DuplicateKeyException;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -65,14 +66,8 @@ class PaintingDbTest {
     @DisplayName("Can not create painting with exists name")
     void canNotCreatePaintingWithExistsNameTest(PaintingDTO painting) {
 
-        // Steps
-        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
-
-        // Assertions
-        assertAll(
-                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(painting.getTitle())))
-        );
+        // Steps & Assertions
+        assertThrows(PaintingAlreadyExistsException.class, () -> paintingService.add(painting));
 
     }
 
@@ -232,13 +227,7 @@ class PaintingDbTest {
                 .setTitle(paintings.getLast().getTitle());
 
         // Steps & Assertions
-        var result = assertThrows(RuntimeException.class, () -> paintingService.update(painting));
-
-        // Assertions
-        assertAll(
-                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(painting.getTitle())))
-        );
+        assertThrows(PaintingAlreadyExistsException.class, () -> paintingService.update(painting));
 
     }
 
@@ -264,7 +253,7 @@ class PaintingDbTest {
         paintingService.clearAll();
 
         // Assertions
-        assertTrue(paintingService.findAll().isEmpty());
+        assertTrue(new PaintingRepositorySpringJdbc().findAll().isEmpty());
 
     }
 

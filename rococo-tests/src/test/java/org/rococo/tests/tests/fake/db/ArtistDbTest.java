@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.data.repository.impl.springJdbc.ArtistRepositorySpringJdbc;
+import org.rococo.tests.ex.ArtistAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Artists;
 import org.rococo.tests.jupiter.annotation.meta.DbTest;
@@ -16,7 +18,6 @@ import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.service.ArtistService;
 import org.rococo.tests.util.DataGenerator;
-import org.springframework.dao.DuplicateKeyException;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -58,14 +59,8 @@ class ArtistDbTest {
     @DisplayName("Can not create artist with exists name")
     void canNotCreateArtistWithExistsNameTest(ArtistDTO artist) {
 
-        // Steps
-        var result = assertThrows(RuntimeException.class, () -> artistService.add(artist));
-
-        // Assertions
-        assertAll(
-                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(artist.getName())))
-        );
+        // Steps & Assertions
+        assertThrows(ArtistAlreadyExistsException.class, () -> artistService.add(artist));
 
     }
 
@@ -171,13 +166,7 @@ class ArtistDbTest {
                 .setName(artists.getLast().getName());
 
         // Steps & Assertions
-        var result = assertThrows(RuntimeException.class, () -> artistService.update(artist));
-
-        // Assertions
-        assertAll(
-                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(artist.getName())))
-        );
+        assertThrows(ArtistAlreadyExistsException.class, () -> artistService.update(artist));
 
     }
 
@@ -203,7 +192,7 @@ class ArtistDbTest {
         artistService.clearAll();
 
         // Assertions
-        assertTrue(artistService.findAll().isEmpty());
+        assertTrue(new ArtistRepositorySpringJdbc().findAll().isEmpty());
 
     }
 

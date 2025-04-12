@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.data.repository.impl.springJdbc.MuseumRepositorySpringJdbc;
+import org.rococo.tests.ex.MuseumAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Museums;
@@ -18,7 +20,6 @@ import org.rococo.tests.model.CountryDTO;
 import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.service.MuseumService;
 import org.rococo.tests.util.DataGenerator;
-import org.springframework.dao.DuplicateKeyException;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -64,13 +65,7 @@ class MuseumDbTest {
     void canNotCreateMuseumWithExistsNameTest(MuseumDTO museum) {
 
         // Steps
-        var result = assertThrows(RuntimeException.class, () -> museumService.add(museum));
-
-        // Assertions
-        assertAll(
-                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(museum.getTitle())))
-        );
+        assertThrows(MuseumAlreadyExistsException.class, () -> museumService.add(museum));
 
     }
 
@@ -147,14 +142,16 @@ class MuseumDbTest {
 
     }
 
+    @Country
     @Museum
     @Test
     @DisplayName("Can update museum")
-    void canUpdateMuseumTest(MuseumDTO oldMuseum) {
+    void canUpdateMuseumTest(MuseumDTO oldMuseum, CountryDTO country) {
 
         // Data
         var newMuseum = DataGenerator.generateMuseum()
-                .setId(oldMuseum.getId());
+                .setId(oldMuseum.getId())
+                .setCountry(country);
 
         // Steps
         var result = museumService.update(newMuseum);
@@ -182,13 +179,7 @@ class MuseumDbTest {
                 .setTitle(museums.getLast().getTitle());
 
         // Steps & Assertions
-        var result = assertThrows(RuntimeException.class, () -> museumService.update(museum));
-
-        // Assertions
-        assertAll(
-                () -> assertInstanceOf(DuplicateKeyException.class, result.getCause()),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(museum.getTitle())))
-        );
+        assertThrows(MuseumAlreadyExistsException.class, () -> museumService.update(museum));
 
     }
 
@@ -214,7 +205,7 @@ class MuseumDbTest {
         museumService.clearAll();
 
         // Assertions
-        assertTrue(museumService.findAll().isEmpty());
+        assertTrue(new MuseumRepositorySpringJdbc().findAll().isEmpty());
 
     }
 

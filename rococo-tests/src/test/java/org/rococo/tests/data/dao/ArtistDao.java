@@ -24,6 +24,9 @@ public interface ArtistDao {
     List<ArtistEntity> findAllByPartialName(String partialName);
 
     @Nonnull
+    List<ArtistEntity> findAllByIds(List<UUID> ids);
+
+    @Nonnull
     List<ArtistEntity> findAll();
 
     @Nonnull

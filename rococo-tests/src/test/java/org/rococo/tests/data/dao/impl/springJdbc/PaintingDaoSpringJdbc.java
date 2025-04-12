@@ -5,6 +5,8 @@ import org.rococo.tests.data.dao.PaintingDao;
 import org.rococo.tests.data.entity.PaintingEntity;
 import org.rococo.tests.data.rowMapper.PaintingRowMapper;
 import org.rococo.tests.data.tpl.DataSources;
+import org.rococo.tests.ex.PaintingAlreadyExistsException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -28,29 +30,32 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
     @Nonnull
     @Override
     public PaintingEntity create(PaintingEntity painting) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-                    PreparedStatement ps = connection.prepareStatement("""
-                                    INSERT INTO rococo.paintings
-                                        (title, description, artist_id, museum_id)
-                                    VALUES
-                                        (?, ?, ?, ?)""",
-                            Statement.RETURN_GENERATED_KEYS
-                    );
-                    ps.setString(1, painting.getTitle());
-                    ps.setString(2, painting.getDescription());
-                    ps.setObject(3, painting.getArtistId());
-                    ps.setObject(4, painting.getMuseumId());
-                    return ps;
-                },
-                keyHolder
-        );
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                        PreparedStatement ps = connection.prepareStatement("""
+                                        INSERT INTO rococo.paintings
+                                            (title, description, artist_id, museum_id)
+                                        VALUES
+                                            (?, ?, ?, ?)""",
+                                Statement.RETURN_GENERATED_KEYS
+                        );
+                        ps.setString(1, painting.getTitle());
+                        ps.setString(2, painting.getDescription());
+                        ps.setObject(3, painting.getArtistId());
+                        ps.setObject(4, painting.getMuseumId());
+                        return ps;
+                    },
+                    keyHolder
+            );
 
-        final UUID generatedKey = (UUID) keyHolder.getKeys().get("id");
-        painting.setId(generatedKey);
-        return painting;
-
+            final UUID generatedKey = (UUID) keyHolder.getKeys().get("id");
+            painting.setId(generatedKey);
+            return painting;
+        } catch (DuplicateKeyException ex) {
+            throw new PaintingAlreadyExistsException(painting.getTitle());
+        }
     }
 
     @Nonnull
@@ -60,8 +65,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
         try {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject("""
-                                    
-                                        SELECT *
+                                    SELECT *
                                     FROM
                                         rococo.paintings
                                     WHERE
@@ -73,7 +77,6 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-
     }
 
     @Nonnull
@@ -149,28 +152,32 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
     @Nonnull
     @Override
     public PaintingEntity update(PaintingEntity painting) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
-        jdbcTemplate.update(connection -> {
-                    PreparedStatement ps = connection.prepareStatement("""
-                            UPDATE
-                                rococo.paintings
-                            SET
-                                title = ?,
-                                description = ?,
-                                artist_id = ?,
-                                museum_id = ?
-                            WHERE
-                                id = ?"""
-                    );
-                    ps.setString(1, painting.getTitle());
-                    ps.setString(2, painting.getDescription());
-                    ps.setObject(3, painting.getArtistId());
-                    ps.setObject(4, painting.getMuseumId());
-                    ps.setObject(5, painting.getId());
-                    return ps;
-                }
-        );
-        return painting;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
+            jdbcTemplate.update(connection -> {
+                        PreparedStatement ps = connection.prepareStatement("""
+                                UPDATE
+                                    rococo.paintings
+                                SET
+                                    title = ?,
+                                    description = ?,
+                                    artist_id = ?,
+                                    museum_id = ?
+                                WHERE
+                                    id = ?"""
+                        );
+                        ps.setString(1, painting.getTitle());
+                        ps.setString(2, painting.getDescription());
+                        ps.setObject(3, painting.getArtistId());
+                        ps.setObject(4, painting.getMuseumId());
+                        ps.setObject(5, painting.getId());
+                        return ps;
+                    }
+            );
+            return painting;
+        } catch (DuplicateKeyException ex) {
+            throw new PaintingAlreadyExistsException(painting.getTitle());
+        }
     }
 
     @Override

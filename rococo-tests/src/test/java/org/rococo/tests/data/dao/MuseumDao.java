@@ -24,6 +24,9 @@ public interface MuseumDao {
     List<MuseumEntity> findAllByPartialTitle(String partialTitle);
 
     @Nonnull
+    List<MuseumEntity> findAllByIds(List<UUID> ids);
+
+    @Nonnull
     List<MuseumEntity> findAll();
 
     @Nonnull

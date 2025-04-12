@@ -1,6 +1,7 @@
 package org.rococo.tests.mapper;
 
 import org.rococo.grpc.museums.*;
+import org.rococo.tests.data.entity.CountryEntity;
 import org.rococo.tests.data.entity.MuseumEntity;
 import org.rococo.tests.enums.CountryCode;
 import org.rococo.tests.jupiter.annotation.Museum;
@@ -160,7 +161,7 @@ public class MuseumMapper {
     }
 
     @Nonnull
-    public static MuseumDTO toDTO(MuseumEntity entity, @Nullable byte[] image) {
+    public static MuseumDTO toDTO(MuseumEntity entity, CountryEntity country, @Nullable byte[] image) {
         return MuseumDTO.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
@@ -168,8 +169,7 @@ public class MuseumMapper {
                 .location(
                         new LocationDTO(
                                 entity.getCity(),
-                                new CountryDTO(entity.getCountryId(), null, null)
-                        ))
+                                CountryMapper.toDTO(country)))
                 .photo(image == null || image.length == 0
                         ? null
                         : new String(image, StandardCharsets.UTF_8))

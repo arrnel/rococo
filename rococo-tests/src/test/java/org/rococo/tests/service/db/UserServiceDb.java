@@ -31,7 +31,7 @@ import static org.rococo.tests.enums.EntityType.ARTIST;
 import static org.rococo.tests.enums.EntityType.USER;
 
 @Slf4j
-@SuppressWarnings("unchecked")
+@SuppressWarnings("ConstantConditions")
 public class UserServiceDb implements UserService {
 
     private static final Config CFG = Config.getInstance();

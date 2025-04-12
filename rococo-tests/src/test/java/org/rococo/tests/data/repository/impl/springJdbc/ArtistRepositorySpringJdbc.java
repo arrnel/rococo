@@ -41,6 +41,11 @@ public class ArtistRepositorySpringJdbc implements ArtistRepository {
     }
 
     @Nonnull
+    public List<ArtistEntity> findAllByIds(List<UUID> ids) {
+        return artistDao.findAllByIds(ids);
+    }
+
+    @Nonnull
     @Override
     public List<ArtistEntity> findAll() {
         return artistDao.findAll();
