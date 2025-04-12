@@ -33,7 +33,6 @@ public class UsersGrpcClient extends GrpcClient {
 
     @Nonnull
     public UserDTO add(UserDTO requestDTO) {
-
         try {
             return UserMapper.toDTO(
                     usersServiceStub.create(
@@ -43,12 +42,10 @@ public class UsersGrpcClient extends GrpcClient {
                 throw new UserAlreadyExistsException(requestDTO.getUsername());
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
-
     }
 
     @Nonnull
     public Optional<UserDTO> findById(UUID id) {
-
         try {
             return Optional.of(
                     UserMapper.toDTO(
@@ -57,18 +54,13 @@ public class UsersGrpcClient extends GrpcClient {
                                             .setId(id.toString())
                                             .build())));
         } catch (StatusRuntimeException ex) {
-
             if (ex.getStatus().getCode() != Status.Code.NOT_FOUND)
                 throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
-
             return Optional.empty();
-
         }
-
     }
 
     public Optional<UserDTO> findByUsername(String username) {
-
         try {
             return Optional.of(
                     UserMapper.toDTO(
@@ -77,19 +69,14 @@ public class UsersGrpcClient extends GrpcClient {
                                             .setName(username)
                                             .build())));
         } catch (StatusRuntimeException ex) {
-
             if (ex.getStatus().getCode() != Status.Code.NOT_FOUND)
                 throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
-
             return Optional.empty();
-
         }
-
     }
 
     @Nonnull
     public Page<UserDTO> findAll(Pageable pageable) {
-
         try {
             return UserMapper.toPageDTO(
                     usersServiceStub.findAll(
@@ -97,32 +84,24 @@ public class UsersGrpcClient extends GrpcClient {
         } catch (StatusRuntimeException ex) {
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
-
     }
 
     @Nonnull
     public UserDTO update(UserDTO requestDTO) {
-
         try {
             return UserMapper.toDTO(
                     usersServiceStub.update(
                             UserMapper.toUpdateGrpcRequest(requestDTO)));
         } catch (StatusRuntimeException ex) {
-
             if (ex.getStatus().getCode() == Status.Code.NOT_FOUND)
                 throw new UserNotFoundException(requestDTO.getId());
-
             if (ex.getStatus().getCode() == Status.Code.ALREADY_EXISTS)
                 throw new UserAlreadyExistsException(requestDTO.getUsername());
-
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
-
         }
-
     }
 
     public void delete(UUID id) {
-
         try {
             usersServiceStub.removeById(
                     IdType.newBuilder()
@@ -131,8 +110,6 @@ public class UsersGrpcClient extends GrpcClient {
         } catch (StatusRuntimeException ex) {
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
-
     }
-
 
 }

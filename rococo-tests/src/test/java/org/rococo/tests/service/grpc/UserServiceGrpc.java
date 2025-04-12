@@ -23,16 +23,13 @@ import static org.rococo.tests.enums.EntityType.USER;
 public class UserServiceGrpc implements UserService {
 
     private final UsersGrpcClient userClient = new UsersGrpcClient();
-    private final FilesGrpcClient filesClient = new FilesGrpcClient();
 
     @Nonnull
     @Override
     @Step("Create new user: [{user.username}]")
     public UserDTO create(UserDTO user) {
         log.info("Create new user: {}", user);
-        var newUser = userClient.add(user);
-        filesClient.addImage(USER, newUser.getId(), user.getPhoto());
-        return newUser.setPhoto(user.getPhoto());
+        return userClient.add(user);
     }
 
     @Nonnull
@@ -40,11 +37,7 @@ public class UserServiceGrpc implements UserService {
     @Step("Find user by id: [{id}]")
     public Optional<UserDTO> findById(UUID id) {
         log.info("Find user with id: {}", id);
-        return userClient.findById(id)
-                .map(user -> user.setPhoto(
-                        filesClient.findImage(USER, user.getId())
-                                .map(ImageDTO::getContent)
-                                .orElse(null)));
+        return userClient.findById(id);
     }
 
     @Nonnull
@@ -52,11 +45,7 @@ public class UserServiceGrpc implements UserService {
     @Step("Find user by username: [{username}]")
     public Optional<UserDTO> findByUsername(String username) {
         log.info("Find user with username: {}", username);
-        return userClient.findByUsername(username)
-                .map(user -> user.setPhoto(
-                        filesClient.findImage(USER, user.getId())
-                                .map(ImageDTO::getContent)
-                                .orElse(null)));
+        return userClient.findByUsername(username);
     }
 
     @Nonnull
@@ -64,7 +53,7 @@ public class UserServiceGrpc implements UserService {
     @Step("Find all users")
     public List<UserDTO> findAll() {
         log.info("Find all users");
-        return enrichAll(findUsers());
+        return findUsers();
     }
 
     @Nonnull
@@ -72,12 +61,7 @@ public class UserServiceGrpc implements UserService {
     @Step("Update user: [{user.username}]")
     public UserDTO update(UserDTO user) {
         log.info("Update user: {}", user);
-        var updatedUser = userClient.update(user);
-        filesClient.findImage(USER, user.getId())
-                .ifPresentOrElse(
-                        image -> filesClient.update(USER, user.getId(), user.getPhoto()),
-                        () -> filesClient.addImage(USER, user.getId(), user.getPhoto()));
-        return updatedUser.setPhoto(user.getPhoto());
+        return userClient.update(user);
     }
 
     @Override
@@ -93,7 +77,6 @@ public class UserServiceGrpc implements UserService {
     public void clearAll() {
         findUsers().forEach(u -> {
             userClient.delete(u.getId());
-            filesClient.delete(USER, u.getId());
         });
     }
 
@@ -109,23 +92,6 @@ public class UserServiceGrpc implements UserService {
             pageable = pageable.next();
         }
         return allUsers;
-    }
-
-    @Nonnull
-    private List<UserDTO> enrichAll(List<UserDTO> users) {
-
-        var usersIds = users.stream()
-                .map(UserDTO::getId)
-                .toList();
-
-        Map<UUID, String> usersBase64ImageMap = filesClient.findAll(USER, usersIds).stream()
-                .collect(Collectors.toMap(
-                        ImageDTO::getEntityId,
-                        ImageDTO::getContent));
-
-        return users.stream()
-                .map(user -> user.setPhoto(usersBase64ImageMap.get(user.getId())))
-                .toList();
     }
 
 }

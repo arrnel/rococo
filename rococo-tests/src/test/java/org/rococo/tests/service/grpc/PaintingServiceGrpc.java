@@ -38,64 +38,48 @@ public class PaintingServiceGrpc implements PaintingService {
     @Override
     public Optional<PaintingDTO> findById(UUID id) {
         log.info("Find painting with id: {}", id);
-        return paintingClient.findById(id)
-                .map(painting -> painting.setPhoto(
-                        filesClient.findImage(PAINTING, painting.getId())
-                                .map(ImageDTO::getContent)
-                                .orElse(null)));
+        return paintingClient.findById(id);
     }
 
     @Nonnull
     @Override
     public Optional<PaintingDTO> findByTitle(String title) {
         log.info("Find painting with title: {}", title);
-        return findAllPaintings(title, null).stream()
-                .filter(painting -> painting.getTitle().equals(title))
-                .findFirst()
-                .map(painting -> painting.setPhoto(
-                        filesClient.findImage(PAINTING, painting.getId())
-                                .map(ImageDTO::getContent)
-                                .orElse(null)));
+        return paintingClient.findByTitle(title);
     }
 
     @Nonnull
     @Override
     public List<PaintingDTO> findAllByPartialTitle(String partialTitle) {
         log.info("Find all paintings by partial title: {}", partialTitle);
-        return enrichAll(findAllPaintings(partialTitle, null));
+        return findAllPaintings(partialTitle, null);
     }
 
     @Nonnull
     @Override
     public List<PaintingDTO> findAllByArtistId(UUID artistId) {
         log.info("Find all paintings by artist id: {}", artistId);
-        return enrichAll(findAllPaintings(null, artistId));
+        return findAllPaintings(null, artistId);
     }
 
     @Nonnull
     @Override
     public List<PaintingDTO> findAll() {
         log.info("Find all paintings");
-        return enrichAll(findAllPaintings(null, null));
+        return findAllPaintings(null, null);
     }
 
     @Nonnull
     @Override
     public PaintingDTO update(PaintingDTO painting) {
         log.info("Update painting: {}", painting);
-        var updatedPainting = paintingClient.update(painting);
-        filesClient.findImage(PAINTING, painting.getId())
-                .ifPresentOrElse(
-                        image -> filesClient.update(PAINTING, painting.getId(), painting.getPhoto()),
-                        () -> filesClient.addImage(PAINTING, painting.getId(), painting.getPhoto()));
-        return updatedPainting.setPhoto(painting.getPhoto());
+        return paintingClient.update(painting);
     }
 
     @Override
     public void delete(UUID id) {
         log.info("Delete painting with id: {}", id);
         paintingClient.delete(id);
-        filesClient.delete(PAINTING, id);
     }
 
     @Override
@@ -117,23 +101,6 @@ public class PaintingServiceGrpc implements PaintingService {
             pageable = pageable.next();
         }
         return allPaintings;
-    }
-
-    @Nonnull
-    private List<PaintingDTO> enrichAll(List<PaintingDTO> paintings) {
-
-        var paintingIds = paintings.stream()
-                .map(PaintingDTO::getId)
-                .toList();
-
-        Map<UUID, String> paintingBase64ImageMap = filesClient.findAll(PAINTING, paintingIds).stream()
-                .collect(Collectors.toMap(
-                        ImageDTO::getEntityId,
-                        ImageDTO::getContent));
-
-        return paintings.stream()
-                .map(painting -> painting.setPhoto(paintingBase64ImageMap.get(painting.getId())))
-                .toList();
     }
 
 }

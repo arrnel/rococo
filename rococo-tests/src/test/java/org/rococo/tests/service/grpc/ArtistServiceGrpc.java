@@ -24,16 +24,13 @@ import static org.rococo.tests.enums.EntityType.ARTIST;
 public class ArtistServiceGrpc implements ArtistService {
 
     private final ArtistsGrpcClient artistClient = new ArtistsGrpcClient();
-    private final FilesGrpcClient filesClient = new FilesGrpcClient();
 
     @Nonnull
     @Override
     @Step("Add new artist: [{artist.name}]")
     public ArtistDTO add(ArtistDTO artist) {
         log.info("Add new artist: {}", artist);
-        var newArtist = artistClient.add(artist);
-        filesClient.addImage(ARTIST, newArtist.getId(), artist.getPhoto());
-        return newArtist.setPhoto(artist.getPhoto());
+        return artistClient.add(artist);
     }
 
     @Nonnull
@@ -41,11 +38,7 @@ public class ArtistServiceGrpc implements ArtistService {
     @Step("Find artist by id: [{id}]")
     public Optional<ArtistDTO> findById(UUID id) {
         log.info("Find artist with id: {}", id);
-        return artistClient.findById(id)
-                .map(artist -> artist.setPhoto(
-                        filesClient.findImage(ARTIST, artist.getId())
-                                .map(ImageDTO::getContent)
-                                .orElse(null)));
+        return artistClient.findById(id);
     }
 
     @Nonnull
@@ -53,11 +46,7 @@ public class ArtistServiceGrpc implements ArtistService {
     @Step("Find artist by name: [{name}]")
     public Optional<ArtistDTO> findByName(String name) {
         log.info("Find artist with name: {}", name);
-        return artistClient.findByName(name)
-                .map(artist -> artist.setPhoto(
-                        filesClient.findImage(ARTIST, artist.getId())
-                                .map(ImageDTO::getContent)
-                                .orElse(null)));
+        return artistClient.findByName(name);
     }
 
     @Nonnull
@@ -65,7 +54,7 @@ public class ArtistServiceGrpc implements ArtistService {
     @Step("Find all artists by partial name: [{partialName}]")
     public List<ArtistDTO> findAllByPartialName(String partialName) {
         log.info("Find all artists by partial name: {}", partialName);
-        return enrichAll(findAllArtists(partialName));
+        return findAllArtists(partialName);
     }
 
     @Nonnull
@@ -73,7 +62,7 @@ public class ArtistServiceGrpc implements ArtistService {
     @Step("Find all artists")
     public List<ArtistDTO> findAll() {
         log.info("Find all artists by names: names");
-        return enrichAll(findAllArtists(null));
+        return findAllArtists(null);
     }
 
     @Nonnull
@@ -81,13 +70,7 @@ public class ArtistServiceGrpc implements ArtistService {
     @Step("Update artist with id: [{artist.id}]")
     public ArtistDTO update(ArtistDTO artist) {
         log.info("Update artist: {}", artist);
-        var updatedArtist = artistClient.update(artist);
-        filesClient.findImage(ARTIST, artist.getId())
-                .ifPresentOrElse(
-                        image -> filesClient.update(ARTIST, artist.getId(), artist.getPhoto()),
-                        () -> filesClient.addImage(ARTIST, artist.getId(), artist.getPhoto()));
-
-        return updatedArtist.setPhoto(artist.getPhoto());
+        return artistClient.update(artist);
 
     }
 
@@ -96,7 +79,6 @@ public class ArtistServiceGrpc implements ArtistService {
     public void delete(UUID id) {
         log.info("Delete artist with id: {}", id);
         artistClient.delete(id);
-        filesClient.delete(ARTIST, id);
     }
 
     @Override
@@ -121,20 +103,6 @@ public class ArtistServiceGrpc implements ArtistService {
         }
 
         return allArtists;
-    }
-
-    @Nonnull
-    private List<ArtistDTO> enrichAll(List<ArtistDTO> artists) {
-        var artistIds = artists.stream().map(ArtistDTO::getId).toList();
-
-        Map<UUID, String> artistBase64ImageMap = filesClient.findAll(ARTIST, artistIds).stream()
-                .collect(Collectors.toMap(
-                        ImageDTO::getEntityId,
-                        ImageDTO::getContent));
-
-        return artists.stream()
-                .map(artist -> artist.setPhoto(artistBase64ImageMap.get(artist.getId())))
-                .toList();
     }
 
 }

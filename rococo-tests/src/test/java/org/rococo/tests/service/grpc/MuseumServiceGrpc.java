@@ -25,17 +25,13 @@ import static org.rococo.tests.enums.EntityType.MUSEUM;
 public class MuseumServiceGrpc implements MuseumService {
 
     private final MuseumsGrpcClient museumClient = new MuseumsGrpcClient();
-    private final CountriesGrpcClient countryClient = new CountriesGrpcClient();
-    private final FilesGrpcClient filesClient = new FilesGrpcClient();
 
     @Nonnull
     @Override
     @Step("Add new museum: [{museum.title}]")
     public MuseumDTO add(MuseumDTO museum) {
         log.info("Add new museum: {}", museum);
-        var newMuseum = museumClient.add(museum);
-        filesClient.addImage(MUSEUM, newMuseum.getId(), museum.getPhoto());
-        return newMuseum.setPhoto(museum.getPhoto());
+        return museumClient.add(museum);
     }
 
     @Nonnull
@@ -43,13 +39,7 @@ public class MuseumServiceGrpc implements MuseumService {
     @Step("Find museum by id: [{id}]")
     public Optional<MuseumDTO> findById(UUID id) {
         log.info("Find museum with id: {}", id);
-        return museumClient.findById(id)
-                .map(museum -> museum
-                        .setPhoto(filesClient.findImage(MUSEUM, museum.getId())
-                                .map(ImageDTO::getContent)
-                                .orElse(null))
-                        .setCountry(countryClient.findById(museum.getLocation().getCountry().getId())
-                                .orElse(null)));
+        return museumClient.findById(id);
     }
 
     @Nonnull
@@ -57,14 +47,7 @@ public class MuseumServiceGrpc implements MuseumService {
     @Step("Find museum by name: [{name}]")
     public Optional<MuseumDTO> findByTitle(String title) {
         log.info("Find museum with title: {}", title);
-        return findAllMuseums(title).stream()
-                .filter(museum -> museum.getTitle().equals(title))
-                .findFirst()
-                .map(museum -> museum
-                        .setPhoto(filesClient.findImage(MUSEUM, museum.getId())
-                                .map(ImageDTO::getContent)
-                                .orElse(null))
-                        .setCountry(countryClient.findById(museum.getLocation().getCountry().getId()).orElse(null)));
+        return museumClient.findByTitle(title);
     }
 
     @Nonnull
@@ -72,15 +55,15 @@ public class MuseumServiceGrpc implements MuseumService {
     @Step("Find all museums by partial title: [{partialTitle}]")
     public List<MuseumDTO> findAllByPartialTitle(String partialTitle) {
         log.info("Find all museums by partial name: {}", partialTitle);
-        return enrichAll(findAllMuseums(partialTitle));
+        return findAllMuseums(partialTitle);
     }
 
     @Nonnull
     @Override
     @Step("Find all museums")
     public List<MuseumDTO> findAll() {
-        log.info("Find all museums by names: names");
-        return enrichAll(findAllMuseums(null));
+        log.info("Find all museums");
+        return findAllMuseums(null);
     }
 
     @Nonnull
@@ -88,14 +71,7 @@ public class MuseumServiceGrpc implements MuseumService {
     @Step("Update museum with id: [{museum.id}]")
     public MuseumDTO update(MuseumDTO museum) {
         log.info("Update museum: {}", museum);
-        var updatedMuseum = museumClient.update(museum);
-        filesClient.findImage(MUSEUM, museum.getId())
-                .ifPresentOrElse(
-                        image -> filesClient.update(MUSEUM, museum.getId(), museum.getPhoto()),
-                        () -> filesClient.addImage(MUSEUM, museum.getId(), museum.getPhoto()));
-
-        return updatedMuseum.setPhoto(museum.getPhoto());
-
+        return museumClient.update(museum);
     }
 
     @Override
@@ -103,7 +79,6 @@ public class MuseumServiceGrpc implements MuseumService {
     public void delete(UUID id) {
         log.info("Delete museum with id: {}", id);
         museumClient.delete(id);
-        filesClient.delete(MUSEUM, id);
     }
 
     @Override
@@ -128,20 +103,6 @@ public class MuseumServiceGrpc implements MuseumService {
         }
 
         return allMuseums;
-    }
-
-    @Nonnull
-    private List<MuseumDTO> enrichAll(List<MuseumDTO> museums) {
-        var museumIds = museums.stream().map(MuseumDTO::getId).toList();
-
-        Map<UUID, String> museumBase64ImageMap = filesClient.findAll(MUSEUM, museumIds).stream()
-                .collect(Collectors.toMap(
-                        ImageDTO::getEntityId,
-                        ImageDTO::getContent));
-
-        return museums.stream()
-                .map(museum -> museum.setPhoto(museumBase64ImageMap.get(museum.getId())))
-                .toList();
     }
 
 }
