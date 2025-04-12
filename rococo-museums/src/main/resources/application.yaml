@@ -64,9 +64,6 @@ grpc:
   server:
     port: ${ROCOCO_MUSEUMS_PORT:9005}
   client:
-    grpcArtistsClient:
-      address: 'static://artists.rococo.dc:9002'
-      negotiationType: PLAINTEXT
     grpcCountriesClient:
       address: 'static://countries.rococo.dc:9003'
       negotiationType: PLAINTEXT
