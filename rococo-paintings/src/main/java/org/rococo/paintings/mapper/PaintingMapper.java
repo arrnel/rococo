@@ -2,19 +2,12 @@ package org.rococo.paintings.mapper;
 
 import org.rococo.grpc.artists.ArtistGrpcResponse;
 import org.rococo.grpc.artists.ArtistShortGrpcResponse;
-import org.rococo.grpc.common.page.DirectionGrpc;
-import org.rococo.grpc.common.page.PageableGrpc;
-import org.rococo.grpc.countries.CountryGrpcResponse;
-import org.rococo.grpc.files.ImageGrpcResponse;
 import org.rococo.grpc.museums.MuseumGrpcResponse;
 import org.rococo.grpc.museums.MuseumShortGrpcResponse;
 import org.rococo.grpc.paintings.*;
 import org.rococo.paintings.data.PaintingEntity;
 import org.rococo.paintings.model.PaintingFilter;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;

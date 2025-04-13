@@ -1,4 +1,5 @@
 package org.rococo.paintings.client;
+
 import com.google.protobuf.ByteString;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -7,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.rococo.grpc.files.*;
 import org.rococo.paintings.ex.ImageAlreadyExistsException;
-import org.rococo.paintings.ex.ServiceUnavailableException;
 import org.rococo.paintings.ex.ImageNotFoundException;
+import org.rococo.paintings.ex.ServiceUnavailableException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -73,7 +74,7 @@ public class FilesGrpcClient {
                             .build());
 
             List<ImageGrpcResponse> response = new ArrayList<>();
-            while(grpcImagesStream.hasNext()) {
+            while (grpcImagesStream.hasNext()) {
                 response.add(grpcImagesStream.next());
             }
             return response;

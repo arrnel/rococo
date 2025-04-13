@@ -17,7 +17,6 @@ import org.rococo.grpc.artists.*;
 import org.rococo.grpc.common.type.IdType;
 import org.rococo.grpc.common.type.NameType;
 import org.rococo.grpc.files.ImageGrpcResponse;
-import org.rococo.grpc.museums.MuseumListGrpcResponse;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;

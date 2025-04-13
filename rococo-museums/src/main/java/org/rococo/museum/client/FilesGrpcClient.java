@@ -75,7 +75,7 @@ public class FilesGrpcClient {
                             .build());
 
             List<ImageGrpcResponse> response = new ArrayList<>();
-            while(grpcImagesStream.hasNext()) {
+            while (grpcImagesStream.hasNext()) {
                 response.add(grpcImagesStream.next());
             }
             return response;

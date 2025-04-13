@@ -235,7 +235,7 @@ public class PaintingGrpcService extends PaintingsServiceGrpc.PaintingsServiceIm
         log.info("Find painting by id: {}", request.getId());
 
         paintingRepository.findById(UUID.fromString(request.getId()))
-                .ifPresent(painting-> {
+                .ifPresent(painting -> {
                     filesClient.delete(painting.getId());
                     paintingRepository.delete(painting);
                 });

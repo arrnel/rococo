@@ -1,11 +1,8 @@
 package org.rococo.artists.mapper;
 
-import org.rococo.artists.data.ArtistEntity;
-import org.rococo.grpc.artists.ArtistsGrpcResponse;
 import org.rococo.grpc.common.page.DirectionGrpc;
 import org.rococo.grpc.common.page.PageableGrpc;
 import org.rococo.grpc.common.page.SortGrpc;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -3,8 +3,6 @@ package org.rococo.artists.mapper;
 import org.rococo.artists.data.ArtistEntity;
 import org.rococo.artists.model.ArtistFilter;
 import org.rococo.grpc.artists.*;
-import org.rococo.grpc.files.ImageGrpcResponse;
-import org.rococo.grpc.museums.MuseumsGrpcResponse;
 import org.springframework.data.domain.Page;
 
 import javax.annotation.Nonnull;

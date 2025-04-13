@@ -10,7 +10,6 @@ import org.rococo.grpc.artists.ArtistsByIdsGrpcRequest;
 import org.rococo.grpc.artists.ArtistsServiceGrpc;
 import org.rococo.grpc.common.type.IdType;
 import org.rococo.grpc.common.type.IdsType;
-import org.rococo.paintings.ex.ArtistNotFoundException;
 import org.rococo.paintings.ex.ServiceUnavailableException;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +62,7 @@ public class ArtistsGrpcClient {
                                             .addAllId(idsText)
                                             .build())
                             .setOriginalPhoto(false)
-                    .build());
+                            .build());
             return response.getArtistsList();
         } catch (StatusRuntimeException ex) {
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
