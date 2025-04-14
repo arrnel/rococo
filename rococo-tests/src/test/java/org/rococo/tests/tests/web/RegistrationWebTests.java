@@ -25,7 +25,7 @@ import static org.rococo.tests.util.DataGenerator.generateUsername;
 @Story("[WEB] Registration tests")
 @DisplayName("[WEB] Registration tests")
 @ParametersAreNonnullByDefault
-class RegistrationWebTest {
+class RegistrationWebTests {
 
     private static final String USERNAME_ALREADY_EXISTS_ERROR_MESSAGE_TPL = "Username = [%s] already exists",
             PASSWORDS_SHOULD_BE_EQUAL_MESSAGE = "Passwords should be equal";
