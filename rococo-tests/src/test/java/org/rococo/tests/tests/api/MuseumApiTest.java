@@ -1,4 +1,4 @@
-package org.rococo.tests.tests.fake.api;
+package org.rococo.tests.tests.api;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -32,7 +32,7 @@ import static org.rococo.tests.enums.ServiceType.API;
 
 @Isolated
 @ApiTest
-@Feature("FAKE")
+@Feature("API")
 @Story("[API] Museums tests")
 @DisplayName("[API] Museums tests")
 @ParametersAreNonnullByDefault
