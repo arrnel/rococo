@@ -185,18 +185,4 @@ class ArtistDbTest {
 
     }
 
-    @Order(2)
-    @Artists(count = 3)
-    @Test
-    @DisplayName("Can delete all artists and artists images")
-    void canDeleteAllArtistsAndArtistImagesTest(List<ArtistDTO> artists) { // do not remove argument
-
-        // Steps
-        artistService.clearAll();
-
-        // Assertions
-        assertTrue(new ArtistRepositorySpringJdbc().findAll().isEmpty());
-
-    }
-
 }

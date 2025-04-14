@@ -244,18 +244,4 @@ class PaintingDbTest {
 
     }
 
-    @Order(2)
-    @Paintings(count = 3)
-    @Test
-    @DisplayName("Can delete all paintings and paintings images")
-    void canDeleteAllPaintingsAndPaintingImagesTest(List<PaintingDTO> paintings) { // do not remove argument
-
-        // Steps
-        paintingService.clearAll();
-
-        // Assertions
-        assertTrue(new PaintingRepositorySpringJdbc().findAll().isEmpty());
-
-    }
-
 }

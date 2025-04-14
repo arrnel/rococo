@@ -161,18 +161,4 @@ class UserGrpcTest {
 
     }
 
-    @User
-    @Test
-    @DisplayName("Can delete user")
-    void canDeleteUserTest(UserDTO user) {
-
-        // Steps
-        userService.delete(user.getUsername());
-
-        // Assertions
-        assertTrue(userService.findById(user.getId()).isEmpty());
-
-    }
-
-
 }

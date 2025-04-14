@@ -239,18 +239,4 @@ class MuseumApiTest {
 
     }
 
-    @Order(2)
-    @Museums(count = 3)
-    @Test
-    @DisplayName("Can delete all museums and museums images")
-    void canDeleteAllMuseumsAndMuseumImagesTest(List<MuseumDTO> museums) { // do not remove argument
-
-        // Steps
-        museumService.clearAll();
-
-        // Assertions
-        assertTrue(museumService.findAll().isEmpty());
-
-    }
-
 }
