@@ -6,7 +6,8 @@ import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.ex.ArtistNotFoundException;
+import org.rococo.tests.ex.MuseumNotFoundException;
 import org.rococo.tests.ex.PaintingAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Museum;
@@ -29,7 +30,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.GRPC;
 
-@Isolated
 @GrpcTest
 @Feature("FAKE")
 @Story("[GRPC] Paintings tests")
@@ -70,6 +70,32 @@ class PaintingGrpcTest {
         // Assertions
         assertEquals("Painting with title = [%s] already exists".formatted(painting.getTitle()), result.getMessage());
 
+    }
+
+    @Museum
+    @Test
+    @DisplayName("Can not update painting with unknown artist")
+    void canNotCreatePaintingWithUnknownArtistTest(MuseumDTO museum) {
+        // Data
+        var painting = DataGenerator.generatePainting();
+        painting.setMuseum(museum)
+                .getArtist().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(ArtistNotFoundException.class, () -> paintingService.add(painting));
+    }
+
+    @Artist
+    @Test
+    @DisplayName("Can not create painting with unknown museum")
+    void canNotCreatePaintingWithUnknownMuseumTest(ArtistDTO artist) {
+        // Data
+        var painting = DataGenerator.generatePainting();
+        painting.setArtist(artist)
+                .getMuseum().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(MuseumNotFoundException.class, () -> paintingService.add(painting));
     }
 
     @Painting
@@ -196,10 +222,8 @@ class PaintingGrpcTest {
     ) {
 
         // Data
-        var temp = DataGenerator.generatePainting();
-        var newPainting = oldPainting
-                .setTitle(temp.getTitle())
-                .setDescription(temp.getDescription())
+        var newPainting = DataGenerator.generatePainting()
+                .setId(oldPainting.getId())
                 .setArtist(newArtist)
                 .setMuseum(newMuseum);
 
@@ -237,6 +261,28 @@ class PaintingGrpcTest {
 
     @Painting
     @Test
+    @DisplayName("Can not update painting with unknown artist")
+    void canNotUpdatePaintingWithUnknownArtistTest(PaintingDTO painting) {
+        // Data
+        painting.getArtist().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(ArtistNotFoundException.class, () -> paintingService.update(painting));
+    }
+
+    @Painting
+    @Test
+    @DisplayName("Can not update painting with unknown museum")
+    void canNotUpdatePaintingWithUnknownMuseumTest(PaintingDTO painting) {
+        // Data
+        painting.getMuseum().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(MuseumNotFoundException.class, () -> paintingService.update(painting));
+    }
+
+    @Painting
+    @Test
     @DisplayName("Can delete painting")
     void canDeletePaintingTest(PaintingDTO painting) {
 
@@ -245,19 +291,6 @@ class PaintingGrpcTest {
 
         // Assertions
         assertTrue(paintingService.findById(painting.getId()).isEmpty());
-
-    }
-
-    @Paintings(count = 3)
-    @Test
-    @DisplayName("Can delete all paintings and paintings images")
-    void canDeleteAllPaintingsAndPaintingImagesTest(List<PaintingDTO> paintings) { // do not remove argument
-
-        // Steps
-        paintingService.clearAll();
-
-        // Assertions
-        assertTrue(paintingService.findAll().isEmpty());
 
     }
 

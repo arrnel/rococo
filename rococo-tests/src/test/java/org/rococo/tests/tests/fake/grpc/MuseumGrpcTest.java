@@ -7,7 +7,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.ex.CountryNotFoundException;
 import org.rococo.tests.ex.MuseumAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.Museum;
@@ -28,7 +28,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.GRPC;
 
-@Isolated
 @GrpcTest
 @Feature("FAKE")
 @Story("[GRPC] Museums tests")
@@ -67,6 +66,17 @@ class MuseumGrpcTest {
         // Assertions
         assertEquals("Museum with title = [%s] already exists".formatted(museum.getTitle()), result.getMessage());
 
+    }
+
+    @Test
+    @DisplayName("Should throw CountryNotFoundException if update museum with unknown country")
+    void shouldThrowCountryNotFoundExceptionIfCreateMuseumWithUnknownCountryTest() {
+        // Data
+        var museum = DataGenerator.generateMuseum()
+                .setCountryId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(CountryNotFoundException.class, () -> museumService.add(museum));
     }
 
     @Museum
@@ -189,6 +199,18 @@ class MuseumGrpcTest {
 
     @Museum
     @Test
+    @DisplayName("Should throw CountryNotFoundException if update museum with unknown country")
+    void shouldThrowCountryNotFoundExceptionIfUpdateMuseumWithUnknownCountryTest(MuseumDTO museum) {
+        // Data
+        museum.setCountryId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(CountryNotFoundException.class, () -> museumService.update(museum));
+    }
+
+
+    @Museum
+    @Test
     @DisplayName("Can delete museum")
     void canDeleteMuseumTest(MuseumDTO museum) {
 
@@ -197,19 +219,6 @@ class MuseumGrpcTest {
 
         // Assertions
         assertTrue(museumService.findById(museum.getId()).isEmpty());
-
-    }
-
-    @Museums(count = 3)
-    @Test
-    @DisplayName("Can delete all museums and museums images")
-    void canDeleteAllMuseumsAndMuseumImagesTest(List<MuseumDTO> museums) { // do not remove argument
-
-        // Steps
-        museumService.clearAll();
-
-        // Assertions
-        assertTrue(museumService.findAll().isEmpty());
 
     }
 

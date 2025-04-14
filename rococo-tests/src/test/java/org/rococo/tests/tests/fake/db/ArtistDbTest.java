@@ -6,10 +6,7 @@ import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
-import org.rococo.tests.data.repository.impl.springJdbc.ArtistRepositorySpringJdbc;
 import org.rococo.tests.ex.ArtistAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Artists;
@@ -28,7 +25,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.DB;
 
-@Isolated
 @DbTest
 @Feature("FAKE")
 @Story("[DB] Artists tests")

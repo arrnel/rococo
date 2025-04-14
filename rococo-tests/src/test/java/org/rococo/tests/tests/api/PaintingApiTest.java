@@ -5,10 +5,10 @@ import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.ex.ArtistNotFoundException;
+import org.rococo.tests.ex.MuseumNotFoundException;
 import org.rococo.tests.ex.PaintingAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Museum;
@@ -31,7 +31,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.API;
 
-@Isolated
 @ApiTest
 @Feature("API")
 @Story("[API] Paintings tests")
@@ -76,21 +75,28 @@ class PaintingApiTest {
 
     @Museum
     @Test
-    @DisplayName("Can not create painting if artist not found")
-    void canCreatePaintingIfArtistNotExistTest(MuseumDTO museum) {
-
+    @DisplayName("Can not create painting with unknown artist")
+    void canNotCreatePaintingWithUnknownArtistTest(MuseumDTO museum) {
         // Data
-        var artistId = UUID.randomUUID();
-        var painting = DataGenerator.generatePainting()
-                .setArtist(ArtistDTO.builder().id(artistId).build())
-                .setMuseum(museum);
+        var painting = DataGenerator.generatePainting();
+        painting.setMuseum(museum)
+                .getArtist().setId(UUID.randomUUID());
 
-        // Steps
-        var result = assertThrows(ArtistNotFoundException.class, () -> paintingService.add(painting));
+        // Steps & Assertions
+        assertThrows(ArtistNotFoundException.class, () -> paintingService.add(painting));
+    }
 
-        // Assertions
-        assertEquals("Artist with id = [%s] not found".formatted(artistId), result.getMessage());
+    @Artist
+    @Test
+    @DisplayName("Can not create painting with unknown museum")
+    void canNotCreatePaintingWithUnknownMuseumTest(ArtistDTO artist) {
+        // Data
+        var painting = DataGenerator.generatePainting();
+        painting.setArtist(artist)
+                .getMuseum().setId(UUID.randomUUID());
 
+        // Steps & Assertions
+        assertThrows(MuseumNotFoundException.class, () -> paintingService.add(painting));
     }
 
     @Painting
@@ -254,6 +260,28 @@ class PaintingApiTest {
         // Assertions
         assertEquals("Painting with title = [%s] already exists".formatted(painting.getTitle()), result.getMessage());
 
+    }
+
+    @Painting
+    @Test
+    @DisplayName("Can not update painting with unknown artist")
+    void canNotUpdatePaintingWithUnknownArtistTest(PaintingDTO painting) {
+        // Data
+        painting.getArtist().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(ArtistNotFoundException.class, () -> paintingService.update(painting));
+    }
+
+    @Painting
+    @Test
+    @DisplayName("Can not update painting with unknown museum")
+    void canNotUpdatePaintingWithUnknownMuseumTest(PaintingDTO painting) {
+        // Data
+        painting.getMuseum().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(MuseumNotFoundException.class, () -> paintingService.update(painting));
     }
 
     @Painting

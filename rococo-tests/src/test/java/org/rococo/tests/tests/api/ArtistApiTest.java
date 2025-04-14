@@ -6,7 +6,6 @@ import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.ex.ArtistAlreadyExistsException;
@@ -27,7 +26,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.API;
 
-@Isolated
 @ApiTest
 @Feature("API")
 @Story("[API] Artists tests")

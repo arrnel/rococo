@@ -5,10 +5,9 @@ import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
-import org.rococo.tests.data.repository.impl.springJdbc.PaintingRepositorySpringJdbc;
+import org.rococo.tests.ex.ArtistNotFoundException;
+import org.rococo.tests.ex.MuseumNotFoundException;
 import org.rococo.tests.ex.PaintingAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Museum;
@@ -31,7 +30,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.DB;
 
-@Isolated
 @DbTest
 @Feature("FAKE")
 @Story("[DB] Paintings tests")
@@ -68,6 +66,32 @@ class PaintingDbTest {
         // Steps & Assertions
         var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
         assertInstanceOf(PaintingAlreadyExistsException.class, result.getCause());
+    }
+
+    @Museum
+    @Test
+    @DisplayName("Can not create painting with unknown artist")
+    void canNotCreatePaintingWithUnknownArtistTest(MuseumDTO museum) {
+        // Data
+        var painting = DataGenerator.generatePainting().setMuseum(museum);
+        painting.getArtist().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(ArtistNotFoundException.class, result.getCause());
+    }
+
+    @Artist
+    @Test
+    @DisplayName("Can not create painting with unknown museum")
+    void canNotCreatePaintingWithUnknownMuseumTest(ArtistDTO artist) {
+        // Data
+        var painting = DataGenerator.generatePainting().setArtist(artist);
+        painting.getMuseum().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(MuseumNotFoundException.class, result.getCause());
     }
 
     @Painting
@@ -229,6 +253,30 @@ class PaintingDbTest {
         var result = assertThrows(RuntimeException.class, () -> paintingService.update(painting));
         assertInstanceOf(PaintingAlreadyExistsException.class, result.getCause());
 
+    }
+
+    @Painting
+    @Test
+    @DisplayName("Can not update painting with unknown artist")
+    void canNotUpdatePaintingWithUnknownArtistTest(PaintingDTO painting) {
+        // Data
+        painting.getArtist().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(ArtistNotFoundException.class, result.getCause());
+    }
+
+    @Painting
+    @Test
+    @DisplayName("Can not create painting with unknown museum")
+    void canNotUpdatePaintingWithUnknownMuseumTest(PaintingDTO painting) {
+        // Data
+        painting.getMuseum().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(MuseumNotFoundException.class, result.getCause());
     }
 
     @Painting

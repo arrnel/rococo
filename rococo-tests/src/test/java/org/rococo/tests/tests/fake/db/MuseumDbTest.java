@@ -6,10 +6,8 @@ import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
-import org.rococo.tests.data.repository.impl.springJdbc.MuseumRepositorySpringJdbc;
+import org.rococo.tests.ex.CountryNotFoundException;
 import org.rococo.tests.ex.MuseumAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.Museum;
@@ -30,7 +28,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.DB;
 
-@Isolated
 @DbTest
 @Feature("FAKE")
 @Story("[DB] Museums tests")
@@ -66,6 +63,18 @@ class MuseumDbTest {
         // Steps & Assertions
         var result = assertThrows(RuntimeException.class, () -> museumService.add(museum));
         assertInstanceOf(MuseumAlreadyExistsException.class, result.getCause());
+    }
+
+    @Test
+    @DisplayName("Should throw CountryNotFoundException if create museum with unknown country")
+    void shouldThrowCountryNotFoundExceptionIfCreateMuseumWithUnknownCountryTest() {
+
+        var museum = DataGenerator.generateMuseum()
+                .setCountryId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> museumService.add(museum));
+        assertInstanceOf(CountryNotFoundException.class, result.getCause());
     }
 
     @Museum
@@ -181,6 +190,18 @@ class MuseumDbTest {
         var result = assertThrows(RuntimeException.class, () -> museumService.update(museum));
         assertInstanceOf(MuseumAlreadyExistsException.class, result.getCause());
 
+    }
+
+    @Museum
+    @Test
+    @DisplayName("Should throw CountryNotFoundException if update museum with unknown country")
+    void shouldThrowCountryNotFoundExceptionIfUpdateMuseumWithUnknownCountryTest(MuseumDTO museum) {
+        // Data
+        museum.setCountryId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> museumService.update(museum));
+        assertInstanceOf(CountryNotFoundException.class, result.getCause());
     }
 
     @Museum

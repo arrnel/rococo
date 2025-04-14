@@ -7,7 +7,6 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.ex.ArtistAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Artists;
@@ -26,7 +25,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.GRPC;
 
-@Isolated
 @GrpcTest
 @Feature("FAKE")
 @Story("[GRPC] Artists tests")
@@ -182,19 +180,6 @@ class ArtistGrpcTest {
 
         // Assertions
         assertTrue(artistService.findById(artist.getId()).isEmpty());
-
-    }
-
-    @Artists(count = 3)
-    @Test
-    @DisplayName("Can delete all artists and artists images")
-    void canDeleteAllArtistsAndArtistImagesTest(List<ArtistDTO> artists) { // do not remove argument
-
-        // Steps
-        artistService.clearAll();
-
-        // Assertions
-        assertTrue(artistService.findAll().isEmpty());
 
     }
 

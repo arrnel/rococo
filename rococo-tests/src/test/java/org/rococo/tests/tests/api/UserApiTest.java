@@ -23,7 +23,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.rococo.tests.enums.ServiceType.API;
 
-@Isolated
 @ApiTest
 @Feature("API")
 @Story("[API] Users tests")

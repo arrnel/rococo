@@ -1,7 +1,10 @@
 package org.rococo.tests.client.gateway;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jetbrains.annotations.Nullable;
@@ -9,8 +12,12 @@ import org.rococo.tests.client.gateway.core.RestClient;
 import org.rococo.tests.client.gateway.core.interceptor.AuthorizedCodeInterceptor;
 import org.rococo.tests.client.gateway.core.store.AuthStore;
 import org.rococo.tests.client.gateway.core.store.ThreadSafeCookieStore;
+import org.rococo.tests.client.grpc.UsersGrpcClient;
 import org.rococo.tests.model.UserDTO;
+import org.rococo.tests.service.UserService;
+import org.rococo.tests.service.db.UserServiceDb;
 import org.rococo.tests.util.OAuthUtil;
+import retrofit2.Response;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,11 +39,19 @@ public class AuthApiClient extends RestClient {
             GRANT_TYPE = "authorization_code";
 
     private final AuthApi authApi;
-    private final UsersApiClient userdataApiClient = new UsersApiClient();
+    private final UserService userService = new UserServiceDb();
 
     public AuthApiClient() {
         super(CFG.authUrl(),
                 true,
+                HttpLoggingInterceptor.Level.HEADERS,
+                new AuthorizedCodeInterceptor());
+        this.authApi = retrofit.create(AuthApi.class);
+    }
+
+    public AuthApiClient(boolean followRedirect) {
+        super(CFG.authUrl(),
+                followRedirect,
                 HttpLoggingInterceptor.Level.HEADERS,
                 new AuthorizedCodeInterceptor());
         this.authApi = retrofit.create(AuthApi.class);
@@ -113,6 +128,91 @@ public class AuthApiClient extends RestClient {
                 .asText());
     }
 
+    @SneakyThrows
+    @Nonnull
+    @Step("Send get cookies request. GET:[rococo-auth]/login")
+    public Response<ResponseBody> sendGetCookiesRequest() {
+        log.info("Send get cookies request. GET:[rococo-auth]/login");
+        return authApi.getCookies().execute();
+    }
+
+    @SneakyThrows
+    @Nonnull
+    @Step("Send request POST:[rococo-auth]/register")
+    public Response<ResponseBody> sendRegisterUserRequest(String username, String password, String passwordConfirmation, String csrfCookie) {
+        log.info("""
+                Send register user request. POST:[rococo-auth]/register
+                username = [%s],
+                password = [%s],
+                confirmationPassword = [%s],
+                csrfCookie = [%s]""".formatted(username, password, passwordConfirmation, csrfCookie));
+        return authApi.register(username, password, passwordConfirmation, csrfCookie)
+                .execute();
+    }
+
+    @SneakyThrows
+    @Nonnull
+    @Step("Send authorize request. GET:[rococo-auth]/oauth2/authorize")
+    public Response<Void> sendAuthorizeRequest(
+            final String responseType,
+            final String clientId,
+            final String scope,
+            final String redirectUri,
+            final String codeChallenge,
+            final String codeChallengeMethod
+    ) {
+        log.info("""
+                Send authorize request. GET:[rococo-auth]/oauth2/authorize
+                response_type = [%s],
+                client_id = [%s],
+                scope = [%s],
+                redirect_uri = [%s],
+                code_challenge = [%s],
+                codeChallengerMethod = [%s]"""
+                .formatted(responseType, clientId, scope, redirectUri, codeChallenge, codeChallengeMethod));
+        return authApi.authorize(responseType, clientId, scope, redirectUri, codeChallenge, codeChallengeMethod)
+                .execute();
+    }
+
+    @SneakyThrows
+    @Nonnull
+    @Step("Send login request. POST:[rococo-auth]/login")
+    public Response<Void> sendLoginRequest(final String username,
+                                           final String password,
+                                           final String csrfCookie
+    ) {
+        log.info("""
+                Send login request. GET:[rococo-auth]/oauth2/authorize
+                username: [%s],
+                password: [%s],
+                csrfCookie: [%s]"""
+                .formatted(username, password, csrfCookie));
+        return authApi.login(username, password, csrfCookie)
+                .execute();
+    }
+
+    @SneakyThrows
+    @Nonnull
+    @Step("Send get token request. POST:[rococo-auth]/oauth2/token")
+    public Response<JsonNode> sendGetTokenRequest(final String clientId,
+                                                  final String redirectUri,
+                                                  final String grantType,
+                                                  final String code,
+                                                  final String codeVerifier
+    ) {
+        log.info("""
+                Send get token request. GET:[rococo-auth]/oauth2/token
+                clientId: [%s],
+                redirectUri = [%s],
+                grantType = [%s],
+                code = [%s],
+                codeVerifier = [%s]
+                """
+                .formatted(clientId, redirectUri, grantType, code, codeVerifier));
+        return authApi.token(clientId, redirectUri, grantType, code, codeVerifier)
+                .execute();
+    }
+
     @Nullable
     private UserDTO waitUserFromUsers(String username) {
         StopWatch sw = StopWatch.createStarted();
@@ -120,7 +220,7 @@ public class AuthApiClient extends RestClient {
 
         while (user == null && sw.getTime(TimeUnit.SECONDS) < 30) {
             try {
-                user = userdataApiClient.currentUser(username).orElse(null);
+                user = userService.findByUsername(username).orElse(null);
                 if (user != null && user.getId() != null) {
                     break;
                 } else {

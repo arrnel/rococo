@@ -1,6 +1,7 @@
 package org.rococo.tests.client.gateway;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -10,11 +11,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface AuthApi {
 
     @GET("/login")
-    Call<Void> getCookies();
+    Call<ResponseBody> getCookies();
 
     @FormUrlEncoded
     @POST("/register")
-    Call<Void> register(
+    Call<ResponseBody> register(
             @Field("username") String username,
             @Field("password") String password,
             @Field("passwordSubmit") String passwordConfirmation,
@@ -29,6 +30,7 @@ public interface AuthApi {
             @Query(value = "redirect_uri", encoded = true) String redirectUri,
             @Query("code_challenge") String codeChallenge,
             @Query("code_challenge_method") String codeChallengeMethod);
+
 
     @POST("/login")
     @FormUrlEncoded

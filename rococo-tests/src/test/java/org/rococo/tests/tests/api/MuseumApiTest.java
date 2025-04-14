@@ -6,7 +6,6 @@ import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.ex.CountryNotFoundException;
@@ -30,7 +29,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.API;
 
-@Isolated
 @ApiTest
 @Feature("API")
 @Story("[API] Museums tests")
@@ -69,6 +67,16 @@ class MuseumApiTest {
         // Assertions
         assertEquals("Museum with title = [%s] already exists".formatted(museum.getTitle()), result.getMessage());
 
+    }
+
+    @Test
+    @DisplayName("Should throw CountryNotFoundException if create museum with unknown country")
+    void shouldThrowCountryNotFoundExceptionIfCreateMuseumWithUnknownCountryTest() {
+        // Data
+        var museum = DataGenerator.generateMuseum().setCountryId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(CountryNotFoundException.class, () -> museumService.add(museum));
     }
 
     @Test
