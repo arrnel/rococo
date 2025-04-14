@@ -60,7 +60,8 @@ class ArtistDbTest {
     void canNotCreateArtistWithExistsNameTest(ArtistDTO artist) {
 
         // Steps & Assertions
-        assertThrows(ArtistAlreadyExistsException.class, () -> artistService.add(artist));
+        var result = assertThrows(RuntimeException.class, () -> artistService.add(artist));
+        assertInstanceOf(ArtistAlreadyExistsException.class, result.getCause());
 
     }
 
@@ -166,7 +167,8 @@ class ArtistDbTest {
                 .setName(artists.getLast().getName());
 
         // Steps & Assertions
-        assertThrows(ArtistAlreadyExistsException.class, () -> artistService.update(artist));
+        var result = assertThrows(RuntimeException.class, () -> artistService.update(artist));
+        assertInstanceOf(ArtistAlreadyExistsException.class, result.getCause());
 
     }
 
@@ -184,9 +186,10 @@ class ArtistDbTest {
     }
 
     @Order(2)
+    @Artists(count = 3)
     @Test
     @DisplayName("Can delete all artists and artists images")
-    void canDeleteAllArtistsAndArtistImagesTest() {
+    void canDeleteAllArtistsAndArtistImagesTest(List<ArtistDTO> artists) { // do not remove argument
 
         // Steps
         artistService.clearAll();

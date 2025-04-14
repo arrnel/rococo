@@ -1,16 +1,18 @@
 package org.rococo.tests.tests.fake.api;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.ex.ArtistAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Artists;
-import org.rococo.tests.jupiter.annotation.meta.GrpcTest;
+import org.rococo.tests.jupiter.annotation.meta.ApiTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.service.ArtistService;
@@ -26,7 +28,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.API;
 
 @Isolated
-@GrpcTest
+@ApiTest
+@Feature("FAKE")
 @Story("[API] Artists tests")
 @DisplayName("[API] Artists tests")
 @ParametersAreNonnullByDefault
@@ -185,9 +188,11 @@ class ArtistApiTest {
 
     }
 
+    @Order(2)
+    @Artists(count = 3)
     @Test
     @DisplayName("Can delete all artists and artists images")
-    void canDeleteAllArtistsAndArtistImagesTest() {
+    void canDeleteAllArtistsAndArtistImagesTest(List<ArtistDTO> artists) { // do not remove argument
 
         // Steps
         artistService.clearAll();

@@ -200,9 +200,10 @@ class MuseumGrpcTest {
 
     }
 
+    @Museums(count = 3)
     @Test
     @DisplayName("Can delete all museums and museums images")
-    void canDeleteAllMuseumsAndMuseumImagesTest() {
+    void canDeleteAllMuseumsAndMuseumImagesTest(List<MuseumDTO> museums) { // do not remove argument
 
         // Steps
         museumService.clearAll();

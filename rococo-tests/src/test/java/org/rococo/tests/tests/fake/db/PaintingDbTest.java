@@ -65,10 +65,9 @@ class PaintingDbTest {
     @Test
     @DisplayName("Can not create painting with exists name")
     void canNotCreatePaintingWithExistsNameTest(PaintingDTO painting) {
-
         // Steps & Assertions
-        assertThrows(PaintingAlreadyExistsException.class, () -> paintingService.add(painting));
-
+        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(PaintingAlreadyExistsException.class, result.getCause());
     }
 
     @Painting
@@ -140,7 +139,7 @@ class PaintingDbTest {
             @Painting(artist = @Artist(name = "Claude Monet"))}
     )
     @Test
-    @DisplayName("Can get all painting")
+    @DisplayName("Can get all artist paintings")
     void canGetAllArtistPaintingsTest(ArtistDTO artist, List<PaintingDTO> paintings) {
 
         // Steps
@@ -163,7 +162,7 @@ class PaintingDbTest {
 
     @Paintings(count = 3)
     @Test
-    @DisplayName("Can get all painting")
+    @DisplayName("Can get all paintings")
     void canGetAllPaintingsTest(List<PaintingDTO> paintings) {
 
         // Steps
@@ -227,7 +226,8 @@ class PaintingDbTest {
                 .setTitle(paintings.getLast().getTitle());
 
         // Steps & Assertions
-        assertThrows(PaintingAlreadyExistsException.class, () -> paintingService.update(painting));
+        var result = assertThrows(RuntimeException.class, () -> paintingService.update(painting));
+        assertInstanceOf(PaintingAlreadyExistsException.class, result.getCause());
 
     }
 
@@ -245,9 +245,10 @@ class PaintingDbTest {
     }
 
     @Order(2)
+    @Paintings(count = 3)
     @Test
     @DisplayName("Can delete all paintings and paintings images")
-    void canDeleteAllPaintingsAndPaintingImagesTest() {
+    void canDeleteAllPaintingsAndPaintingImagesTest(List<PaintingDTO> paintings) { // do not remove argument
 
         // Steps
         paintingService.clearAll();

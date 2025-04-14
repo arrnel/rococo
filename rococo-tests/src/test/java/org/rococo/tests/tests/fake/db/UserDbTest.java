@@ -53,10 +53,9 @@ class UserDbTest {
     @Test
     @DisplayName("Can not create user with exists username")
     void canNotCreateUserWithExistsUsernameTest(UserDTO user) {
-
         // Steps & Assertions
-        assertThrows(UserAlreadyExistsException.class, () -> userService.create(user));
-
+        var result = assertThrows(RuntimeException.class, () -> userService.create(user));
+        assertInstanceOf(UserAlreadyExistsException.class, result.getCause());
     }
 
     @User
@@ -131,17 +130,20 @@ class UserDbTest {
 
     }
 
-    @Users(count = 2)
+    @User
     @Test
-    @DisplayName("Can not update username to exist")
-    void canNotUpdateArtistNameToExistTest(List<UserDTO> users) {
+    @DisplayName("Can not update username")
+    void canNotUpdateArtistNameToExistTest(UserDTO user) {
 
         // Data
-        var user = users.getFirst()
-                .setUsername(users.getLast().getUsername());
+        var oldUsername = user.getUsername();
+        user.setUsername(DataGenerator.generateUsername());
 
-        // Steps & Assertions
-        assertThrows(UserAlreadyExistsException.class, () -> userService.update(user));
+        // Steps
+        var result = userService.update(user);
+
+        // Assertions
+        assertEquals(oldUsername, result.getUsername());
 
     }
 

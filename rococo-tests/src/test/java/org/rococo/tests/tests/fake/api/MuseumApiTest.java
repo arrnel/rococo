@@ -6,6 +6,7 @@ import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.ex.CountryNotFoundException;
@@ -238,10 +239,11 @@ class MuseumApiTest {
 
     }
 
+    @Order(2)
+    @Museums(count = 3)
     @Test
-    @Museums(count = 2)
     @DisplayName("Can delete all museums and museums images")
-    void canDeleteAllMuseumsAndMuseumImagesTest() {
+    void canDeleteAllMuseumsAndMuseumImagesTest(List<MuseumDTO> museums) { // do not remove argument
 
         // Steps
         museumService.clearAll();

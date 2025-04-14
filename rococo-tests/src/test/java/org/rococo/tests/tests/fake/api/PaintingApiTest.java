@@ -5,6 +5,7 @@ import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.ex.ArtistNotFoundException;
@@ -161,7 +162,7 @@ class PaintingApiTest {
             @Painting(artist = @Artist(name = "Claude Monet"))}
     )
     @Test
-    @DisplayName("Can get all painting")
+    @DisplayName("Can get all artist paintings")
     void canGetAllArtistPaintingsTest(ArtistDTO artist, List<PaintingDTO> paintings) {
 
         // Steps
@@ -184,7 +185,7 @@ class PaintingApiTest {
 
     @Paintings(count = 3)
     @Test
-    @DisplayName("Can get all painting")
+    @DisplayName("Can get all paintings")
     void canGetAllPaintingsTest(List<PaintingDTO> paintings) {
 
         // Steps
@@ -268,9 +269,11 @@ class PaintingApiTest {
 
     }
 
+    @Order(2)
+    @Paintings(count = 3)
     @Test
     @DisplayName("Can delete all paintings and paintings images")
-    void canDeleteAllPaintingsAndPaintingImagesTest() {
+    void canDeleteAllPaintingsAndPaintingImagesTest(List<PaintingDTO> paintings) { // do not remove argument
 
         // Steps
         paintingService.clearAll();
