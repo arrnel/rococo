@@ -12,7 +12,6 @@ import org.rococo.tests.client.gateway.core.RestClient;
 import org.rococo.tests.client.gateway.core.interceptor.AuthorizedCodeInterceptor;
 import org.rococo.tests.client.gateway.core.store.AuthStore;
 import org.rococo.tests.client.gateway.core.store.ThreadSafeCookieStore;
-import org.rococo.tests.client.grpc.UsersGrpcClient;
 import org.rococo.tests.model.UserDTO;
 import org.rococo.tests.service.UserService;
 import org.rococo.tests.service.db.UserServiceDb;

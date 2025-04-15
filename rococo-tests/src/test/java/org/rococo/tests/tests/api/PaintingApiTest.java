@@ -6,7 +6,6 @@ import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.ex.ArtistNotFoundException;
 import org.rococo.tests.ex.MuseumNotFoundException;
 import org.rococo.tests.ex.PaintingAlreadyExistsException;
