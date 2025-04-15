@@ -23,7 +23,7 @@ public interface PaintingsApi {
                                         @Query("size") int size);
 
     @GET("/api/painting")
-    Call<RestPage<PaintingDTO>> findAll(@Query("name") String name,
+    Call<RestPage<PaintingDTO>> findAll(@Query("title") String name,
                                         @Query("page") int page,
                                         @Query("size") int size);
 
