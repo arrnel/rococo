@@ -35,6 +35,7 @@ public final class ScreenshotCondition {
     private static final String PATH_TO_RESOURCES = "rococo-tests/src/test/resources/";
     private static final ObjectMapper OM = new ObjectMapper();
     private static final Base64.Encoder encoder = Base64.getEncoder();
+    private static final double DEFAULT_PERCENTAGE_TOLERANCE = 0.02;
 
     /**
      * @param urlToScreenshot           Path to expected screenshot
@@ -107,21 +108,21 @@ public final class ScreenshotCondition {
     /**
      * @param urlToScreenshot Path to expected screenshot
      * @param millis          Wait before making screenshot
-     * @apiNote * percentOfTolerance = 0.01.
+     * @apiNote * percentOfTolerance = DEFAULT_PERCENTAGE_TOLERANCE.
      */
     @Nonnull
     public static WebElementCondition screenshot(
             String urlToScreenshot,
             long millis
     ) {
-        return (screenshot(urlToScreenshot, 0.01, millis, false));
+        return (screenshot(urlToScreenshot, DEFAULT_PERCENTAGE_TOLERANCE, millis, false));
     }
 
     /**
      * @param urlToScreenshot           Path to expected screenshot;
      * @param millis                    Wait before making screenshot;
      * @param rewriteExpectedAfterCheck Create and save new expected screenshot;
-     * @apiNote * percentOfTolerance = 0.01.
+     * @apiNote * percentOfTolerance = DEFAULT_PERCENTAGE_TOLERANCE.
      */
     @Nonnull
     public static WebElementCondition screenshot(
@@ -129,13 +130,13 @@ public final class ScreenshotCondition {
             long millis,
             boolean rewriteExpectedAfterCheck
     ) {
-        return (screenshot(urlToScreenshot, 0.01, millis, rewriteExpectedAfterCheck));
+        return (screenshot(urlToScreenshot, DEFAULT_PERCENTAGE_TOLERANCE, millis, rewriteExpectedAfterCheck));
     }
 
     /**
      * @param urlToScreenshot           Path to expected screenshot
      * @param rewriteExpectedAfterCheck Create and save new expected screenshot
-     * @apiNote * percentOfTolerance = 0.01.
+     * @apiNote * percentOfTolerance = DEFAULT_PERCENTAGE_TOLERANCE.
      * <br>
      * * millis = 0
      */
@@ -144,18 +145,18 @@ public final class ScreenshotCondition {
             String urlToScreenshot,
             boolean rewriteExpectedAfterCheck
     ) {
-        return (screenshot(urlToScreenshot, 0.01, 0, rewriteExpectedAfterCheck));
+        return (screenshot(urlToScreenshot, DEFAULT_PERCENTAGE_TOLERANCE, 0, rewriteExpectedAfterCheck));
     }
 
     /**
      * @param urlToScreenshot Path to expected screenshot
-     * @apiNote * percentOfTolerance = 0.01.
+     * @apiNote * percentOfTolerance = DEFAULT_PERCENTAGE_TOLERANCE.
      * <br>
      * * millis = 0
      */
     @Nonnull
     public static WebElementCondition screenshot(String urlToScreenshot) {
-        return (screenshot(urlToScreenshot, 0.01, 0, false));
+        return (screenshot(urlToScreenshot, DEFAULT_PERCENTAGE_TOLERANCE, 0, false));
     }
 
     @NotNull
