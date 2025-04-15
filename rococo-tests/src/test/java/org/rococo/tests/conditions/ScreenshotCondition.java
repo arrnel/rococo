@@ -64,7 +64,7 @@ public final class ScreenshotCondition {
                 if (rewriteExpectedAfterCheck)
                     saveNewExpectedScreenshot(actualScreenshot, urlToScreenshot);
 
-                org.rococo.tests.util.ScreenDiffResult diff = new ScreenDiffResult(
+                ScreenDiffResult diff = new ScreenDiffResult(
                         expectedScreenshot,
                         actualScreenshot,
                         percentOfTolerance
@@ -79,7 +79,7 @@ public final class ScreenshotCondition {
                                     .diff("data:image/png;base64," + encoder.encodeToString(imageToBytes(diff.getDiff().getMarkedImage())))
                                     .build()
                     );
-                    String message = percentOfTolerance > 0
+                    String message = percentOfTolerance == 0
                             ? "Expected and actual screenshots not identical"
                             : "Expected and actual screenshots has difference greater then: " + percentOfTolerance;
                     throw new ScreenshotException(message);

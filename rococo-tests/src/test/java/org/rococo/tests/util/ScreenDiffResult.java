@@ -1,6 +1,7 @@
 package org.rococo.tests.util;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import ru.yandex.qatools.ashot.comparison.ImageDiff;
 import ru.yandex.qatools.ashot.comparison.ImageDiffer;
 
@@ -8,6 +9,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.image.BufferedImage;
 import java.util.function.BooleanSupplier;
 
+@Slf4j
 @ParametersAreNonnullByDefault
 public class ScreenDiffResult implements BooleanSupplier {
 
@@ -29,7 +31,13 @@ public class ScreenDiffResult implements BooleanSupplier {
             throw new IllegalArgumentException("Illegal percent value. Allowed between [0, 0.2]");
         }
         int maxDiffPixels = (int) (expected.getWidth() * expected.getHeight() * percent);
-        return diff.getDiffSize() > maxDiffPixels;
+
+        var hasDiff = diff.getDiffSize() > maxDiffPixels;
+        if (hasDiff) {
+            var diffPercent = (double) diff.getDiffSize() / (expected.getWidth() * expected.getHeight());
+            log.error("Real diff size: {}, percent: {}", diff.getDiffSize(), diffPercent);
+        }
+        return hasDiff;
     }
 
     @Override
