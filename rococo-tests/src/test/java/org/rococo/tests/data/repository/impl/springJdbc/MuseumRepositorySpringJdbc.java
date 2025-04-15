@@ -42,6 +42,12 @@ public class MuseumRepositorySpringJdbc implements MuseumRepository {
 
     @Nonnull
     @Override
+    public List<MuseumEntity> findAllByIds(List<UUID> ids) {
+        return museumDao.findAllByIds(ids);
+    }
+
+    @Nonnull
+    @Override
     public List<MuseumEntity> findAll() {
         return museumDao.findAll();
     }

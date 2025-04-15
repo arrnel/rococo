@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import static org.rococo.tests.enums.EntityType.ARTIST;
 
 @Slf4j
-@SuppressWarnings("unchecked")
+@SuppressWarnings("ConstantConditions")
 @ParametersAreNonnullByDefault
 public class ArtistServiceDb implements ArtistService {
 
@@ -158,8 +158,7 @@ public class ArtistServiceDb implements ArtistService {
         Map<UUID, byte[]> artistBase64ImageMap = artistsImage.stream()
                 .collect(Collectors.toMap(
                         ImageMetadataEntity::getEntityId,
-                        image -> image.getContent().getThumbnailData(),
-                        (existing, replacement) -> existing
+                        image -> image.getContent().getThumbnailData()
                 ));
 
         return artists.stream()

@@ -1,17 +1,16 @@
 package org.rococo.museum.mapper;
 
-import org.rococo.grpc.common.page.DirectionGrpc;
-import org.rococo.grpc.common.page.PageableGrpc;
+import org.rococo.grpc.countries.CountryGrpcResponse;
+import org.rococo.grpc.files.ImageGrpcResponse;
 import org.rococo.grpc.museums.*;
 import org.rococo.museum.data.MuseumEntity;
 import org.rococo.museum.model.MuseumFilter;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Map;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
@@ -56,7 +55,7 @@ public class MuseumMapper {
     }
 
     @Nonnull
-    public static MuseumGrpcResponse toGrpcResponse(MuseumEntity entity) {
+    public static MuseumGrpcResponse toGrpcResponse(MuseumEntity entity, @Nullable CountryGrpcResponse country, @Nullable ImageGrpcResponse image) {
         return MuseumGrpcResponse.newBuilder()
                 .setId(entity.getId() == null
                         ? ""
@@ -67,24 +66,27 @@ public class MuseumMapper {
                 .setDescription(entity.getDescription() == null
                         ? ""
                         : entity.getDescription())
-                .setCountryId(entity.getCountryId() == null
-                        ? ""
-                        : entity.getCountryId().toString())
+                .setCountry(country == null
+                        ? CountryGrpcResponse.getDefaultInstance()
+                        : country)
                 .setCity(entity.getCity() == null
                         ? ""
                         : entity.getCity())
+                .setPhoto(image == null
+                        ? ""
+                        : image.getContent().toStringUtf8())
                 .build();
     }
 
     @Nonnull
-    public static MuseumsGrpcResponse toPageGrpc(Page<MuseumEntity> page) {
+    public static MuseumsGrpcResponse toPageGrpc(Page<MuseumEntity> page, Map<UUID, CountryGrpcResponse> countries, Map<UUID, ImageGrpcResponse> photos) {
         return MuseumsGrpcResponse.newBuilder()
                 .setCurrentPage(page.getPageable().getPageNumber())
                 .setItemsPerPage(page.getSize())
                 .setTotalItems(page.getTotalElements())
                 .setTotalPages(page.getTotalPages())
                 .addAllData(page.getContent().stream()
-                        .map(MuseumMapper::toGrpcResponse)
+                        .map(museum -> MuseumMapper.toGrpcResponse(museum, countries.get(museum.getCountryId()), photos.get(museum.getId())))
                         .toList())
                 .build();
     }
@@ -101,23 +103,6 @@ public class MuseumMapper {
                         ? null
                         : request.getCountryId())
                 .build();
-    }
-
-    @Nonnull
-    public static Pageable fromPageableGrpc(PageableGrpc pageable) {
-
-        final var grpcDirection = pageable.getSort().getDirection();
-        final var direction = (grpcDirection == DirectionGrpc.DEFAULT || grpcDirection == DirectionGrpc.ASC)
-                ? Sort.Direction.ASC
-                : Sort.Direction.DESC;
-
-        return PageRequest.of(
-                pageable.getPage(),
-                pageable.getSize(),
-                pageable.getSort().getOrder().isEmpty()
-                        ? Sort.unsorted()
-                        : Sort.by(direction, pageable.getSort().getOrder().split(","))
-        );
     }
 
 }

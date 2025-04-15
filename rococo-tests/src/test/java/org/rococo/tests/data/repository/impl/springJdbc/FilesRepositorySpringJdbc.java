@@ -36,7 +36,7 @@ public class FilesRepositorySpringJdbc implements FilesRepository {
 
     @Override
     public List<ImageMetadataEntity> findAllByEntityTypeAndEntityIds(EntityType entityType, List<UUID> entitiesId) {
-        return List.of();
+        return imageMetadataDao.findAllByEntityTypeAndEntitiesId(entityType, entitiesId);
     }
 
     @Nonnull

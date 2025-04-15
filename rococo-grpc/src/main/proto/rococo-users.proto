@@ -22,28 +22,34 @@ service UsersService {
 
 message CreateUserGrpcRequest {
   string username = 1;
-  string firstName = 2;
-  string lastName = 3;
-  bytes photo = 4;
+  string first_name = 2;
+  string last_name = 3;
+  string photo = 4;
 }
 
 message UsersFilterGrpcRequest {
-  common.page.PageableGrpc pageable = 3;
+  bool original_photo = 1;
+  common.page.PageableGrpc pageable = 2;
+}
+
+message UsersByIdsGrpcRequest {
+  common.type.IdsType ids = 1;
+  bool original_photo = 2;
 }
 
 message UpdateUserGrpcRequest {
   string id = 1;
-  string firstName = 2;
-  string lastName = 3;
-  bytes photo = 4;
+  string first_name = 2;
+  string last_name = 3;
+  string photo = 4;
 }
 
 message UserGrpcResponse {
   string id = 1;
   string username = 2;
-  string firstName = 3;
-  string lastName = 4;
-  bytes photo = 5;
+  string first_name = 3;
+  string last_name = 4;
+  string photo = 5;
 }
 
 message UserListGrpcResponse {

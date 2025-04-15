@@ -5,7 +5,7 @@ import io.grpc.StatusRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.grpc.files.EntityTypeGrpc;
 import org.rococo.grpc.files.FilesServiceGrpc;
-import org.rococo.grpc.files.FindAllImagesGrpcRequest;
+import org.rococo.grpc.files.FindImagesGrpcRequest;
 import org.rococo.tests.enums.EntityType;
 import org.rococo.tests.ex.ImageNotFoundException;
 import org.rococo.tests.ex.ServiceUnavailableException;
@@ -56,7 +56,7 @@ public class FilesGrpcClient extends GrpcClient {
 
         try {
             final var grpcImagesStream = filesServiceStub.findAllByEntityTypeAndIds(
-                    FindAllImagesGrpcRequest.newBuilder()
+                    FindImagesGrpcRequest.newBuilder()
                             .setEntityType(EntityTypeGrpc.valueOf(entityType.name()))
                             .addAllEntityIds(entityIds.stream()
                                     .map(UUID::toString)

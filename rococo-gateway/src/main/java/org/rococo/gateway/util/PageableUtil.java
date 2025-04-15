@@ -32,10 +32,10 @@ public class PageableUtil {
         final var paramsText = params.isEmpty()
                 ? ""
                 : params.keySet().stream()
-                    .filter(key -> params.get(key) != null)
-                    .map(key -> "%s = [%s]".formatted(key, params.get(key)))
+                .filter(key -> params.get(key) != null)
+                .map(key -> "%s = [%s]".formatted(key, params.get(key)))
                 .collect(Collectors.joining(","));
-        return paramsText.isEmpty() ? pageableText :  paramsText + ", " + pageableText;
+        return paramsText.isEmpty() ? pageableText : paramsText + ", " + pageableText;
     }
 
 }

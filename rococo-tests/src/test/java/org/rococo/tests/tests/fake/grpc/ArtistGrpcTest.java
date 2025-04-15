@@ -7,8 +7,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
-import org.rococo.tests.ex.ArtistAlreadyExistException;
+import org.rococo.tests.ex.ArtistAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Artists;
 import org.rococo.tests.jupiter.annotation.meta.GrpcTest;
@@ -26,7 +25,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.GRPC;
 
-@Isolated
 @GrpcTest
 @Feature("FAKE")
 @Story("[GRPC] Artists tests")
@@ -58,7 +56,7 @@ class ArtistGrpcTest {
     void canNotCreateArtistWithExistsNameTest(ArtistDTO artist) {
 
         // Steps
-        var result = assertThrows(ArtistAlreadyExistException.class, () -> artistService.add(artist));
+        var result = assertThrows(ArtistAlreadyExistsException.class, () -> artistService.add(artist));
 
         // Assertions
         assertEquals("Artist with name = [%s] already exists".formatted(artist.getName()), result.getMessage());
@@ -165,7 +163,7 @@ class ArtistGrpcTest {
                 .setName(artists.getLast().getName());
 
         // Steps & Assertions
-        var result = assertThrows(ArtistAlreadyExistException.class, () -> artistService.update(artist));
+        var result = assertThrows(ArtistAlreadyExistsException.class, () -> artistService.update(artist));
 
         // Assertions
         assertThat(result.getMessage(), containsString("[%s] already exists".formatted(artist.getName())));
@@ -182,18 +180,6 @@ class ArtistGrpcTest {
 
         // Assertions
         assertTrue(artistService.findById(artist.getId()).isEmpty());
-
-    }
-
-    @Test
-    @DisplayName("Can delete all artists and artists images")
-    void canDeleteAllArtistsAndArtistImagesTest() {
-
-        // Steps
-        artistService.clearAll();
-
-        // Assertions
-        assertTrue(artistService.findAll().isEmpty());
 
     }
 

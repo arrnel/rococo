@@ -6,9 +6,8 @@ import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.ex.ArtistAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Artists;
 import org.rococo.tests.jupiter.annotation.meta.DbTest;
@@ -16,7 +15,6 @@ import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.service.ArtistService;
 import org.rococo.tests.util.DataGenerator;
-import org.springframework.dao.DuplicateKeyException;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -27,7 +25,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.DB;
 
-@Isolated
 @DbTest
 @Feature("FAKE")
 @Story("[DB] Artists tests")
@@ -58,14 +55,9 @@ class ArtistDbTest {
     @DisplayName("Can not create artist with exists name")
     void canNotCreateArtistWithExistsNameTest(ArtistDTO artist) {
 
-        // Steps
+        // Steps & Assertions
         var result = assertThrows(RuntimeException.class, () -> artistService.add(artist));
-
-        // Assertions
-        assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(artist.getName())))
-        );
+        assertInstanceOf(ArtistAlreadyExistsException.class, result.getCause());
 
     }
 
@@ -172,12 +164,7 @@ class ArtistDbTest {
 
         // Steps & Assertions
         var result = assertThrows(RuntimeException.class, () -> artistService.update(artist));
-
-        // Assertions
-        assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(artist.getName())))
-        );
+        assertInstanceOf(ArtistAlreadyExistsException.class, result.getCause());
 
     }
 
@@ -191,19 +178,6 @@ class ArtistDbTest {
 
         // Assertions
         assertTrue(artistService.findById(artist.getId()).isEmpty());
-
-    }
-
-    @Order(2)
-    @Test
-    @DisplayName("Can delete all artists and artists images")
-    void canDeleteAllArtistsAndArtistImagesTest() {
-
-        // Steps
-        artistService.clearAll();
-
-        // Assertions
-        assertTrue(artistService.findAll().isEmpty());
 
     }
 

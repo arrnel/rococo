@@ -13,7 +13,7 @@ option java_outer_classname = "RococoFilesProto";
 service FilesService {
   rpc AddImage(ImageGrpcRequest) returns (google.protobuf.Empty){}
   rpc FindByEntityTypeAndId(FindImageGrpcRequest) returns (ImageGrpcResponse){}
-  rpc FindAllByEntityTypeAndIds(FindAllImagesGrpcRequest) returns (stream ImageGrpcResponse){}
+  rpc FindAllByEntityTypeAndIds(FindImagesGrpcRequest) returns (stream ImageGrpcResponse){}
   rpc UpdateImage(ImageGrpcRequest) returns (google.protobuf.Empty){}
   rpc DeleteImage(FindImageGrpcRequest) returns (google.protobuf.Empty){}
 }
@@ -29,11 +29,10 @@ message FindImageGrpcRequest {
   string entity_id = 2;
 }
 
-message FindAllImagesGrpcRequest {
-  reserved 2;
+message FindImagesGrpcRequest {
   EntityTypeGrpc entity_type = 1;
-  // bool is_thumbnail = 2;  now returns only thumbnail images
-  repeated string entity_ids = 3;
+  repeated string entity_ids = 2;
+  bool is_original = 3;
 }
 
 enum EntityTypeGrpc {

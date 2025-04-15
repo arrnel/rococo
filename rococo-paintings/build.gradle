@@ -24,6 +24,8 @@ dependencies {
     implementation "net.devh:grpc-server-spring-boot-starter:${project.ext.springGrpcVersion}"
     implementation "org.flywaydb:flyway-core:${project.ext.flywayVersion}"
     implementation "org.flywaydb:flyway-database-postgresql:${project.ext.flywayVersion}"
+    implementation "net.devh:grpc-client-spring-boot-starter:${project.ext.springGrpcVersion}"
+    implementation "com.google.code.findbugs:jsr305:${project.ext.jsr305Version}"
     compileOnly "org.projectlombok:lombok"
     runtimeOnly "org.postgresql:postgresql"
     annotationProcessor "org.projectlombok:lombok"

@@ -40,4 +40,10 @@ public class ImageMetadataEntity {
     @JoinColumn(name = "content_id", referencedColumnName = "id")
     private ImageContentEntity content;
 
+    public static ImageMetadataEntity empty() {
+        return ImageMetadataEntity.builder()
+                .content(ImageContentEntity.builder().build())
+                .build();
+    }
+
 }

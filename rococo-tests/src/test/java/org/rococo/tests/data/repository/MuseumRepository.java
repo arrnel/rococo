@@ -1,6 +1,5 @@
 package org.rococo.tests.data.repository;
 
-
 import org.rococo.tests.data.entity.MuseumEntity;
 
 import javax.annotation.Nonnull;
@@ -20,6 +19,9 @@ public interface MuseumRepository {
 
     @Nonnull
     Optional<MuseumEntity> findByTitle(String title);
+
+    @Nonnull
+    List<MuseumEntity> findAllByIds(List<UUID> ids);
 
     @Nonnull
     List<MuseumEntity> findAllByPartialTitle(String title);

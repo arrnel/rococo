@@ -12,7 +12,7 @@ import org.rococo.files.data.entity.ImageMetadataEntity;
 import org.rococo.files.data.repository.ImageContentRepository;
 import org.rococo.files.data.repository.ImageMetadataRepository;
 import org.rococo.files.ex.BadRequestException;
-import org.rococo.files.ex.ImageAlreadyExistException;
+import org.rococo.files.ex.ImageAlreadyExistsException;
 import org.rococo.files.ex.ImageNotFoundException;
 import org.rococo.files.ex.InternalException;
 import org.rococo.files.mapper.ImageMapper;
@@ -47,10 +47,9 @@ public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
 
         try {
             var metadataEntity = ImageMapper.fromGrpcRequest(request);
-            var content = contentRepository.save(metadataEntity.getContent());
-            metadataRepository.save(metadataEntity.setContent(content));
+            metadataRepository.save(metadataEntity);
         } catch (DataIntegrityViolationException ex) {
-            throw new ImageAlreadyExistException(
+            throw new ImageAlreadyExistsException(
                     EntityType.valueOf(request.getEntityType().name()),
                     UUID.fromString(request.getEntityId()));
         } catch (Exception ex) {
@@ -64,7 +63,7 @@ public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public void findByEntityTypeAndId(FindImageGrpcRequest request,
                                       StreamObserver<ImageGrpcResponse> responseObserver
     ) {
@@ -77,7 +76,7 @@ public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
                         UUID.fromString(request.getEntityId()))
                 .ifPresentOrElse(
                         metadata -> responseObserver.onNext(
-                                ImageMapper.toGrpcResponse(metadata, false)),
+                                ImageMapper.toGrpcResponse(metadata, true)),
                         () -> {
                             throw new ImageNotFoundException(
                                     EntityType.valueOf(request.getEntityType().name()),
@@ -90,8 +89,8 @@ public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
     }
 
     @Override
-    @Transactional
-    public void findAllByEntityTypeAndIds(FindAllImagesGrpcRequest request,
+    @Transactional(readOnly = true)
+    public void findAllByEntityTypeAndIds(FindImagesGrpcRequest request,
                                           StreamObserver<ImageGrpcResponse> responseObserver
     ) {
 
@@ -99,13 +98,14 @@ public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
                 .map(UUID::fromString)
                 .toArray(UUID[]::new);
 
-        log.info("Find all images by params: entityType = [{}], entityIds = {}", request.getEntityType(), Arrays.toString(entityIds));
+        log.info("Find all images by params: entityType = [{}], entityIds = {}, isOriginalPhoto = {}",
+                request.getEntityType(), Arrays.toString(entityIds), request.getIsOriginal());
 
         final var imageFilter = ImageMapper.fromFilterGrpc(request);
 
         metadataRepository.findAll(imageSpecs.findByCriteria(imageFilter))
                 .forEach(content -> responseObserver.onNext(
-                        ImageMapper.toGrpcResponse(content, true)));
+                        ImageMapper.toGrpcResponse(content, request.getIsOriginal())));
 
         responseObserver.onCompleted();
 

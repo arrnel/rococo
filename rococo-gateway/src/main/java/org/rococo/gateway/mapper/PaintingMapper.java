@@ -1,11 +1,8 @@
 package org.rococo.gateway.mapper;
 
-import com.google.protobuf.ByteString;
-import org.rococo.gateway.model.artists.ArtistDTO;
-import org.rococo.gateway.model.museums.MuseumDTO;
 import org.rococo.gateway.model.paintings.AddPaintingRequestDTO;
-import org.rococo.gateway.model.paintings.PaintingFindAllParamsValidationObject;
 import org.rococo.gateway.model.paintings.PaintingDTO;
+import org.rococo.gateway.model.paintings.PaintingFindAllParamsValidationObject;
 import org.rococo.gateway.model.paintings.UpdatePaintingRequestDTO;
 import org.rococo.grpc.paintings.*;
 import org.springframework.data.domain.Page;
@@ -16,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
@@ -42,8 +38,8 @@ public class PaintingMapper {
                         ? ""
                         : requestDTO.museum().id().toString())
                 .setPhoto(requestDTO.photo() == null
-                        ? ByteString.EMPTY
-                        : ByteString.copyFrom(requestDTO.photo(), StandardCharsets.UTF_8))
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -67,8 +63,8 @@ public class PaintingMapper {
                         ? ""
                         : requestDTO.museum().id().toString())
                 .setPhoto(requestDTO.photo() == null
-                        ? ByteString.EMPTY
-                        : ByteString.copyFrom(requestDTO.photo(), StandardCharsets.UTF_8))
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -84,25 +80,18 @@ public class PaintingMapper {
                 .description(grpcResponseModel.getDescription().isEmpty()
                         ? null
                         : grpcResponseModel.getDescription())
-                .artist(ArtistDTO.builder()
-                        .id(grpcResponseModel.getArtistId().isEmpty()
-                                ? null
-                                : UUID.fromString(grpcResponseModel.getArtistId()))
-                        .build())
-                .museum(MuseumDTO.builder()
-                        .id(grpcResponseModel.getMuseumId().isEmpty()
-                                ? null
-                                : UUID.fromString(grpcResponseModel.getMuseumId()))
-                        .build())
+                .artist(ArtistMapper.toDTO(grpcResponseModel.getArtist()))
+                .museum(MuseumMapper.toDTO(grpcResponseModel.getMuseum()))
                 .photo(grpcResponseModel.getPhoto().isEmpty()
                         ? null
-                        : grpcResponseModel.getPhoto().toString(StandardCharsets.UTF_8))
+                        : grpcResponseModel.getPhoto())
                 .build();
     }
 
     @Nonnull
     public static PaintingsFilterGrpcRequest toFilter(@Nullable final String name,
                                                       @Nullable final UUID artistId,
+                                                      boolean isOriginalPhoto,
                                                       final Pageable pageable
     ) {
         return PaintingsFilterGrpcRequest.newBuilder()
@@ -114,6 +103,7 @@ public class PaintingMapper {
                         artistId == null
                                 ? ""
                                 : artistId.toString())
+                .setOriginalPhoto(isOriginalPhoto)
                 .setPageable(
                         PageableMapper.toPageableGrpc(pageable))
                 .build();

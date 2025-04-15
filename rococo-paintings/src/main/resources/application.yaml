@@ -40,6 +40,19 @@ spring:
 grpc:
   server:
     port: ${ROCOCO_PAINTINGS_PORT:9006}
+  client:
+    grpcArtistsClient:
+      address: 'static://localhost:${ROCOCO_ARTISTS_PORT:9002}'
+      max-inbound-message-size: 15728640
+      negotiationType: PLAINTEXT
+    grpcFilesClient:
+      address: 'static://localhost:${ROCOCO_FILES_PORT:9004}'
+      max-inbound-message-size: 15728640
+      negotiationType: PLAINTEXT
+    grpcMuseumsClient:
+      address: 'static://localhost:${ROCOCO_MUSEUMS_PORT:9005}'
+      max-inbound-message-size: 15728640
+      negotiationType: PLAINTEXT
 
 ---
 spring:
@@ -54,5 +67,17 @@ spring:
 grpc:
   server:
     port: 9006
-
+  client:
+    grpcArtistsClient:
+      address: 'static://artists.rococo.dc:9002'
+      max-inbound-message-size: 15728640
+      negotiationType: PLAINTEXT
+    grpcFilesClient:
+      address: 'static://files.rococo.dc:9004'
+      max-inbound-message-size: 15728640
+      negotiationType: PLAINTEXT
+    grpcMuseumsClient:
+      address: 'static://museums.rococo.dc:9005'
+      max-inbound-message-size: 15728640
+      negotiationType: PLAINTEXT
 ---

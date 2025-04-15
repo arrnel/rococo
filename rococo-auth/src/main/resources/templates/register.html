@@ -18,7 +18,8 @@
                     <span class="error__indicator error__username" th:if="${#fields.hasErrors('username')}"></span>
                     <input class="form__input" type="text" id="username" th:field="*{username}" name="username"
                            placeholder="Введите имя пользователя..." required/>
-                    <span data-testid="error-username" class="form__error error__username" style="white-space: pre-wrap; text-align: left;" th:if="${#fields.hasErrors('username')}"
+                    <span data-testid="error-username" class="form__error error__username"
+                          style="white-space: pre-wrap; text-align: left;" th:if="${#fields.hasErrors('username')}"
                           th:errors="*{username}"></span>
                 </label>
                 <label class="form__element">
@@ -26,7 +27,8 @@
                     <span class="error__indicator error__password" th:if="${#fields.hasErrors('password')}"></span>
                     <input class="form__input" type="password" id="password" name="password" th:field="*{password}"
                            placeholder="Введите пароль..." required/>
-                    <span data-testid="error-password" class="form__error error__password" style="white-space: pre-wrap; text-align: left;" th:if="${#fields.hasErrors('password')}"
+                    <span data-testid="error-password" class="form__error error__password"
+                          style="white-space: pre-wrap; text-align: left;" th:if="${#fields.hasErrors('password')}"
                           th:errors="*{password}"></span>
                 </label>
                 <label class="form__element">
@@ -35,7 +37,9 @@
                           th:if="${#fields.hasErrors('passwordSubmit')}"></span>
                     <input class="form__input" type="password" id="passwordSubmit" name="passwordSubmit"
                            th:field="*{passwordSubmit}" placeholder="Повторите пароль..." required/>
-                    <span data-testid="error-password-submit" class="form__error error__passwordSubmit" style="white-space: pre-wrap; text-align: left;" th:if="${#fields.hasErrors('passwordSubmit')}"
+                    <span data-testid="error-password-submit" class="form__error error__passwordSubmit"
+                          style="white-space: pre-wrap; text-align: left;"
+                          th:if="${#fields.hasErrors('passwordSubmit')}"
                           th:errors="*{passwordSubmit}"></span>
                 </label>
                 <button class="form__submit" type="submit">

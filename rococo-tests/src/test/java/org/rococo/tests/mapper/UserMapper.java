@@ -83,6 +83,9 @@ public class UserMapper {
                 .lastName(grpcResponse.getLastName().isEmpty()
                         ? null
                         : grpcResponse.getLastName())
+                .photo(grpcResponse.getPhoto().isEmpty()
+                        ? ""
+                        : grpcResponse.getPhoto())
                 .build();
     }
 
@@ -106,6 +109,9 @@ public class UserMapper {
                 .setLastName(userDTO.getId() == null
                         ? ""
                         : userDTO.getLastName())
+                .setPhoto(userDTO.getPhoto() == null
+                        ? ""
+                        : userDTO.getPhoto())
                 .build();
     }
 
@@ -120,6 +126,9 @@ public class UserMapper {
                 .setLastName(userDTO.getId() == null
                         ? ""
                         : userDTO.getLastName())
+                .setPhoto(userDTO.getPhoto() == null
+                        ? ""
+                        : userDTO.getPhoto())
                 .build();
     }
 

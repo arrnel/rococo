@@ -1,16 +1,14 @@
 package org.rococo.tests.tests.fake.grpc;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
-import org.rococo.tests.ex.MuseumAlreadyExistException;
+import org.rococo.tests.ex.CountryNotFoundException;
+import org.rococo.tests.ex.MuseumAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Museums;
@@ -30,7 +28,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.GRPC;
 
-@Isolated
 @GrpcTest
 @Feature("FAKE")
 @Story("[GRPC] Museums tests")
@@ -64,11 +61,22 @@ class MuseumGrpcTest {
     void canNotCreateMuseumWithExistsTitleTest(MuseumDTO museum) {
 
         // Steps
-        var result = assertThrows(MuseumAlreadyExistException.class, () -> museumService.add(museum));
+        var result = assertThrows(MuseumAlreadyExistsException.class, () -> museumService.add(museum));
 
         // Assertions
         assertEquals("Museum with title = [%s] already exists".formatted(museum.getTitle()), result.getMessage());
 
+    }
+
+    @Test
+    @DisplayName("Should throw CountryNotFoundException if update museum with unknown country")
+    void shouldThrowCountryNotFoundExceptionIfCreateMuseumWithUnknownCountryTest() {
+        // Data
+        var museum = DataGenerator.generateMuseum()
+                .setCountryId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(CountryNotFoundException.class, () -> museumService.add(museum));
     }
 
     @Museum
@@ -145,14 +153,16 @@ class MuseumGrpcTest {
 
     }
 
+    @Country
     @Museum
     @Test
     @DisplayName("Can update museum")
-    void canUpdateMuseumTest(MuseumDTO oldMuseum) {
+    void canUpdateMuseumTest(MuseumDTO oldMuseum, CountryDTO country) {
 
         // Data
         var newMuseum = DataGenerator.generateMuseum()
-                .setId(oldMuseum.getId());
+                .setId(oldMuseum.getId())
+                .setCountry(country);
 
         // Steps
         var result = museumService.update(newMuseum);
@@ -180,12 +190,24 @@ class MuseumGrpcTest {
                 .setTitle(museums.getLast().getTitle());
 
         // Steps & Assertions
-        var result = assertThrows(MuseumAlreadyExistException.class, () -> museumService.update(museum));
+        var result = assertThrows(MuseumAlreadyExistsException.class, () -> museumService.update(museum));
 
         // Assertions
         assertEquals("Museum with title = [%s] already exists".formatted(museum.getTitle()), result.getMessage());
 
     }
+
+    @Museum
+    @Test
+    @DisplayName("Should throw CountryNotFoundException if update museum with unknown country")
+    void shouldThrowCountryNotFoundExceptionIfUpdateMuseumWithUnknownCountryTest(MuseumDTO museum) {
+        // Data
+        museum.setCountryId(UUID.randomUUID());
+
+        // Steps & Assertions
+        assertThrows(CountryNotFoundException.class, () -> museumService.update(museum));
+    }
+
 
     @Museum
     @Test
@@ -197,18 +219,6 @@ class MuseumGrpcTest {
 
         // Assertions
         assertTrue(museumService.findById(museum.getId()).isEmpty());
-
-    }
-
-    @Test
-    @DisplayName("Can delete all museums and museums images")
-    void canDeleteAllMuseumsAndMuseumImagesTest() {
-
-        // Steps
-        museumService.clearAll();
-
-        // Assertions
-        assertTrue(museumService.findAll().isEmpty());
 
     }
 

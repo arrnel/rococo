@@ -117,9 +117,7 @@ public class RococoServiceGateway implements RococoService {
                 .orElseGet(() -> museumService.add(painting.getMuseum().setCountry(country)));
         painting.setArtist(artist)
                 .setMuseum(museum);
-        return paintingService.add(painting)
-                .setArtist(artist)
-                .setMuseum(museum.setCountry(country));
+        return paintingService.add(painting);
     }
 
     @Nonnull

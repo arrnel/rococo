@@ -43,7 +43,7 @@ public class ServiceUnavailableExceptionHandler {
                                                                       final Locale locale
     ) {
 
-        log.error("Service [{}] not available. Details: {}", ex.getServiceName(), ex.getMessage());
+        log.error("Service [{}] not available.\nDetails: {}.\nStack trace: {}", ex.getServiceName(), ex.getMessage(), ex.getStackTrace());
 
         final String message = messageSource.getMessage(
                 SERVICE_UNAVAILABLE_REASON,

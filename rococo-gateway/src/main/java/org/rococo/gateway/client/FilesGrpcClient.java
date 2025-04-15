@@ -12,7 +12,7 @@ import org.rococo.gateway.model.EntityType;
 import org.rococo.gateway.model.files.ImageDTO;
 import org.rococo.grpc.files.EntityTypeGrpc;
 import org.rococo.grpc.files.FilesServiceGrpc;
-import org.rococo.grpc.files.FindAllImagesGrpcRequest;
+import org.rococo.grpc.files.FindImagesGrpcRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -58,7 +58,7 @@ public class FilesGrpcClient {
 
         try {
             final var grpcImagesStream = filesServiceStub.findAllByEntityTypeAndIds(
-                    FindAllImagesGrpcRequest.newBuilder()
+                    FindImagesGrpcRequest.newBuilder()
                             .setEntityType(EntityTypeGrpc.valueOf(entityType.name()))
                             .addAllEntityIds(entityIds.stream()
                                     .map(UUID::toString)

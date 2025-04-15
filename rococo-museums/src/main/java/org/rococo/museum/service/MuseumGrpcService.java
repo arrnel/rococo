@@ -1,22 +1,31 @@
 package org.rococo.museum.service;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.rococo.grpc.common.type.IdType;
-import org.rococo.grpc.common.type.IdsType;
 import org.rococo.grpc.common.type.NameType;
+import org.rococo.grpc.countries.CountryGrpcResponse;
+import org.rococo.grpc.files.ImageGrpcResponse;
 import org.rococo.grpc.museums.*;
+import org.rococo.museum.client.CountriesGrpcClient;
+import org.rococo.museum.client.FilesGrpcClient;
+import org.rococo.museum.data.MuseumEntity;
 import org.rococo.museum.data.MuseumRepository;
-import org.rococo.museum.ex.MuseumAlreadyExistException;
+import org.rococo.museum.ex.CountryNotFoundException;
+import org.rococo.museum.ex.MuseumAlreadyExistsException;
 import org.rococo.museum.ex.MuseumNotFoundException;
 import org.rococo.museum.mapper.MuseumMapper;
+import org.rococo.museum.mapper.PageableMapper;
 import org.rococo.museum.specs.MuseumSpecs;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @GrpcService
@@ -26,28 +35,44 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
 
     private final MuseumRepository museumRepository;
     private final MuseumSpecs museumSpecs;
+    private final FilesGrpcClient filesClient;
+    private final CountriesGrpcClient countriesClient;
 
     @Override
+    @Transactional
     public void add(AddMuseumGrpcRequest request, StreamObserver<MuseumGrpcResponse> responseObserver) {
 
-        log.info("Find all countries by params: {}", request);
+        log.info("Add new museum: {}", request);
 
-        log.info("Country Id UUID: {}", request.getCountryId());
         museumRepository.findByTitle(request.getTitle())
-                .ifPresent(museum -> {
-                    throw new MuseumAlreadyExistException(request.getTitle());
-                });
+                .ifPresentOrElse(
+                        museum -> {
+                            throw new MuseumAlreadyExistsException(request.getTitle());
+                        },
+                        () -> {
+                            var countryId = UUID.fromString(request.getCountryId());
+                            var country = countriesClient.findById(countryId)
+                                    .orElseThrow(() -> new CountryNotFoundException(countryId));
 
-        responseObserver.onNext(
-                MuseumMapper.toGrpcResponse(
-                        museumRepository.save(
-                                MuseumMapper.fromGrpcRequest(request))));
+                            var museum = museumRepository.save(
+                                    MuseumMapper.fromGrpcRequest(request));
+                            filesClient.add(museum.getId(), request.getPhoto());
 
-        responseObserver.onCompleted();
+                            responseObserver.onNext(
+                                    MuseumMapper.toGrpcResponse(
+                                            museum,
+                                            country,
+                                            ImageGrpcResponse.newBuilder()
+                                                    .setEntityId(museum.getId().toString())
+                                                    .setContent(ByteString.copyFromUtf8(request.getPhoto()))
+                                                    .build()));
+                            responseObserver.onCompleted();
+                        });
 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void findById(IdType request, StreamObserver<MuseumGrpcResponse> responseObserver) {
 
         log.info("Find museum by id: {}", request.getId());
@@ -55,7 +80,11 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
         museumRepository.findById(UUID.fromString(request.getId()))
                 .ifPresentOrElse(
                         museum -> {
-                            responseObserver.onNext(MuseumMapper.toGrpcResponse(museum));
+                            var country = countriesClient.findById(museum.getCountryId())
+                                    .orElse(CountryGrpcResponse.getDefaultInstance());
+                            var photo = filesClient.findImage(museum.getId())
+                                    .orElse(ImageGrpcResponse.getDefaultInstance());
+                            responseObserver.onNext(MuseumMapper.toGrpcResponse(museum, country, photo));
                             responseObserver.onCompleted();
                         },
                         () -> {
@@ -66,6 +95,7 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void findByTitle(NameType request, StreamObserver<MuseumGrpcResponse> responseObserver) {
 
         log.info("Find museum by title: {}", request.getName());
@@ -73,7 +103,9 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
         museumRepository.findByTitle(request.getName())
                 .ifPresentOrElse(
                         museum -> {
-                            responseObserver.onNext(MuseumMapper.toGrpcResponse(museum));
+                            var country = countriesClient.findById(museum.getCountryId()).orElse(null);
+                            var photo = filesClient.findImage(museum.getId()).orElse(null);
+                            responseObserver.onNext(MuseumMapper.toGrpcResponse(museum, country, photo));
                             responseObserver.onCompleted();
                         },
                         () -> {
@@ -85,15 +117,42 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
     }
 
     @Override
-    public void findAllByIds(IdsType request, StreamObserver<MuseumListGrpcResponse> responseObserver) {
+    @Transactional(readOnly = true)
+    public void findAllByIds(MuseumsByIdsGrpcRequest request, StreamObserver<MuseumListGrpcResponse> responseObserver) {
 
-        log.info("Find all museum by params: {}", request);
+        var isOriginalText = request.getOriginalPhoto()
+                ? "original"
+                : "thumbnail";
+        log.info("Find all museums with {} photos by params: {}", isOriginalText, request);
 
-        var ids = request.getIdList().stream()
+        var museumIds = request.getIds().getIdList().stream()
                 .map(UUID::fromString)
+                .distinct()
                 .toList();
-        var grpcMuseums = museumRepository.findAllById(ids).stream()
-                .map(MuseumMapper::toGrpcResponse)
+
+        var museumEntities = museumRepository.findAllById(museumIds);
+
+        var countryIds = museumEntities.stream()
+                .map(MuseumEntity::getCountryId)
+                .distinct()
+                .toList();
+
+        var countryMap = countriesClient.findAllByIds(countryIds).stream()
+                .collect(Collectors.toMap(
+                        country -> UUID.fromString(country.getId()),
+                        country -> country));
+
+        var photoMap = filesClient.findAllByIds(museumIds, request.getOriginalPhoto()).stream()
+                .collect(Collectors.toMap(
+                        photo -> UUID.fromString(photo.getEntityId()),
+                        photo -> photo));
+
+        var grpcMuseums = museumEntities.stream()
+                .map(museum -> MuseumMapper
+                        .toGrpcResponse(
+                                museum,
+                                countryMap.getOrDefault(museum.getCountryId(), CountryGrpcResponse.getDefaultInstance()),
+                                photoMap.getOrDefault(museum.getId(), ImageGrpcResponse.getDefaultInstance())))
                 .toList();
 
         responseObserver.onNext(MuseumListGrpcResponse.newBuilder()
@@ -105,22 +164,55 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void findAll(MuseumsFilterGrpcRequest request, StreamObserver<MuseumsGrpcResponse> responseObserver) {
 
-        log.info("Find all museum by params: {}", request);
+        var isOriginalText = request.getOriginalPhoto()
+                ? "original"
+                : "thumbnail";
+        log.info("Find all museums with {} photos by params: {}", isOriginalText, request);
+
+        var museumEntities = museumRepository.findAll(
+                museumSpecs.findByCriteria(
+                        MuseumMapper.fromGrpcFilter(request)),
+                PageableMapper.fromPageableGrpc(request.getPageable()));
+
+        var countryIds = museumEntities.stream()
+                .map(MuseumEntity::getCountryId)
+                .distinct()
+                .toList();
+
+        var museumIds = museumEntities.stream()
+                .map(MuseumEntity::getId)
+                .distinct()
+                .toList();
+
+        var countryMap = countriesClient.findAllByIds(countryIds).stream()
+                .collect(Collectors.toMap(
+                        country -> UUID.fromString(country.getId()),
+                        country -> country));
+
+        var photoMap = filesClient.findAllByIds(museumIds, request.getOriginalPhoto()).stream()
+                .collect(Collectors.toMap(
+                        photo -> UUID.fromString(photo.getEntityId()),
+                        photo -> photo));
 
         responseObserver.onNext(
                 MuseumMapper.toPageGrpc(
                         museumRepository.findAll(
                                 museumSpecs.findByCriteria(
                                         MuseumMapper.fromGrpcFilter(request)),
-                                MuseumMapper.fromPageableGrpc(request.getPageable()))));
+                                PageableMapper.fromPageableGrpc(request.getPageable())),
+                        countryMap,
+                        photoMap
+                ));
 
         responseObserver.onCompleted();
 
     }
 
     @Override
+    @Transactional
     public void update(UpdateMuseumGrpcRequest request, StreamObserver<MuseumGrpcResponse> responseObserver) {
 
         log.info("Update museum: {}", request);
@@ -131,12 +223,34 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
                             museumRepository.findByTitle(request.getTitle())
                                     .ifPresent(m -> {
                                         if (!m.getId().equals(museum.getId()))
-                                            throw new MuseumAlreadyExistException(request.getTitle());
+                                            throw new MuseumAlreadyExistsException(request.getTitle());
                                     });
+
+                            var updatedMuseum = museumRepository.save(
+                                    MuseumMapper.updateFromGrpcRequest(museum, request));
+
+                            var existPhoto = filesClient.findImage(museum.getId());
+                            if (existPhoto.isPresent() && !request.getPhoto().isEmpty()) {
+                                filesClient.update(museum.getId(), request.getPhoto());
+                            } else if (existPhoto.isPresent() && request.getPhoto().isEmpty()) {
+                                filesClient.delete(museum.getId());
+                            } else if (existPhoto.isEmpty() && !request.getPhoto().isEmpty()) {
+                                filesClient.add(museum.getId(), request.getPhoto());
+                            }
+
+                            var countryId = UUID.fromString(request.getCountryId());
+                            var country = countriesClient.findById(countryId)
+                                    .orElseThrow(() -> new CountryNotFoundException(countryId));
+
                             responseObserver.onNext(
                                     MuseumMapper.toGrpcResponse(
-                                            museumRepository.save(
-                                                    MuseumMapper.updateFromGrpcRequest(museum, request))));
+                                            updatedMuseum,
+                                            country,
+                                            ImageGrpcResponse.newBuilder()
+                                                    .setEntityId(museum.getId().toString())
+                                                    .setContent(ByteString.copyFromUtf8(request.getPhoto()))
+                                                    .build()
+                                    ));
                             responseObserver.onCompleted();
                         },
                         () -> {
@@ -147,12 +261,16 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
     }
 
     @Override
+    @Transactional
     public void removeById(IdType request, StreamObserver<com.google.protobuf.Empty> responseObserver) {
 
         log.info("Delete museum by id: {}", request.getId());
 
         museumRepository.findById(UUID.fromString(request.getId()))
-                .ifPresent(museumRepository::delete);
+                .ifPresent(museum -> {
+                    filesClient.delete(museum.getId());
+                    museumRepository.delete(museum);
+                });
 
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();

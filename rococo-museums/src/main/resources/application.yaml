@@ -1,7 +1,3 @@
-grpc:
-  server:
-    port: ${ROCOCO_MUSEUMS_PORT:9005}
-
 spring:
   application:
     name: rococo-museums
@@ -40,6 +36,19 @@ spring:
     url: 'jdbc:postgresql://localhost:${ROCOCO_DB_PORT:5432}/rococo-museums'
     username: ${ROCOCO_DB_USER:postgres}
     password: ${ROCOCO_DB_PASSWORD:secret}
+
+
+grpc:
+  server:
+    port: ${ROCOCO_MUSEUMS_PORT:9005}
+  client:
+    grpcCountriesClient:
+      address: 'static://localhost:${ROCOCO_COUNTRIES_PORT:9003}'
+      negotiationType: PLAINTEXT
+    grpcFilesClient:
+      address: 'static://localhost:${ROCOCO_FILES_PORT:9004}'
+      negotiationType: PLAINTEXT
+
 ---
 spring:
   config:
@@ -49,4 +58,16 @@ spring:
     url: 'jdbc:postgresql://rococo-db:5432/rococo-museums'
     username: postgres
     password: secret
+
+
+grpc:
+  server:
+    port: ${ROCOCO_MUSEUMS_PORT:9005}
+  client:
+    grpcCountriesClient:
+      address: 'static://countries.rococo.dc:9003'
+      negotiationType: PLAINTEXT
+    grpcFilesClient:
+      address: 'static://files.rococo.dc:9004'
+      negotiationType: PLAINTEXT
 ---

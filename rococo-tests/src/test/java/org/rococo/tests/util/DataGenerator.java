@@ -25,7 +25,6 @@ public class DataGenerator {
                 availableImagesFormats[FAKE.random().nextInt(availableImagesFormats.length)]);
     }
 
-
     public static ArtistDTO generateArtist() {
         return ArtistDTO.builder()
                 .name(FAKE.name().fullName())
@@ -40,10 +39,10 @@ public class DataGenerator {
         return MuseumDTO.builder()
                 .title(FAKE.book().author() + ". " + FAKE.book().title())
                 .description(FAKE.lorem().paragraph())
-                .photo(ImageUtil.generateImage())
                 .location(new LocationDTO(
                         FAKE.address().cityName(),
                         new CountryDTO(null, countryCode.getValue(), countryCode)))
+                .photo(ImageUtil.generateImage())
                 .pathToPhoto(randomImagePath())
                 .build();
     }
@@ -71,7 +70,29 @@ public class DataGenerator {
     }
 
     public static String generateUsername() {
-        return FAKE.internet().username();
+        return new Faker().internet().username() + "." + FAKE.number().digits(3);
+    }
+
+    public static String generateUsername(int fixedLength) {
+        return generateUsername(fixedLength, fixedLength);
+    }
+
+    public static String generateUsername(int min, int max) {
+        var firstChar = FAKE.lorem().characters(1, false, false);
+        var lastChar = FAKE.lorem().characters(1, false, true);
+        var number = FAKE.number().numberBetween(min, max);
+        number = Math.max(0, number - 2);
+        var textBuilder = Text.TextSymbolsBuilder.builder()
+                .len(number)
+                .with(DIGITS)
+                .build();
+
+        return switch (min) {
+            case 0 -> "";
+            case 1 -> firstChar;
+            case 2 -> firstChar + lastChar;
+            default -> firstChar + FAKE.text().text(textBuilder) + lastChar;
+        };
     }
 
     public static String generatePassword() {

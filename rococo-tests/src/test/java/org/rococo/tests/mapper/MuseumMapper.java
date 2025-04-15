@@ -1,6 +1,7 @@
 package org.rococo.tests.mapper;
 
 import org.rococo.grpc.museums.*;
+import org.rococo.tests.data.entity.CountryEntity;
 import org.rococo.tests.data.entity.MuseumEntity;
 import org.rococo.tests.enums.CountryCode;
 import org.rococo.tests.jupiter.annotation.Museum;
@@ -103,6 +104,9 @@ public class MuseumMapper {
                 .setCountryId(dto.getLocation().getCountry().getId() == null
                         ? ""
                         : dto.getLocation().getCountry().getId().toString())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
 
     }
@@ -126,6 +130,9 @@ public class MuseumMapper {
                 .setCountryId(dto.getLocation() == null || dto.getLocation().getCountry() == null || dto.getLocation().getCountry().getId() == null
                         ? ""
                         : dto.getLocation().getCountry().getId().toString())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
 
     }
@@ -137,22 +144,24 @@ public class MuseumMapper {
                 .id(grpcResponse.getId().isEmpty()
                         ? null
                         : UUID.fromString(grpcResponse.getId()))
-                .title(grpcResponse.getTitle())
-                .description(grpcResponse.getDescription())
-                .location(
-                        new LocationDTO(grpcResponse.getCity(),
-                                new CountryDTO(
-                                        grpcResponse.getCountryId().isEmpty()
-                                                ? null
-                                                : UUID.fromString(grpcResponse.getCountryId()),
-                                        null,
-                                        null)))
+                .title(grpcResponse.getTitle().isEmpty()
+                        ? null
+                        : grpcResponse.getTitle())
+                .description(grpcResponse.getDescription().isEmpty()
+                        ? null
+                        : grpcResponse.getDescription())
+                .location(new LocationDTO(
+                        grpcResponse.getCity(),
+                        CountryMapper.toDTO(grpcResponse.getCountry())))
+                .photo(grpcResponse.getPhoto().isEmpty()
+                        ? null
+                        : grpcResponse.getPhoto())
                 .build();
 
     }
 
     @Nonnull
-    public static MuseumDTO toDTO(MuseumEntity entity, @Nullable byte[] image) {
+    public static MuseumDTO toDTO(MuseumEntity entity, CountryEntity country, @Nullable byte[] image) {
         return MuseumDTO.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
@@ -160,8 +169,7 @@ public class MuseumMapper {
                 .location(
                         new LocationDTO(
                                 entity.getCity(),
-                                new CountryDTO(entity.getCountryId(), null, null)
-                        ))
+                                CountryMapper.toDTO(country)))
                 .photo(image == null || image.length == 0
                         ? null
                         : new String(image, StandardCharsets.UTF_8))

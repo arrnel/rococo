@@ -49,7 +49,7 @@ public class PaintingsApiClient extends RestClient {
                 case NOT_FOUND -> message.contains(requestBody.getArtist().getId().toString())
                         ? new ArtistNotFoundException(requestBody.getArtist().getId())
                         : new MuseumNotFoundException(requestBody.getMuseum().getId());
-                case CONFLICT -> new PaintingAlreadyExistException(requestBody.getTitle());
+                case CONFLICT -> new PaintingAlreadyExistsException(requestBody.getTitle());
                 default -> new ServiceUnavailableException(SERVICE_NAME, call, statusCode, message);
             };
 
@@ -142,7 +142,7 @@ public class PaintingsApiClient extends RestClient {
                         yield new MuseumNotFoundException(requestBody.getMuseum().getId());
                     }
                 }
-                case CONFLICT -> new PaintingAlreadyExistException(requestBody.getTitle());
+                case CONFLICT -> new PaintingAlreadyExistsException(requestBody.getTitle());
                 default -> new ServiceUnavailableException(SERVICE_NAME, call, response.code(), message);
             };
 

@@ -23,7 +23,7 @@ public interface MuseumsApi {
                                       @Query("size") int size);
 
     @GET("/api/museum")
-    Call<RestPage<MuseumDTO>> findAll(@Query("name") String name,
+    Call<RestPage<MuseumDTO>> findAll(@Query("title") String name,
                                       @Query("page") int page,
                                       @Query("size") int size);
 

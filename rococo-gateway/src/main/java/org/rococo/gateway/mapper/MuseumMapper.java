@@ -1,10 +1,9 @@
 package org.rococo.gateway.mapper;
 
-import org.rococo.gateway.model.countries.CountryDTO;
 import org.rococo.gateway.model.countries.LocationResponseDTO;
 import org.rococo.gateway.model.museums.AddMuseumRequestDTO;
-import org.rococo.gateway.model.museums.MuseumFindAllParamsValidationObject;
 import org.rococo.gateway.model.museums.MuseumDTO;
+import org.rococo.gateway.model.museums.MuseumFindAllParamsValidationObject;
 import org.rococo.gateway.model.museums.UpdateMuseumRequestDTO;
 import org.rococo.grpc.museums.*;
 import org.springframework.data.domain.Page;
@@ -39,6 +38,9 @@ public class MuseumMapper {
                 .setCity(requestDTO.location().city() == null
                         ? ""
                         : requestDTO.location().city())
+                .setPhoto(requestDTO.photo() == null
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -58,6 +60,9 @@ public class MuseumMapper {
                 .setCity(requestDTO.location().city() == null
                         ? ""
                         : requestDTO.location().city())
+                .setPhoto(requestDTO.photo() == null
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -78,13 +83,33 @@ public class MuseumMapper {
                                 .city(grpcResponseModel.getCity().isEmpty()
                                         ? null
                                         : grpcResponseModel.getCity())
-                                .country(CountryDTO.builder()
-                                        .id(grpcResponseModel.getCountryId().isEmpty()
-                                                ? null
-                                                : UUID.fromString(grpcResponseModel.getCountryId()))
-                                        .build())
-                                .build()
-                )
+                                .country(CountryMapper.toDTO(grpcResponseModel.getCountry()))
+                                .build())
+                .photo(grpcResponseModel.getPhoto().isEmpty()
+                        ? null
+                        : grpcResponseModel.getPhoto())
+                .build();
+    }
+
+    @Nonnull
+    public static MuseumDTO toDTO(final MuseumShortGrpcResponse grpcResponseModel) {
+        return MuseumDTO.builder()
+                .id(grpcResponseModel.getId().isEmpty()
+                        ? null
+                        : UUID.fromString(grpcResponseModel.getId()))
+                .title(grpcResponseModel.getTitle().isEmpty()
+                        ? null
+                        : grpcResponseModel.getTitle())
+                .description(grpcResponseModel.getDescription().isEmpty()
+                        ? null
+                        : grpcResponseModel.getDescription())
+                .location(
+                        LocationResponseDTO.builder()
+                                .city(grpcResponseModel.getCity().isEmpty()
+                                        ? null
+                                        : grpcResponseModel.getCity())
+                                .country(CountryMapper.toDTO(grpcResponseModel.getCountry()))
+                                .build())
                 .build();
     }
 

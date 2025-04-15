@@ -4,7 +4,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.client.gateway.AuthApi;
 import org.rococo.tests.client.gateway.core.RestClient;
 import org.rococo.tests.client.gateway.core.store.ThreadSafeCookieStore;
@@ -19,7 +18,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Isolated
 @KafkaTest
 @Feature("FAKE")
 @Story("[Kafka] Users tests")

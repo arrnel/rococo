@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class AllureBackendLogsExtension implements SuiteExtension {
 
-    public static final String CASE_NAME = "rococo backend logs";
+    public static final String CASE_NAME = "Backend logs";
 
     private static void addLogsToAllure(AllureLifecycle allureLifecycle) throws IOException {
 
@@ -74,7 +74,7 @@ public class AllureBackendLogsExtension implements SuiteExtension {
         final String caseId = UUID.randomUUID().toString();
 
         List<Label> labels = List.of(
-                new Label().setName("story").setValue("rococo backend logs"));
+                new Label().setName("story").setValue(CASE_NAME));
 
         allureLifecycle.scheduleTestCase(
                 new TestResult()

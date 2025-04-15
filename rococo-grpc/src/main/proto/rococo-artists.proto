@@ -14,6 +14,7 @@ service ArtistsService {
   rpc Add(AddArtistGrpcRequest) returns (ArtistGrpcResponse){}
   rpc FindById(common.type.IdType) returns (ArtistGrpcResponse){}
   rpc FindByName(common.type.NameType) returns (ArtistGrpcResponse){}
+  rpc FindAllByIds(ArtistsByIdsGrpcRequest) returns (ArtistListGrpcResponse){}
   rpc FindAll(ArtistsFilterGrpcRequest) returns (ArtistsGrpcResponse){}
   rpc Update(UpdateArtistGrpcRequest) returns (ArtistGrpcResponse){}
   rpc RemoveById(common.type.IdType) returns (google.protobuf.Empty){}
@@ -22,20 +23,35 @@ service ArtistsService {
 message AddArtistGrpcRequest {
   string name = 1;
   string biography = 2;
+  string photo = 3;
 }
 
 message ArtistsFilterGrpcRequest {
   string query = 1;
-  common.page.PageableGrpc pageable = 2;
+  bool original_photo = 2;
+  common.page.PageableGrpc pageable = 3;
+}
+
+message ArtistsByIdsGrpcRequest {
+  common.type.IdsType ids = 1;
+  bool original_photo = 2;
 }
 
 message UpdateArtistGrpcRequest {
   string id = 1;
   string name = 2;
   string biography = 3;
+  string photo = 4;
 }
 
 message ArtistGrpcResponse {
+  string id = 1;
+  string name = 2;
+  string biography = 3;
+  string photo = 4;
+}
+
+message ArtistShortGrpcResponse {
   string id = 1;
   string name = 2;
   string biography = 3;

@@ -1,6 +1,5 @@
 package org.rococo.gateway.mapper;
 
-import com.google.protobuf.ByteString;
 import org.rococo.gateway.model.users.CreateUserRequestDTO;
 import org.rococo.gateway.model.users.UpdateUserRequestDTO;
 import org.rococo.gateway.model.users.UserDTO;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
@@ -35,8 +33,8 @@ public class UserMapper {
                         ? ""
                         : requestDTO.lastName())
                 .setPhoto(requestDTO.photo() == null
-                        ? ByteString.EMPTY
-                        : ByteString.copyFrom(requestDTO.photo(), StandardCharsets.UTF_8))
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -53,8 +51,8 @@ public class UserMapper {
                         ? ""
                         : requestDTO.lastName())
                 .setPhoto(requestDTO.photo() == null
-                        ? ByteString.EMPTY
-                        : ByteString.copyFrom(requestDTO.photo(), StandardCharsets.UTF_8))
+                        ? ""
+                        : requestDTO.photo())
                 .build();
     }
 
@@ -75,7 +73,7 @@ public class UserMapper {
                         : grpcResponseModel.getLastName())
                 .photo(grpcResponseModel.getPhoto().isEmpty()
                         ? null
-                        : grpcResponseModel.getPhoto().toString(StandardCharsets.UTF_8))
+                        : grpcResponseModel.getPhoto())
                 .build();
     }
 

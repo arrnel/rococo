@@ -3,16 +3,13 @@ package org.rococo.artists.mapper;
 import org.rococo.artists.data.ArtistEntity;
 import org.rococo.artists.model.ArtistFilter;
 import org.rococo.grpc.artists.*;
-import org.rococo.grpc.common.page.DirectionGrpc;
-import org.rococo.grpc.common.page.PageableGrpc;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Map;
+import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public class ArtistMapper {
@@ -46,7 +43,7 @@ public class ArtistMapper {
     }
 
     @Nonnull
-    public static ArtistGrpcResponse toGrpcResponse(ArtistEntity entity) {
+    public static ArtistGrpcResponse toGrpcResponse(ArtistEntity entity, @Nullable String photo) {
         return ArtistGrpcResponse.newBuilder()
                 .setId(entity.getId().toString())
                 .setName(entity.getName() == null
@@ -55,6 +52,9 @@ public class ArtistMapper {
                 .setBiography(entity.getBiography() == null
                         ? ""
                         : entity.getBiography())
+                .setPhoto(photo == null
+                        ? ""
+                        : photo)
                 .build();
     }
 
@@ -66,31 +66,14 @@ public class ArtistMapper {
     }
 
     @Nonnull
-    public static Pageable fromPageableGrpc(PageableGrpc pageable) {
-
-        final var grpcDirection = pageable.getSort().getDirection();
-        final var direction = (grpcDirection == DirectionGrpc.DEFAULT || grpcDirection == DirectionGrpc.ASC)
-                ? Direction.ASC
-                : Direction.DESC;
-
-        return PageRequest.of(
-                pageable.getPage(),
-                pageable.getSize(),
-                pageable.getSort().getOrder().isEmpty()
-                        ? Sort.unsorted()
-                        : Sort.by(direction, pageable.getSort().getOrder().split(","))
-        );
-    }
-
-    @Nonnull
-    public static ArtistsGrpcResponse toPageGrpc(Page<ArtistEntity> page) {
+    public static ArtistsGrpcResponse toPageGrpc(Page<ArtistEntity> page, Map<UUID, String> photos) {
         return ArtistsGrpcResponse.newBuilder()
                 .setCurrentPage(page.getPageable().getPageNumber())
                 .setItemsPerPage(page.getSize())
                 .setTotalItems(page.getTotalElements())
                 .setTotalPages(page.getTotalPages())
                 .addAllData(page.getContent().stream()
-                        .map(ArtistMapper::toGrpcResponse)
+                        .map(artist -> ArtistMapper.toGrpcResponse(artist, photos.get(artist.getId())))
                         .toList())
                 .build();
     }

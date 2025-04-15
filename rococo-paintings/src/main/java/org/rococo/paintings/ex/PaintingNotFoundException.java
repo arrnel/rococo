@@ -8,4 +8,8 @@ public class PaintingNotFoundException extends RuntimeException {
         super("Painting with id = [%s] not found".formatted(paintingId.toString()));
     }
 
+    public PaintingNotFoundException(String title) {
+        super("Painting with title = [%s] not found".formatted(title));
+    }
+
 }

@@ -93,5 +93,5 @@ public interface Config {
 
     default int updateTokenTimeoutMillis() {
         return 60_000;
-    };
+    }
 }

@@ -1,6 +1,9 @@
 package org.rococo.tests.mapper;
 
 import org.rococo.grpc.paintings.*;
+import org.rococo.tests.data.entity.ArtistEntity;
+import org.rococo.tests.data.entity.CountryEntity;
+import org.rococo.tests.data.entity.MuseumEntity;
 import org.rococo.tests.data.entity.PaintingEntity;
 import org.rococo.tests.jupiter.annotation.Painting;
 import org.rococo.tests.model.ArtistDTO;
@@ -82,35 +85,18 @@ public class PaintingMapper {
     }
 
     @Nonnull
-    public static PaintingDTO toDTO(PaintingEntity entity, @Nullable byte[] photo) {
+    public static PaintingDTO toDTO(PaintingEntity entity, ArtistEntity artist, MuseumEntity museum, CountryEntity country, @Nullable byte[] photo) {
         return PaintingDTO.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
-                .artist(ArtistDTO.builder()
-                        .id(entity.getArtistId())
-                        .build())
-                .museum(MuseumDTO.builder()
-                        .id(entity.getMuseumId())
-                        .build())
+                .artist(ArtistMapper.toDTO(artist))
+                .museum(MuseumMapper.toDTO(museum)
+                        .setCountry(CountryMapper.toDTO(country)))
                 .photo(photo == null
                         ? null
                         : new String(photo, StandardCharsets.UTF_8))
                 .build();
-    }
-
-    @Nonnull
-    public static PaintingDTO toDTO(PaintingEntity entity,
-                                    @Nullable byte[] photo,
-                                    ArtistDTO artistDTO,
-                                    MuseumDTO museumDTO
-    ) {
-        return toDTO(entity)
-                .setArtist(artistDTO)
-                .setMuseum(museumDTO)
-                .setPhoto(photo == null || photo.length == 0
-                        ? null
-                        : new String(photo, StandardCharsets.UTF_8));
     }
 
     @Nonnull
@@ -119,22 +105,25 @@ public class PaintingMapper {
                 .id(grpcResponse.getId().isEmpty()
                         ? null
                         : UUID.fromString(grpcResponse.getId()))
-                .title(grpcResponse.getTitle().isBlank()
+                .title(grpcResponse.getTitle().isEmpty()
                         ? null
                         : grpcResponse.getTitle())
-                .description(grpcResponse.getDescription().isBlank()
+                .description(grpcResponse.getDescription().isEmpty()
                         ? null
                         : grpcResponse.getDescription())
-                .artist(grpcResponse.getMuseumId().isBlank()
+                .artist(grpcResponse.getArtist().getId().isEmpty()
                         ? null
                         : ArtistDTO.builder()
-                        .id(UUID.fromString(grpcResponse.getArtistId()))
+                        .id(UUID.fromString(grpcResponse.getArtist().getId()))
                         .build())
-                .museum(grpcResponse.getMuseumId().isBlank()
+                .museum(grpcResponse.getMuseum().getId().isEmpty()
                         ? null
                         : MuseumDTO.builder()
-                        .id(UUID.fromString(grpcResponse.getMuseumId()))
+                        .id(UUID.fromString(grpcResponse.getMuseum().getId()))
                         .build())
+                .photo(grpcResponse.getPhoto().isEmpty()
+                        ? null
+                        : grpcResponse.getPhoto())
                 .build();
     }
 
@@ -155,6 +144,9 @@ public class PaintingMapper {
                 .setMuseumId(dto.getMuseum() == null || dto.getMuseum().getId() == null
                         ? ""
                         : dto.getMuseum().getId().toString())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
     }
 
@@ -178,6 +170,9 @@ public class PaintingMapper {
                 .setMuseumId(dto.getMuseum() == null || dto.getMuseum().getId() == null
                         ? ""
                         : dto.getMuseum().getId().toString())
+                .setPhoto(dto.getPhoto() == null
+                        ? ""
+                        : dto.getPhoto())
                 .build();
     }
 

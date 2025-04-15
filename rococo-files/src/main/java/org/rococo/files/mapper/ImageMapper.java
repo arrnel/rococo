@@ -11,7 +11,7 @@ import org.rococo.files.util.HashUtil;
 import org.rococo.files.util.ImageUtil;
 import org.rococo.grpc.common.page.PageableGrpc;
 import org.rococo.grpc.files.EntityTypeGrpc;
-import org.rococo.grpc.files.FindAllImagesGrpcRequest;
+import org.rococo.grpc.files.FindImagesGrpcRequest;
 import org.rococo.grpc.files.ImageGrpcRequest;
 import org.rococo.grpc.files.ImageGrpcResponse;
 import org.springframework.data.domain.PageRequest;
@@ -70,11 +70,11 @@ public class ImageMapper {
         return metadata;
     }
 
-    public static ImageGrpcResponse toGrpcResponse(ImageMetadataEntity entity, boolean useThumbnail) {
+    public static ImageGrpcResponse toGrpcResponse(ImageMetadataEntity entity, boolean isOriginal) {
 
-        final var content = useThumbnail
-                ? entity.getContent().getThumbnailData()
-                : entity.getContent().getData();
+        final var content = isOriginal
+                ? entity.getContent().getData()
+                : entity.getContent().getThumbnailData();
 
         return ImageGrpcResponse.newBuilder()
                 .setEntityId(
@@ -88,7 +88,7 @@ public class ImageMapper {
                 .build();
     }
 
-    public static ImageFilter fromFilterGrpc(FindAllImagesGrpcRequest request) {
+    public static ImageFilter fromFilterGrpc(FindImagesGrpcRequest request) {
         return ImageFilter.builder()
                 .entityType(
                         request.getEntityType() == EntityTypeGrpc.UNDEFINED

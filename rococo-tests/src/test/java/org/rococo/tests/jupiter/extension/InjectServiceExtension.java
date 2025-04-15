@@ -3,9 +3,6 @@ package org.rococo.tests.jupiter.extension;
 import org.apache.commons.lang3.EnumUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
-import org.rococo.tests.client.gateway.AuthApiClient;
-import org.rococo.tests.client.gateway.core.store.AuthStore;
-import org.rococo.tests.config.Config;
 import org.rococo.tests.enums.ServiceType;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.Token;
@@ -22,7 +19,6 @@ import java.util.function.Function;
 
 public class InjectServiceExtension implements TestInstancePostProcessor {
 
-    private static final Config CFG = Config.getInstance();
     private static final ServiceType DEFAULT_SERVICE_TYPE = EnumUtils.getEnumIgnoreCase(
             ServiceType.class, System.getProperty("test.service.precondition", "JDBC"), ServiceType.DB);
 

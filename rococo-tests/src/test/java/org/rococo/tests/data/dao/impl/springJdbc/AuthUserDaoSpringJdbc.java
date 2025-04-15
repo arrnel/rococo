@@ -5,6 +5,8 @@ import org.rococo.tests.data.dao.AuthUserDao;
 import org.rococo.tests.data.entity.AuthUserEntity;
 import org.rococo.tests.data.rowMapper.AuthUserRowMapper;
 import org.rococo.tests.data.tpl.DataSources;
+import org.rococo.tests.ex.UserAlreadyExistsException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,36 +28,40 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
     @Override
     public @Nonnull AuthUserEntity create(AuthUserEntity user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-                    PreparedStatement ps = connection.prepareStatement(
-                            """
-                                    INSERT INTO rococo.users (
-                                                      username,
-                                                      password,
-                                                      enabled,
-                                                      account_non_expired,
-                                                      account_non_locked,
-                                                      credentials_non_expired)
-                                    VALUES
-                                        (?, ?, ?, ?, ?, ?)""",
-                            Statement.RETURN_GENERATED_KEYS
-                    );
-                    ps.setString(1, user.getUsername());
-                    ps.setString(2, PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(user.getPassword()));
-                    ps.setBoolean(3, user.getEnabled());
-                    ps.setBoolean(4, user.getAccountNonExpired());
-                    ps.setBoolean(5, user.getAccountNonLocked());
-                    ps.setBoolean(6, user.getCredentialsNonExpired());
-                    return ps;
-                },
-                keyHolder
-        );
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                        PreparedStatement ps = connection.prepareStatement(
+                                """
+                                        INSERT INTO rococo.users (
+                                                          username,
+                                                          password,
+                                                          enabled,
+                                                          account_non_expired,
+                                                          account_non_locked,
+                                                          credentials_non_expired)
+                                        VALUES
+                                            (?, ?, ?, ?, ?, ?)""",
+                                Statement.RETURN_GENERATED_KEYS
+                        );
+                        ps.setString(1, user.getUsername());
+                        ps.setString(2, PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(user.getPassword()));
+                        ps.setBoolean(3, user.getEnabled());
+                        ps.setBoolean(4, user.getAccountNonExpired());
+                        ps.setBoolean(5, user.getAccountNonLocked());
+                        ps.setBoolean(6, user.getCredentialsNonExpired());
+                        return ps;
+                    },
+                    keyHolder
+            );
 
-        final UUID generatedKey = (UUID) keyHolder.getKeys().get("id");
-        user.setId(generatedKey);
-        return user;
+            final UUID generatedKey = (UUID) keyHolder.getKeys().get("id");
+            user.setId(generatedKey);
+            return user;
+        } catch (DuplicateKeyException ex) {
+            throw new UserAlreadyExistsException(user.getUsername());
+        }
 
     }
 
@@ -106,33 +112,37 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
     @Override
     public @Nonnull AuthUserEntity update(AuthUserEntity user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
-        jdbcTemplate.update(connection -> {
-                    PreparedStatement ps = connection.prepareStatement(
-                            """
-                                    UPDATE
-                                        rococo.users
-                                    SET
-                                        username = ?,
-                                        password = ?,
-                                        enabled = ?,
-                                        account_non_expired = ?,
-                                        account_non_locked = ?,
-                                        credentials_non_expired = ?
-                                    WHERE
-                                        id = ?"""
-                    );
-                    ps.setString(1, user.getUsername());
-                    ps.setString(2, PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(user.getPassword()));
-                    ps.setBoolean(3, user.getEnabled());
-                    ps.setBoolean(4, user.getAccountNonExpired());
-                    ps.setBoolean(5, user.getAccountNonLocked());
-                    ps.setBoolean(6, user.getCredentialsNonExpired());
-                    ps.setObject(6, user.getId());
-                    return ps;
-                }
-        );
-        return user;
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
+            jdbcTemplate.update(connection -> {
+                        PreparedStatement ps = connection.prepareStatement(
+                                """
+                                        UPDATE
+                                            rococo.users
+                                        SET
+                                            username = ?,
+                                            password = ?,
+                                            enabled = ?,
+                                            account_non_expired = ?,
+                                            account_non_locked = ?,
+                                            credentials_non_expired = ?
+                                        WHERE
+                                            id = ?"""
+                        );
+                        ps.setString(1, user.getUsername());
+                        ps.setString(2, PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(user.getPassword()));
+                        ps.setBoolean(3, user.getEnabled());
+                        ps.setBoolean(4, user.getAccountNonExpired());
+                        ps.setBoolean(5, user.getAccountNonLocked());
+                        ps.setBoolean(6, user.getCredentialsNonExpired());
+                        ps.setObject(6, user.getId());
+                        return ps;
+                    }
+            );
+            return user;
+        } catch (DuplicateKeyException ex) {
+            throw new UserAlreadyExistsException(user.getUsername());
+        }
     }
 
     @Override

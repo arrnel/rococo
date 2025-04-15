@@ -5,9 +5,10 @@ import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.ex.ArtistNotFoundException;
+import org.rococo.tests.ex.MuseumNotFoundException;
+import org.rococo.tests.ex.PaintingAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
 import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Painting;
@@ -19,7 +20,6 @@ import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.model.PaintingDTO;
 import org.rococo.tests.service.PaintingService;
 import org.rococo.tests.util.DataGenerator;
-import org.springframework.dao.DuplicateKeyException;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -30,7 +30,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.DB;
 
-@Isolated
 @DbTest
 @Feature("FAKE")
 @Story("[DB] Paintings tests")
@@ -64,16 +63,35 @@ class PaintingDbTest {
     @Test
     @DisplayName("Can not create painting with exists name")
     void canNotCreatePaintingWithExistsNameTest(PaintingDTO painting) {
-
-        // Steps
+        // Steps & Assertions
         var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(PaintingAlreadyExistsException.class, result.getCause());
+    }
 
-        // Assertions
-        assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(painting.getTitle())))
-        );
+    @Museum
+    @Test
+    @DisplayName("Can not create painting with unknown artist")
+    void canNotCreatePaintingWithUnknownArtistTest(MuseumDTO museum) {
+        // Data
+        var painting = DataGenerator.generatePainting().setMuseum(museum);
+        painting.getArtist().setId(UUID.randomUUID());
 
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(ArtistNotFoundException.class, result.getCause());
+    }
+
+    @Artist
+    @Test
+    @DisplayName("Can not create painting with unknown museum")
+    void canNotCreatePaintingWithUnknownMuseumTest(ArtistDTO artist) {
+        // Data
+        var painting = DataGenerator.generatePainting().setArtist(artist);
+        painting.getMuseum().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(MuseumNotFoundException.class, result.getCause());
     }
 
     @Painting
@@ -145,7 +163,7 @@ class PaintingDbTest {
             @Painting(artist = @Artist(name = "Claude Monet"))}
     )
     @Test
-    @DisplayName("Can get all painting")
+    @DisplayName("Can get all artist paintings")
     void canGetAllArtistPaintingsTest(ArtistDTO artist, List<PaintingDTO> paintings) {
 
         // Steps
@@ -168,7 +186,7 @@ class PaintingDbTest {
 
     @Paintings(count = 3)
     @Test
-    @DisplayName("Can get all painting")
+    @DisplayName("Can get all paintings")
     void canGetAllPaintingsTest(List<PaintingDTO> paintings) {
 
         // Steps
@@ -233,13 +251,32 @@ class PaintingDbTest {
 
         // Steps & Assertions
         var result = assertThrows(RuntimeException.class, () -> paintingService.update(painting));
+        assertInstanceOf(PaintingAlreadyExistsException.class, result.getCause());
 
-        // Assertions
-        assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(painting.getTitle())))
-        );
+    }
 
+    @Painting
+    @Test
+    @DisplayName("Can not update painting with unknown artist")
+    void canNotUpdatePaintingWithUnknownArtistTest(PaintingDTO painting) {
+        // Data
+        painting.getArtist().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(ArtistNotFoundException.class, result.getCause());
+    }
+
+    @Painting
+    @Test
+    @DisplayName("Can not create painting with unknown museum")
+    void canNotUpdatePaintingWithUnknownMuseumTest(PaintingDTO painting) {
+        // Data
+        painting.getMuseum().setId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> paintingService.add(painting));
+        assertInstanceOf(MuseumNotFoundException.class, result.getCause());
     }
 
     @Painting
@@ -252,19 +289,6 @@ class PaintingDbTest {
 
         // Assertions
         assertTrue(paintingService.findById(painting.getId()).isEmpty());
-
-    }
-
-    @Order(2)
-    @Test
-    @DisplayName("Can delete all paintings and paintings images")
-    void canDeleteAllPaintingsAndPaintingImagesTest() {
-
-        // Steps
-        paintingService.clearAll();
-
-        // Assertions
-        assertTrue(paintingService.findAll().isEmpty());
 
     }
 

@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.gateway.ex.CurrentUserNotFoundException;
-import org.rococo.gateway.ex.UserAlreadyExistException;
+import org.rococo.gateway.ex.UserAlreadyExistsException;
 import org.rococo.gateway.ex.UserNotFoundException;
 import org.rococo.gateway.model.ApiError;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,8 +114,8 @@ public class UsersExceptionHandler {
     }
 
     @Nonnull
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<ApiError> handleUserAlreadyExistsException(final UserAlreadyExistException ex,
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyExistsException(final UserAlreadyExistsException ex,
                                                                      final HttpServletRequest request,
                                                                      final Locale locale
     ) {

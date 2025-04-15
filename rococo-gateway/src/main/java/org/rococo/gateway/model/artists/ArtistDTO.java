@@ -1,5 +1,6 @@
 package org.rococo.gateway.model.artists;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ArtistDTO implements Serializable {
 
     @JsonProperty("id")

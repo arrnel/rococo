@@ -50,7 +50,7 @@ public class ArtistsApiClient extends RestClient {
             throw switch (response.code()) {
                 case BAD_REQUEST -> new BadRequestException(method, path, message);
                 case UNAUTHORIZED -> new UnauthorizedException(method, path);
-                case CONFLICT -> new ArtistAlreadyExistException(requestBody.getName());
+                case CONFLICT -> new ArtistAlreadyExistsException(requestBody.getName());
                 default -> new ServiceUnavailableException(SERVICE_NAME, call, response.code(), message);
             };
 
@@ -124,7 +124,7 @@ public class ArtistsApiClient extends RestClient {
                 case BAD_REQUEST -> new BadRequestException(method, path, message);
                 case UNAUTHORIZED -> new UnauthorizedException(method, path);
                 case NOT_FOUND -> new ArtistNotFoundException(requestBody.getId());
-                case CONFLICT -> new ArtistAlreadyExistException(requestBody.getName());
+                case CONFLICT -> new ArtistAlreadyExistsException(requestBody.getName());
                 default -> new ServiceUnavailableException(SERVICE_NAME, call, response.code(), message);
             };
 

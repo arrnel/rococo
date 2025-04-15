@@ -6,9 +6,9 @@ import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
+import org.rococo.tests.ex.CountryNotFoundException;
+import org.rococo.tests.ex.MuseumAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.Museum;
 import org.rococo.tests.jupiter.annotation.Museums;
@@ -18,7 +18,6 @@ import org.rococo.tests.model.CountryDTO;
 import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.service.MuseumService;
 import org.rococo.tests.util.DataGenerator;
-import org.springframework.dao.DuplicateKeyException;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -29,7 +28,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.DB;
 
-@Isolated
 @DbTest
 @Feature("FAKE")
 @Story("[DB] Museums tests")
@@ -62,16 +60,21 @@ class MuseumDbTest {
     @Test
     @DisplayName("Can not create museum with exists name")
     void canNotCreateMuseumWithExistsNameTest(MuseumDTO museum) {
-
-        // Steps
+        // Steps & Assertions
         var result = assertThrows(RuntimeException.class, () -> museumService.add(museum));
+        assertInstanceOf(MuseumAlreadyExistsException.class, result.getCause());
+    }
 
-        // Assertions
-        assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(museum.getTitle())))
-        );
+    @Test
+    @DisplayName("Should throw CountryNotFoundException if create museum with unknown country")
+    void shouldThrowCountryNotFoundExceptionIfCreateMuseumWithUnknownCountryTest() {
 
+        var museum = DataGenerator.generateMuseum()
+                .setCountryId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> museumService.add(museum));
+        assertInstanceOf(CountryNotFoundException.class, result.getCause());
     }
 
     @Museum
@@ -147,14 +150,16 @@ class MuseumDbTest {
 
     }
 
+    @Country
     @Museum
     @Test
     @DisplayName("Can update museum")
-    void canUpdateMuseumTest(MuseumDTO oldMuseum) {
+    void canUpdateMuseumTest(MuseumDTO oldMuseum, CountryDTO country) {
 
         // Data
         var newMuseum = DataGenerator.generateMuseum()
-                .setId(oldMuseum.getId());
+                .setId(oldMuseum.getId())
+                .setCountry(country);
 
         // Steps
         var result = museumService.update(newMuseum);
@@ -183,13 +188,20 @@ class MuseumDbTest {
 
         // Steps & Assertions
         var result = assertThrows(RuntimeException.class, () -> museumService.update(museum));
+        assertInstanceOf(MuseumAlreadyExistsException.class, result.getCause());
 
-        // Assertions
-        assertAll(
-                () -> assertTrue(result.getCause() instanceof DuplicateKeyException),
-                () -> assertTrue(result.getMessage().contains("(%s) already exists".formatted(museum.getTitle())))
-        );
+    }
 
+    @Museum
+    @Test
+    @DisplayName("Should throw CountryNotFoundException if update museum with unknown country")
+    void shouldThrowCountryNotFoundExceptionIfUpdateMuseumWithUnknownCountryTest(MuseumDTO museum) {
+        // Data
+        museum.setCountryId(UUID.randomUUID());
+
+        // Steps & Assertions
+        var result = assertThrows(RuntimeException.class, () -> museumService.update(museum));
+        assertInstanceOf(CountryNotFoundException.class, result.getCause());
     }
 
     @Museum
@@ -202,19 +214,6 @@ class MuseumDbTest {
 
         // Assertions
         assertTrue(museumService.findById(museum.getId()).isEmpty());
-
-    }
-
-    @Order(2)
-    @Test
-    @DisplayName("Can delete all museums and museums images")
-    void canDeleteAllMuseumsAndMuseumImagesTest() {
-
-        // Steps
-        museumService.clearAll();
-
-        // Assertions
-        assertTrue(museumService.findAll().isEmpty());
 
     }
 

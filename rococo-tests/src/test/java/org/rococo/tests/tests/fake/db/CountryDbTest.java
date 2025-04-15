@@ -1,11 +1,9 @@
 package org.rococo.tests.tests.fake.db;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
 import org.rococo.tests.enums.CountryCode;
 import org.rococo.tests.enums.ServiceType;
 import org.rococo.tests.jupiter.annotation.Country;
@@ -19,7 +17,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Isolated
 @DbTest
 @Feature("FAKE")
 @Story("[DB] Paintings tests")

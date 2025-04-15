@@ -1,6 +1,5 @@
 package org.rococo.tests.jupiter.annotation.meta;
 
-import io.qameta.allure.Feature;
 import io.qameta.allure.junit5.AllureJunit5;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
