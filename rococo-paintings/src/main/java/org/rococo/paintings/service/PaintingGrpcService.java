@@ -193,6 +193,13 @@ public class PaintingGrpcService extends PaintingsServiceGrpc.PaintingsServiceIm
                                             throw new PaintingAlreadyExistsException(request.getTitle());
                                     });
 
+                            var artistId = UUID.fromString(request.getArtistId());
+                            var museumId = UUID.fromString(request.getMuseumId());
+                            var artist = artistsClient.findById(artistId)
+                                    .orElseThrow(() -> new ArtistNotFoundException(artistId));
+                            var museum = museumsClient.findById(museumId)
+                                    .orElseThrow(() -> new MuseumNotFoundException(museumId));
+
                             var updatedPainting = paintingRepository.save(
                                     PaintingMapper.updateFromGrpcRequest(painting, request));
 
@@ -205,13 +212,6 @@ public class PaintingGrpcService extends PaintingsServiceGrpc.PaintingsServiceIm
                                 filesClient.add(painting.getId(), request.getPhoto());
                             }
 
-                            var artistId = UUID.fromString(request.getArtistId());
-                            var museumId = UUID.fromString(request.getMuseumId());
-                            var artist = artistsClient.findById(artistId)
-                                    .orElseThrow(() -> new ArtistNotFoundException(artistId));
-                            var museum = museumsClient.findById(museumId)
-                                    .orElseThrow(() -> new MuseumNotFoundException(museumId));
-
                             responseObserver.onNext(
                                     PaintingMapper.toGrpcResponse(
                                             updatedPainting,
@@ -222,7 +222,7 @@ public class PaintingGrpcService extends PaintingsServiceGrpc.PaintingsServiceIm
                             responseObserver.onCompleted();
                         },
                         () -> {
-                            throw new MuseumNotFoundException(UUID.fromString(request.getId()));
+                            throw new PaintingNotFoundException(UUID.fromString(request.getId()));
                         }
                 );
 
