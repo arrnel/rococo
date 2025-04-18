@@ -226,6 +226,10 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
                                             throw new MuseumAlreadyExistsException(request.getTitle());
                                     });
 
+                            var countryId = UUID.fromString(request.getCountryId());
+                            var country = countriesClient.findById(countryId)
+                                    .orElseThrow(() -> new CountryNotFoundException(countryId));
+
                             var updatedMuseum = museumRepository.save(
                                     MuseumMapper.updateFromGrpcRequest(museum, request));
 
@@ -237,10 +241,6 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
                             } else if (existPhoto.isEmpty() && !request.getPhoto().isEmpty()) {
                                 filesClient.add(museum.getId(), request.getPhoto());
                             }
-
-                            var countryId = UUID.fromString(request.getCountryId());
-                            var country = countriesClient.findById(countryId)
-                                    .orElseThrow(() -> new CountryNotFoundException(countryId));
 
                             responseObserver.onNext(
                                     MuseumMapper.toGrpcResponse(
