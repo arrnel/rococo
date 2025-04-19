@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
@@ -33,6 +34,7 @@ public class ImageMetadataRowMapper implements RowMapper<ImageMetadataEntity> {
                         .data(rs.getBytes("data"))
                         .thumbnailData(rs.getBytes("thumbnail_data"))
                         .build())
+                .createdDate(rs.getObject("created_date", LocalDateTime.class))
                 .build();
     }
 

@@ -37,7 +37,7 @@ public class DataGenerator {
     public static MuseumDTO generateMuseum() {
         var countryCode = CountryCode.random();
         return MuseumDTO.builder()
-                .title(FAKE.book().author() + ". " + FAKE.book().title())
+                .title(FAKE.book().author() + ". " + FAKE.book().title() + "_" + FAKE.number().digits(10))
                 .description(FAKE.lorem().paragraph())
                 .location(new LocationDTO(
                         FAKE.address().cityName(),
@@ -60,7 +60,7 @@ public class DataGenerator {
 
     public static UserDTO generateUser() {
         return UserDTO.builder()
-                .username(FAKE.internet().username() + "." + FAKE.number().digits(3))
+                .username(generateUsername())
                 .firstName(FAKE.name().firstName())
                 .lastName(FAKE.name().lastName())
                 .photo(ImageUtil.generateImage())
@@ -70,7 +70,7 @@ public class DataGenerator {
     }
 
     public static String generateUsername() {
-        return new Faker().internet().username() + "." + FAKE.number().digits(3);
+        return "%s.%s.%s".formatted(FAKE.lorem().word(), FAKE.lorem().word(), FAKE.number().digits(3));
     }
 
     public static String generateUsername(int fixedLength) {

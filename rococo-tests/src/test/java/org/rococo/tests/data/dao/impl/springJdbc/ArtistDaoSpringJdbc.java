@@ -36,13 +36,14 @@ public class ArtistDaoSpringJdbc implements ArtistDao {
             jdbcTemplate.update(connection -> {
                         PreparedStatement ps = connection.prepareStatement("""
                                         INSERT INTO rococo.artists
-                                            (name, biography)
+                                            (name, biography, created_date)
                                         VALUES
-                                            (?, ?)""",
+                                            (?, ?, ?)""",
                                 Statement.RETURN_GENERATED_KEYS
                         );
                         ps.setString(1, artist.getName());
                         ps.setString(2, artist.getBiography());
+                        ps.setObject(3, artist.getCreatedDate());
                         return ps;
                     },
                     keyHolder

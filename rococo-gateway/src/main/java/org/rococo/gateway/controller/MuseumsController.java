@@ -1,5 +1,6 @@
 package org.rococo.gateway.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.gateway.client.MuseumsGrpcClient;
@@ -31,8 +32,9 @@ public class MuseumsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MuseumDTO add(@RequestBody AddMuseumRequestDTO requestDTO,
-                         BindingResult bindingResult) {
+    public MuseumDTO add(@Valid @RequestBody AddMuseumRequestDTO requestDTO,
+                         BindingResult bindingResult
+    ) {
         log.info("Add new museum: {}", requestDTO);
         validationService.throwBadRequestExceptionIfErrorsExist(bindingResult);
         return museumsClient.add(requestDTO);
@@ -50,16 +52,16 @@ public class MuseumsController {
                 MuseumMapper.toRequestParamObj(requestParams, pageable),
                 "MuseumsFindAllParamsValidationObject");
 
-        return museumsClient.findAll(name, pageable);
+        return museumsClient.findAll(name, false, pageable);
     }
 
     @PatchMapping
-    public MuseumDTO update(@RequestBody UpdateMuseumRequestDTO requestDTO,
-                            BindingResult bindingResult) {
+    public MuseumDTO update(@Valid @RequestBody UpdateMuseumRequestDTO requestDTO,
+                            BindingResult bindingResult
+    ) {
         log.info("Update museum: {}", requestDTO);
         validationService.throwBadRequestExceptionIfErrorsExist(bindingResult);
         return museumsClient.update(requestDTO);
     }
-
 
 }

@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 
 public class DatabasesExtension implements SuiteExtension, AfterEachCallback {
 
+    private static final boolean CLEAR_DB = System.getProperty("tests.db_cleanup", "false").equals("true");
+
     private static final Config CFG = Config.getInstance();
     private static final String[] jdbcUrls = new String[]{
             CFG.artistsJdbcUrl(),
@@ -33,8 +35,10 @@ public class DatabasesExtension implements SuiteExtension, AfterEachCallback {
 
     @Override
     public void afterSuite() {
-        clearDb();
-        createTestUser();
+        if (CLEAR_DB) {
+            clearDb();
+            createTestUser();
+        }
         Connections.closeAllConnections();
         EntityManagers.closeAllEmfs();
     }
@@ -49,10 +53,12 @@ public class DatabasesExtension implements SuiteExtension, AfterEachCallback {
     }
 
     void clearDb() {
+
         new ArtistServiceDb().clearAll();
         new MuseumServiceDb().clearAll();
         new PaintingServiceDb().clearAll();
         new UserServiceDb().clearAll();
+
     }
 
     void createTestUser() {

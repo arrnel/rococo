@@ -3,7 +3,6 @@ package org.rococo.tests.tests.fake.grpc;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.ex.ArtistNotFoundException;
@@ -19,6 +18,7 @@ import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.model.PaintingDTO;
 import org.rococo.tests.service.PaintingService;
+import org.rococo.tests.util.CompareUtil;
 import org.rococo.tests.util.DataGenerator;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -174,17 +174,7 @@ class PaintingGrpcTest {
         var result = paintingService.findAllByArtistId(artist.getId());
 
         // Assertions
-        assertThat(result,
-                hasItems(paintings.stream()
-                        .map(painting -> allOf(
-                                hasProperty("id", is(painting.getId())),
-                                hasProperty("title", is(painting.getTitle())),
-                                hasProperty("description", is(painting.getDescription())),
-                                hasProperty("artist", hasProperty("id", is(painting.getArtist().getId()))),
-                                hasProperty("museum", hasProperty("id", is(painting.getMuseum().getId())))
-                        ))
-                        .toArray(Matcher[]::new)
-                ));
+        assertTrue(CompareUtil.containsPaintings(paintings, result, false));
 
     }
 
@@ -197,17 +187,7 @@ class PaintingGrpcTest {
         var result = paintingService.findAll();
 
         // Assertions
-        assertThat(result,
-                hasItems(paintings.stream()
-                        .map(painting -> allOf(
-                                hasProperty("id", is(painting.getId())),
-                                hasProperty("title", is(painting.getTitle())),
-                                hasProperty("description", is(painting.getDescription())),
-                                hasProperty("artist", hasProperty("id", is(painting.getArtist().getId()))),
-                                hasProperty("museum", hasProperty("id", is(painting.getMuseum().getId())))
-                        ))
-                        .toArray(Matcher[]::new)
-                ));
+        assertTrue(CompareUtil.containsPaintings(paintings, result, false));
 
     }
 

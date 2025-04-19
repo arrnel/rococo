@@ -2,7 +2,6 @@ package org.rococo.tests.tests.fake.db;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.ex.UserAlreadyExistsException;
@@ -21,6 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.DB;
+import static org.rococo.tests.util.CompareUtil.containsUsers;
 
 @DbTest
 @Feature("FAKE")
@@ -85,24 +85,13 @@ class UserDbTest {
     @Users(count = 3)
     @Test
     @DisplayName("Can get all user")
-    void canGetAllUsersTest(
-            List<UserDTO> users
-    ) {
+    void canGetAllUsersTest(List<UserDTO> users) {
 
         // Steps
         var result = userService.findAll();
 
         // Assertions
-        assertThat(result,
-                hasItems(users.stream()
-                        .map(user -> allOf(
-                                hasProperty("id", is(user.getId())),
-                                hasProperty("username", is(user.getUsername())),
-                                hasProperty("firstName", is(user.getFirstName())),
-                                hasProperty("lastName", is(user.getLastName()))
-                        ))
-                        .toArray(Matcher[]::new)
-                ));
+        assertTrue(containsUsers(users, result, false));
 
     }
 

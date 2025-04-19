@@ -95,6 +95,7 @@ public class UserMapper {
                 .username(userEntity.getUsername())
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
+                .createdDate(userEntity.getCreatedDate())
                 .build();
     }
 

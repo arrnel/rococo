@@ -22,13 +22,13 @@ import org.rococo.tests.model.UserDTO;
 import org.rococo.tests.service.UserService;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.rococo.tests.enums.EntityType.ARTIST;
-import static org.rococo.tests.enums.EntityType.USER;
+import static org.rococo.tests.enums.EntityType.*;
 
 @Slf4j
 @SuppressWarnings("ConstantConditions")
@@ -46,7 +46,7 @@ public class UserServiceDb implements UserService {
     public UserDTO create(UserDTO user) {
 
         log.info("Create new user: {}", user);
-
+        var currentDate = LocalDateTime.now();
         var userPassword = user.getTestData().getPassword();
         var authUserEntity = AuthUserMapper.toEntity(UserMapper.toAuthDTO(user));
         authUserEntity.setAuthorities(
@@ -59,12 +59,14 @@ public class UserServiceDb implements UserService {
             authUserRepository.create(authUserEntity);
             var newUser = UserMapper.toDTO(
                     userRepository.create(
-                            UserMapper.toEntity(user)));
+                            UserMapper.toEntity(user)
+                                    .setCreatedDate(currentDate)));
 
             Optional.ofNullable(user.getPhoto())
                     .ifPresent(photo -> {
                         var imageMetadata = filesRepository.create(
-                                ImageMapper.fromBase64Image(USER, newUser.getId(), photo));
+                                ImageMapper.fromBase64Image(USER, newUser.getId(), photo)
+                                        .setCreatedDate(currentDate));
                         newUser.setPhoto(new String(
                                 imageMetadata.getContent().getData(),
                                 StandardCharsets.UTF_8));
@@ -128,14 +130,18 @@ public class UserServiceDb implements UserService {
             var userEntity = userRepository.findById(user.getId())
                     .orElseThrow(() -> new ArtistNotFoundException(user.getId()));
 
-            var photo = filesRepository.findByEntityTypeAndEntityId(USER, user.getId())
-                    .map(oldMetadata -> {
-                                var newMetadata = ImageMapper.fromBase64Image(USER, user.getId(), user.getPhoto());
-                                if (!oldMetadata.getContentHash().equals(newMetadata.getContentHash()))
-                                    newMetadata = filesRepository.update(newMetadata);
-                                return newMetadata.getContent().getData();
-                            }
-                    ).orElse(null);
+            var photo = Optional.ofNullable(user.getPhoto())
+                    .map(p -> {
+                        var newMeta = ImageMapper.fromBase64Image(PAINTING, userEntity.getId(), user.getPhoto());
+                        var oldMeta = filesRepository.findByEntityTypeAndEntityId(PAINTING, user.getId());
+                        return oldMeta.isPresent()
+                                ? filesRepository.update(newMeta.setCreatedDate(oldMeta.get().getCreatedDate()))
+                                : filesRepository.create(newMeta.setCreatedDate(LocalDateTime.now()));
+                    })
+                    .orElse(ImageMetadataEntity.empty())
+                    .getContent()
+                    .getData();
+
 
             var updatedFromDtoEntity = UserMapper.updateFromDTO(userEntity, user);
 

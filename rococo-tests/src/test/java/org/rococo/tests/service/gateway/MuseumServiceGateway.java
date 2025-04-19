@@ -122,5 +122,4 @@ public class MuseumServiceGateway implements MuseumService {
         return allMuseums;
     }
 
-
 }

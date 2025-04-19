@@ -85,12 +85,4 @@ public class PaintingDTO implements Serializable {
         return Objects.hash(id, title, description, artist, museum, photo);
     }
 
-    @Override
-    public PaintingDTO clone() {
-        try {
-            return (PaintingDTO) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Can not clone PaintingDTO.", e);
-        }
-    }
 }

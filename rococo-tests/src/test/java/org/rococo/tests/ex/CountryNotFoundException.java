@@ -26,5 +26,4 @@ public class CountryNotFoundException extends RuntimeException {
         super(message);
     }
 
-
 }

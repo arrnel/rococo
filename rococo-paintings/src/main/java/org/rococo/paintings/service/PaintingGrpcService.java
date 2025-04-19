@@ -25,6 +25,7 @@ import org.rococo.paintings.mapper.PaintingMapper;
 import org.rococo.paintings.specs.PaintingSpecs;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,8 @@ public class PaintingGrpcService extends PaintingsServiceGrpc.PaintingsServiceIm
                                     .orElseThrow(() -> new MuseumNotFoundException(museumId));
 
                             var painting = paintingRepository.save(
-                                    PaintingMapper.fromGrpcRequest(request));
+                                    PaintingMapper.fromGrpcRequest(request)
+                                            .setCreatedDate(LocalDateTime.now()));
                             filesClient.add(painting.getId(), request.getPhoto());
 
                             responseObserver.onNext(
@@ -165,10 +167,7 @@ public class PaintingGrpcService extends PaintingsServiceGrpc.PaintingsServiceIm
 
         responseObserver.onNext(
                 PaintingMapper.toPageGrpc(
-                        paintingRepository.findAll(
-                                paintingSpecs.findByCriteria(
-                                        PaintingMapper.fromGrpcFilter(request)),
-                                PageableMapper.fromPageableGrpc(request.getPageable())),
+                        paintingEntities,
                         artistMap,
                         museumMap,
                         photoMap
@@ -232,13 +231,11 @@ public class PaintingGrpcService extends PaintingsServiceGrpc.PaintingsServiceIm
     @Transactional
     public void removeById(IdType request, StreamObserver<Empty> responseObserver) {
 
-        log.info("Find painting by id: {}", request.getId());
+        log.info("Delete painting by id: {}", request.getId());
 
-        paintingRepository.findById(UUID.fromString(request.getId()))
-                .ifPresent(painting -> {
-                    filesClient.delete(painting.getId());
-                    paintingRepository.delete(painting);
-                });
+        var id = UUID.fromString(request.getId());
+        paintingRepository.deleteById(id);
+        filesClient.delete(id);
 
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();

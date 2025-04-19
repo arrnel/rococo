@@ -1,5 +1,6 @@
 package org.rococo.gateway.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.gateway.client.UsersGrpcClient;
@@ -35,7 +36,7 @@ public class UserController {
 
     @PatchMapping
     public UserDTO updateCurrentUser(@ModelAttribute("user") UserDTO user,
-                                     @RequestBody UpdateUserRequestDTO requestDTO,
+                                     @Valid @RequestBody UpdateUserRequestDTO requestDTO,
                                      BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors())

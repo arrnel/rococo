@@ -19,6 +19,7 @@ import org.rococo.tests.service.PaintingService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,6 +52,7 @@ public class PaintingServiceDb implements PaintingService {
     public PaintingDTO add(PaintingDTO painting) {
         log.info("Add new painting: {}", painting);
         return xaTxTemplate.execute(() -> {
+            var currentDate = LocalDateTime.now();
             var artistEntity = artistRepository.findById(painting.getArtist().getId())
                     .orElseThrow(() -> new ArtistNotFoundException(painting.getArtist().getId()));
             var museumEntity = museumRepository.findById(painting.getMuseum().getId())
@@ -58,9 +60,12 @@ public class PaintingServiceDb implements PaintingService {
             var countryEntity = countryRepository.findById(museumEntity.getCountryId())
                     .orElseThrow(() -> new CountryNotFoundException(museumEntity.getCountryId()));
             var paintingEntity = paintingRepository.create(
-                    PaintingMapper.toEntity(painting));
+                    PaintingMapper.toEntity(painting)
+                            .setCreatedDate(currentDate));
             var photo = filesRepository.create(
-                    ImageMapper.fromBase64Image(PAINTING, paintingEntity.getId(), painting.getPhoto())).getContent().getData();
+                            ImageMapper.fromBase64Image(PAINTING, paintingEntity.getId(), painting.getPhoto())
+                                    .setCreatedDate(currentDate))
+                    .getContent().getData();
             return PaintingMapper.toDTO(paintingEntity, artistEntity, museumEntity, countryEntity, photo);
         });
     }
@@ -132,10 +137,11 @@ public class PaintingServiceDb implements PaintingService {
 
             var photo = Optional.ofNullable(painting.getPhoto())
                     .map(p -> {
-                        var meta = ImageMapper.fromBase64Image(PAINTING, paintingEntity.getId(), painting.getPhoto());
-                        return filesRepository.findByEntityTypeAndEntityId(PAINTING, painting.getId()).isPresent()
-                                ? filesRepository.update(meta)
-                                : filesRepository.create(meta);
+                        var newMeta = ImageMapper.fromBase64Image(PAINTING, paintingEntity.getId(), painting.getPhoto());
+                        var oldMeta = filesRepository.findByEntityTypeAndEntityId(PAINTING, painting.getId());
+                        return oldMeta.isPresent()
+                                ? filesRepository.update(newMeta.setCreatedDate(oldMeta.get().getCreatedDate()))
+                                : filesRepository.create(newMeta.setCreatedDate(LocalDateTime.now()));
                     })
                     .orElse(ImageMetadataEntity.empty())
                     .getContent()

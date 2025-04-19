@@ -8,6 +8,7 @@ import org.rococo.tests.service.ArtistService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,7 +60,7 @@ public class ArtistServiceGrpc implements ArtistService {
     @Override
     @Step("Find all artists")
     public List<ArtistDTO> findAll() {
-        log.info("Find all artists by names: names");
+        log.info("Find all artists");
         return findAllArtists(null);
     }
 
@@ -90,9 +91,15 @@ public class ArtistServiceGrpc implements ArtistService {
 
     @Nonnull
     private List<ArtistDTO> findAllArtists(@Nullable String name) {
+        // DON'T remove sort. Help to get all artists in parallel test execution
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.by(
+                        Sort.Order.asc("createdDate"),
+                        Sort.Order.asc("id")
+                ));
         List<ArtistDTO> allArtists = new ArrayList<>();
-        Pageable pageable = PageRequest.of(0, 10);
-
         while (true) {
             Page<ArtistDTO> page = artistClient.findAll(name, pageable);
             allArtists.addAll(page.getContent());

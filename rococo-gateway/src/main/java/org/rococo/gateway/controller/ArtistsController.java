@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.gateway.client.ArtistsGrpcClient;
-import org.rococo.gateway.ex.ArtistNotFoundException;
 import org.rococo.gateway.mapper.ArtistMapper;
 import org.rococo.gateway.model.artists.AddArtistRequestDTO;
 import org.rococo.gateway.model.artists.ArtistDTO;
@@ -26,7 +25,6 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping({"/api/artist", "/api/artist/"})
-
 public class ArtistsController {
 
     private final ArtistsGrpcClient artistsClient;
@@ -59,13 +57,10 @@ public class ArtistsController {
 
     @PatchMapping
     public ArtistDTO update(@Valid @RequestBody UpdateArtistRequestDTO requestDTO,
-                            BindingResult bindingResult) {
+                            BindingResult bindingResult
+    ) {
         log.info("Update artist: {}", requestDTO);
-
         validationService.throwBadRequestExceptionIfErrorsExist(bindingResult);
-
-        artistsClient.findById(requestDTO.id())
-                .orElseThrow(() -> new ArtistNotFoundException(requestDTO.id()));
         return artistsClient.update(requestDTO);
     }
 

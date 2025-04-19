@@ -39,6 +39,7 @@ public class ArtistMapper {
                 .biography(request.getBiography().isEmpty()
                         ? null
                         : request.getBiography())
+                .createdDate(entity.getCreatedDate())
                 .build();
     }
 

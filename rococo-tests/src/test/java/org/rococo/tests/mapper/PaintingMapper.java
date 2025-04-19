@@ -7,6 +7,7 @@ import org.rococo.tests.data.entity.MuseumEntity;
 import org.rococo.tests.data.entity.PaintingEntity;
 import org.rococo.tests.jupiter.annotation.Painting;
 import org.rococo.tests.model.ArtistDTO;
+import org.rococo.tests.model.LocationDTO;
 import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.model.PaintingDTO;
 import org.rococo.tests.util.ImageUtil;
@@ -46,6 +47,7 @@ public class PaintingMapper {
                 .description(request.getDescription())
                 .artistId(request.getArtist().getId())
                 .museumId(request.getMuseum().getId())
+                .createdDate(entity.getCreatedDate())
                 .build();
     }
 
@@ -111,15 +113,33 @@ public class PaintingMapper {
                 .description(grpcResponse.getDescription().isEmpty()
                         ? null
                         : grpcResponse.getDescription())
-                .artist(grpcResponse.getArtist().getId().isEmpty()
-                        ? null
-                        : ArtistDTO.builder()
-                        .id(UUID.fromString(grpcResponse.getArtist().getId()))
+                .artist(ArtistDTO.builder()
+                        .id(grpcResponse.getArtist().getId().isEmpty()
+                                ? null
+                                : UUID.fromString(grpcResponse.getArtist().getId()))
+                        .name(grpcResponse.getArtist().getName().isEmpty()
+                                ? null
+                                : grpcResponse.getArtist().getName())
+                        .biography(grpcResponse.getArtist().getBiography().isEmpty()
+                                ? null
+                                : grpcResponse.getArtist().getBiography())
                         .build())
-                .museum(grpcResponse.getMuseum().getId().isEmpty()
-                        ? null
-                        : MuseumDTO.builder()
-                        .id(UUID.fromString(grpcResponse.getMuseum().getId()))
+                .museum(MuseumDTO.builder()
+                        .id(grpcResponse.getMuseum().getId().isEmpty()
+                                ? null
+                                : UUID.fromString(grpcResponse.getMuseum().getId()))
+                        .title(grpcResponse.getMuseum().getTitle().isEmpty()
+                                ? null
+                                : grpcResponse.getMuseum().getTitle())
+                        .description(grpcResponse.getMuseum().getDescription().isEmpty()
+                                ? null
+                                : grpcResponse.getMuseum().getDescription())
+                        .location(LocationDTO.builder()
+                                .city(grpcResponse.getMuseum().getCity().isEmpty()
+                                        ? null
+                                        : grpcResponse.getMuseum().getCity())
+                                .country(CountryMapper.toDTO(grpcResponse.getMuseum().getCountry()))
+                                .build())
                         .build())
                 .photo(grpcResponse.getPhoto().isEmpty()
                         ? null

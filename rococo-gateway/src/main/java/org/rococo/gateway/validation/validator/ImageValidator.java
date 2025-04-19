@@ -71,6 +71,7 @@ public class ImageValidator implements ConstraintValidator<Image, String> {
     ) {
 
         if (!base64Img.matches(AppProperty.IMAGE_PATTERN)) {
+            context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
                             messageSource.getMessage(
                                     INVALID_IMAGE_PATTERN_MESSAGE,
@@ -121,6 +122,7 @@ public class ImageValidator implements ConstraintValidator<Image, String> {
     ) {
         final int actualSize = (imgText.length() * 3) / 4;
         if (actualSize > maxSize * ONE_MB) {
+            context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
                             messageSource.getMessage(
                                     INVALID_IMAGE_SIZE_MESSAGE,

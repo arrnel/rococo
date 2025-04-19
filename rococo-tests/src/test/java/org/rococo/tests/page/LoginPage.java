@@ -70,5 +70,4 @@ public class LoginPage extends BasePage<LoginPage> {
         return new HeaderComponent();
     }
 
-
 }
