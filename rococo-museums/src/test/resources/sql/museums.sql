@@ -1,0 +1,6 @@
+INSERT INTO rococo.museums(id, title, description, city, country_id, created_date)
+VALUES ('36f0d5e0-a0a0-4095-9547-1cd984ef1867', 'Orsay Museum', 'Museum in Paris, France, on the Left Bank of the Seine', 'Paris', 'bcb125cd-159f-4e89-b954-8e6ca25ad973', '2024-01-01 11:00:00'),
+       ('618419a8-bf17-48d2-b61d-4fc7699cc173', 'Museum of Modern Art', 'Art museum located in Midtown Manhattan, New York City, on 53rd Street between Fifth and Sixth Avenues', 'New York City', '5298412e-2578-4780-b412-e3b189da86fe', '2024-01-01 11:15:00'),
+       ('c24372ec-3eb8-434a-9023-a98c6694ffc6', 'Hermitage Museum', 'Museum of art and culture in Saint Petersburg, Russia, and holds the largest collection of paintings in the world', 'Saint Petersburg', '0932fb02-e533-40cb-abba-26844c83d9a0', '2024-01-01 11:30:00'),
+       ('37cba337-7ff7-4ff5-b785-0c4d144068d8', 'Louvre', 'National art museum in Paris, France, and one of the most famous museums in the world', 'Paris', 'bcb125cd-159f-4e89-b954-8e6ca25ad973', '2024-01-01 11:45:00'),
+       ('a332d60c-0001-4935-b415-6c0914eff1c9', 'Metropolitan Museum of Art', 'Encyclopedic art museum in New York City', 'New York City', '5298412e-2578-4780-b412-e3b189da86fe', '2024-01-01 12:00:00');
