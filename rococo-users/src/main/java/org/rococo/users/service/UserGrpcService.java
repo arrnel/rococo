@@ -168,8 +168,6 @@ public class UserGrpcService extends UsersServiceGrpc.UsersServiceImplBase {
                         }
                 );
 
-        responseObserver.onCompleted();
-
     }
 
     @Override
