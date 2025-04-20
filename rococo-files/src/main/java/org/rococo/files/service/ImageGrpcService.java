@@ -9,7 +9,6 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.rococo.files.config.AppProperty;
 import org.rococo.files.data.entity.EntityType;
 import org.rococo.files.data.entity.ImageMetadataEntity;
-import org.rococo.files.data.repository.ImageContentRepository;
 import org.rococo.files.data.repository.ImageMetadataRepository;
 import org.rococo.files.ex.BadRequestException;
 import org.rococo.files.ex.ImageAlreadyExistsException;
@@ -28,10 +27,9 @@ import java.util.UUID;
 @Slf4j
 @GrpcService
 @RequiredArgsConstructor
-public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
+public class ImageGrpcService extends FilesServiceGrpc.FilesServiceImplBase {
 
     private final ImageMetadataRepository metadataRepository;
-    private final ImageContentRepository contentRepository;
 
     private final ImageSpecs imageSpecs;
 
@@ -122,10 +120,11 @@ public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
     @Transactional
     public void updateImage(ImageGrpcRequest request, StreamObserver<Empty> responseObserver) {
 
+        log.info("Update image by entityType = [{}] and entityId = [{}]", request.getEntityType(), request.getEntityId());
+        validateMetadataRequestParams(request.getEntityType(), request.getEntityId());
+
         final EntityType entityType = EntityType.valueOf(request.getEntityType().name());
         final UUID entityId = UUID.fromString(request.getEntityId());
-
-        validateMetadataRequestParams(request.getEntityType(), request.getEntityId());
 
         var oldMetadata = metadataRepository
                 .findByEntityTypeAndEntityId(entityType, entityId)
