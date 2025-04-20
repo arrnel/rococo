@@ -122,10 +122,11 @@ public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
     @Transactional
     public void updateImage(ImageGrpcRequest request, StreamObserver<Empty> responseObserver) {
 
+        log.info("Update image by entityType = [{}] and entityId = [{}]", request.getEntityType(), request.getEntityId());
+        validateMetadataRequestParams(request.getEntityType(), request.getEntityId());
+
         final EntityType entityType = EntityType.valueOf(request.getEntityType().name());
         final UUID entityId = UUID.fromString(request.getEntityId());
-
-        validateMetadataRequestParams(request.getEntityType(), request.getEntityId());
 
         var oldMetadata = metadataRepository
                 .findByEntityTypeAndEntityId(entityType, entityId)
