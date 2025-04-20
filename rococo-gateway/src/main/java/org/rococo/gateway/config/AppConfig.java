@@ -17,5 +17,4 @@ public class AppConfig {
         return new AppErrorAttributes(apiVersion);
     }
 
-
 }

@@ -19,7 +19,9 @@ public class PageableUtil {
         return "page = %s, size = %s, direction = %s, columns = %s".formatted(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                pageable.getSort().iterator().next().getDirection().name(),
+                pageable.getSort().iterator().hasNext()
+                        ? pageable.getSort().iterator().next().getDirection().name()
+                        : Sort.Direction.ASC.name(),
                 pageable.getSort().stream().map(Sort.Order::getProperty).toList()
         );
     }

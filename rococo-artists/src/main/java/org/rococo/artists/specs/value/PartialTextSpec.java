@@ -50,5 +50,4 @@ public class PartialTextSpec {
                 : Optional.of(builder.or(fieldPredicates.toArray(Predicate[]::new)));
     }
 
-
 }
