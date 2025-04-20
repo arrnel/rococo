@@ -9,7 +9,6 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.rococo.files.config.AppProperty;
 import org.rococo.files.data.entity.EntityType;
 import org.rococo.files.data.entity.ImageMetadataEntity;
-import org.rococo.files.data.repository.ImageContentRepository;
 import org.rococo.files.data.repository.ImageMetadataRepository;
 import org.rococo.files.ex.BadRequestException;
 import org.rococo.files.ex.ImageAlreadyExistsException;
@@ -31,7 +30,6 @@ import java.util.UUID;
 public class ImageGrpcService extends FilesServiceGrpc.FilesServiceImplBase {
 
     private final ImageMetadataRepository metadataRepository;
-    private final ImageContentRepository contentRepository;
 
     private final ImageSpecs imageSpecs;
 
