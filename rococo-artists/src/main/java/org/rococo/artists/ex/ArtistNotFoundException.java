@@ -12,5 +12,4 @@ public class ArtistNotFoundException extends RuntimeException {
         super("Artist with name = [%s] not found".formatted(name));
     }
 
-
 }

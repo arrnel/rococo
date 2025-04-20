@@ -61,5 +61,4 @@ public class MuseumsController {
         return museumsClient.update(requestDTO);
     }
 
-
 }

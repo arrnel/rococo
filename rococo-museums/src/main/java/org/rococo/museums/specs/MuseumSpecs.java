@@ -46,5 +46,4 @@ public class MuseumSpecs implements EntitySpecs<Specification<MuseumEntity>, Mus
         };
     }
 
-
 }

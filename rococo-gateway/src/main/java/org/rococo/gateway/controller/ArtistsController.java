@@ -26,7 +26,6 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping({"/api/artist", "/api/artist/"})
-
 public class ArtistsController {
 
     private final ArtistsGrpcClient artistsClient;

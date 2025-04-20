@@ -92,5 +92,4 @@ public class SelectField extends BaseComponent<SelectField> {
         Selenide.sleep(UPDATE_LIST_TIMEOUT);
     }
 
-
 }
