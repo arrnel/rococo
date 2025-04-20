@@ -28,7 +28,7 @@ import java.util.UUID;
 @Slf4j
 @GrpcService
 @RequiredArgsConstructor
-public class ImageService extends FilesServiceGrpc.FilesServiceImplBase {
+public class ImageGrpcService extends FilesServiceGrpc.FilesServiceImplBase {
 
     private final ImageMetadataRepository metadataRepository;
     private final ImageContentRepository contentRepository;
