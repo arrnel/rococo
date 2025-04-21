@@ -50,7 +50,7 @@ public class PaintingsController {
         log.info("Find all paintings by params: {}", PageableUtil.getLogText(pageable, requestParams));
         validationService.validateObject(PaintingMapper.toRequestParamObj(requestParams, pageable),
                 "PaintingsFindAllParamsValidationObject");
-        return paintingsClient.findAll(title, artistId, pageable);
+        return paintingsClient.findAll(title, artistId, false, pageable);
     }
 
     @PatchMapping

@@ -52,7 +52,7 @@ public class MuseumsController {
                 MuseumMapper.toRequestParamObj(requestParams, pageable),
                 "MuseumsFindAllParamsValidationObject");
 
-        return museumsClient.findAll(name, pageable);
+        return museumsClient.findAll(name, false, pageable);
     }
 
     @PatchMapping
