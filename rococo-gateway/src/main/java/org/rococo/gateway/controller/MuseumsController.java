@@ -56,8 +56,9 @@ public class MuseumsController {
     }
 
     @PatchMapping
-    public MuseumDTO update(@RequestBody UpdateMuseumRequestDTO requestDTO,
-                            BindingResult bindingResult) {
+    public MuseumDTO update(@Valid @RequestBody UpdateMuseumRequestDTO requestDTO,
+                            BindingResult bindingResult
+    ) {
         log.info("Update museum: {}", requestDTO);
         validationService.throwBadRequestExceptionIfErrorsExist(bindingResult);
         return museumsClient.update(requestDTO);

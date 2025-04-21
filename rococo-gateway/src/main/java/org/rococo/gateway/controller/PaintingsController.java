@@ -59,8 +59,6 @@ public class PaintingsController {
     ) {
         log.info("Update painting: {}", requestDTO);
         validationService.throwBadRequestExceptionIfErrorsExist(bindingResult);
-        paintingsClient.findById(requestDTO.id())
-                .orElseThrow(() -> new PaintingNotFoundException(requestDTO.id()));
         return paintingsClient.update(requestDTO);
     }
 

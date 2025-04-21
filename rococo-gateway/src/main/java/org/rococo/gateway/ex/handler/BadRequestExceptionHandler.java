@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,7 +29,6 @@ public class BadRequestExceptionHandler {
 
     private static final String SINGLE_ERROR = "errors.api.common.400.message.single_error";
     private static final String MULTIPLE_ERRORS = "errors.api.common.400.message.multiple_errors";
-
 
     private final MessageSource messageSource;
 
@@ -51,15 +52,9 @@ public class BadRequestExceptionHandler {
                 .toList();
 
         boolean isMultipleErrors = ex.getErrors().size() > 1;
-        final String message = messageSource.getMessage(
-                isMultipleErrors
-                        ? MULTIPLE_ERRORS
-                        : SINGLE_ERROR,
-                new Object[0],
-                isMultipleErrors
-                        ? "Bad request. Multiple validation errors(default)"
-                        : "Bad request(default)",
-                locale);
+        final String message = isMultipleErrors
+                ? messageSource.getMessage(MULTIPLE_ERRORS, new Object[0], "Bad request. Multiple validation errors(default)", locale)
+                : messageSource.getMessage(SINGLE_ERROR, new Object[0], "Bad request(default)", locale);
 
         ApiError apiError = ApiError.builderErrors()
                 .apiVersion(apiVersion)
@@ -68,7 +63,10 @@ public class BadRequestExceptionHandler {
                 .errorItems(errorItems)
                 .buildErrors();
 
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PROBLEM_JSON_VALUE);
+
+        return new ResponseEntity<>(apiError, headers, HttpStatus.BAD_REQUEST);
 
     }
 
