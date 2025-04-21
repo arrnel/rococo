@@ -1,0 +1,6 @@
+app:
+  api:
+    version: '0.0.1'
+
+rococo-front:
+  base-uri: http://127.0.0.1:${ROCOCO_FRONT_PORT:3000}
