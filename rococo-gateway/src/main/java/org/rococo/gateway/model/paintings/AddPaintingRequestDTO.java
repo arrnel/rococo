@@ -1,7 +1,9 @@
 package org.rococo.gateway.model.paintings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import org.rococo.gateway.model.artists.ArtistIdDTO;
@@ -23,9 +25,13 @@ public record AddPaintingRequestDTO(
         @JsonProperty("description")
         String description,
 
+        @Valid
+        @NotNull
         @JsonProperty("artist")
         ArtistIdDTO artist,
 
+        @Valid
+        @NotNull
         @JsonProperty("museum")
         MuseumIdDTO museum,
 
