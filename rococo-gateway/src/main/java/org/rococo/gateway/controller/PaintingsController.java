@@ -1,9 +1,9 @@
 package org.rococo.gateway.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.gateway.client.PaintingsGrpcClient;
-import org.rococo.gateway.ex.PaintingNotFoundException;
 import org.rococo.gateway.mapper.PaintingMapper;
 import org.rococo.gateway.model.paintings.AddPaintingRequestDTO;
 import org.rococo.gateway.model.paintings.PaintingDTO;
@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -24,7 +23,6 @@ import java.util.UUID;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @Slf4j
-@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping({"/api/painting", "/api/painting/"})
@@ -35,7 +33,7 @@ public class PaintingsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PaintingDTO add(@RequestBody AddPaintingRequestDTO requestDTO,
+    public PaintingDTO add(@Valid @RequestBody AddPaintingRequestDTO requestDTO,
                            BindingResult bindingResult
     ) {
         log.info("Add new painting: {}", requestDTO);
@@ -49,21 +47,18 @@ public class PaintingsController {
                                      @PageableDefault(size = 9, sort = "title", direction = ASC) Pageable pageable,
                                      @RequestParam Map<String, String> requestParams
     ) {
-
         log.info("Find all paintings by params: {}", PageableUtil.getLogText(pageable, requestParams));
         validationService.validateObject(PaintingMapper.toRequestParamObj(requestParams, pageable),
                 "PaintingsFindAllParamsValidationObject");
-        return paintingsClient.findAll(title, artistId, pageable);
+        return paintingsClient.findAll(title, artistId, false, pageable);
     }
 
     @PatchMapping
-    public PaintingDTO update(@RequestBody UpdatePaintingRequestDTO requestDTO,
+    public PaintingDTO update(@Valid @RequestBody UpdatePaintingRequestDTO requestDTO,
                               BindingResult bindingResult
     ) {
         log.info("Update painting: {}", requestDTO);
         validationService.throwBadRequestExceptionIfErrorsExist(bindingResult);
-        paintingsClient.findById(requestDTO.id())
-                .orElseThrow(() -> new PaintingNotFoundException(requestDTO.id()));
         return paintingsClient.update(requestDTO);
     }
 

@@ -1,7 +1,9 @@
 package org.rococo.gateway.model.countries;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
@@ -15,6 +17,8 @@ public record LocationRequestDTO(
         @JsonProperty("city")
         String city,
 
+        @Valid
+        @NotNull
         @JsonProperty("country")
         CountryIdDTO country
 

@@ -69,12 +69,13 @@ public class PaintingsGrpcClient {
     @Nonnull
     public Page<PaintingDTO> findAll(@Nullable String name,
                                      @Nullable UUID artistId,
+                                     boolean isOriginalPhoto,
                                      Pageable pageable
     ) {
         try {
             return PaintingMapper.toPageDTO(
                     paintingsServiceStub.findAll(
-                            PaintingMapper.toFilter(name, artistId, false, pageable)));
+                            PaintingMapper.toFilter(name, artistId, isOriginalPhoto, pageable)));
         } catch (StatusRuntimeException ex) {
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }

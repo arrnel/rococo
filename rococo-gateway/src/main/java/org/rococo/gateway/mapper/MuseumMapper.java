@@ -115,6 +115,7 @@ public class MuseumMapper {
 
     @Nonnull
     public static MuseumsFilterGrpcRequest toFilter(@Nullable final String name,
+                                                    final boolean isOriginalPhoto,
                                                     final Pageable pageable) {
         return MuseumsFilterGrpcRequest.newBuilder()
                 .setQuery(
@@ -122,6 +123,7 @@ public class MuseumMapper {
                                 ? ""
                                 : name
                 )
+                .setOriginalPhoto(isOriginalPhoto)
                 .setPageable(
                         PageableMapper.toPageableGrpc(pageable))
                 .build();

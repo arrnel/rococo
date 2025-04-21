@@ -28,7 +28,8 @@ import java.util.Locale;
 public class CountriesExceptionHandler {
 
     private static final String COUNTRY_NOT_FOUND_REASON = "errors.api.countries.404.reason";
-    private static final String COUNTRY_NOT_FOUND_ITEM_MESSAGE = "errors.api.countries.404.item_message";
+    private static final String COUNTRY_NOT_FOUND_BY_ID_ITEM_MESSAGE = "errors.api.countries.404.by_id.item_message";
+    private static final String COUNTRY_NOT_FOUND_BY_CODE_ITEM_MESSAGE = "errors.api.countries.404.by_code.item_message";
 
     private final MessageSource messageSource;
 
@@ -50,11 +51,21 @@ public class CountriesExceptionHandler {
                 "Country not found(default)",
                 locale);
 
-        final String message = messageSource.getMessage(
-                COUNTRY_NOT_FOUND_ITEM_MESSAGE,
-                new String[]{ex.getId().toString()},
-                "Country with id = [%s] not found(default)".formatted(ex.getId().toString()),
-                locale);
+        boolean isNotFoundById = ex.getId() != null;
+
+        // @formatter:off
+        final String message = isNotFoundById
+                ? messageSource.getMessage(
+                        COUNTRY_NOT_FOUND_BY_ID_ITEM_MESSAGE,
+                        new String[]{ex.getId().toString()},
+                        "Country with id = [%s] not found(default)".formatted(ex.getId().toString()),
+                        locale)
+                : messageSource.getMessage(
+                        COUNTRY_NOT_FOUND_BY_CODE_ITEM_MESSAGE,
+                        new String[]{ex.getCountryCode()},
+                        "Country with code = [%s] not found(default)".formatted(ex.getCountryCode()),
+                        locale);
+        // @formatter:on
 
         final var apiError = ApiError.builder()
                 .apiVersion(apiVersion)

@@ -20,7 +20,7 @@ public record ArtistIdDTO(
     @Override
     public String toString() {
         return """
-                {
+                {d
                   "id": %s
                 }""".formatted(
                 id == null

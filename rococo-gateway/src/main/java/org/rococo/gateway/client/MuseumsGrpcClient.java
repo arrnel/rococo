@@ -65,10 +65,10 @@ public class MuseumsGrpcClient {
         }
     }
 
-    public Page<MuseumDTO> findAll(String title, Pageable pageable) {
+    public Page<MuseumDTO> findAll(String title, boolean isOriginalPhoto, Pageable pageable) {
         try {
             return MuseumMapper.toPageDTO(museumsServiceStub.findAll(
-                    MuseumMapper.toFilter(title, pageable)));
+                    MuseumMapper.toFilter(title, isOriginalPhoto, pageable)));
         } catch (StatusRuntimeException ex) {
             throw new ServiceUnavailableException(SERVICE_NAME, ex.getStatus());
         }
