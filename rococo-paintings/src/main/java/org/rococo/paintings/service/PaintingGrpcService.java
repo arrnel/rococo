@@ -165,10 +165,7 @@ public class PaintingGrpcService extends PaintingsServiceGrpc.PaintingsServiceIm
 
         responseObserver.onNext(
                 PaintingMapper.toPageGrpc(
-                        paintingRepository.findAll(
-                                paintingSpecs.findByCriteria(
-                                        PaintingMapper.fromGrpcFilter(request)),
-                                PageableMapper.fromPageableGrpc(request.getPageable())),
+                        paintingEntities,
                         artistMap,
                         museumMap,
                         photoMap
