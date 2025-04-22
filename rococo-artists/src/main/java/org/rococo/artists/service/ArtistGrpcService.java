@@ -192,6 +192,16 @@ public class ArtistGrpcService extends ArtistsServiceGrpc.ArtistsServiceImplBase
                                         if (!artistWithSameName.getId().equals(artist.getId()))
                                             throw new ArtistAlreadyExistsException(artist.getName());
                                     });
+
+                            var existPhoto = filesClient.findImage(artist.getId());
+                            if (existPhoto.isPresent() && !request.getPhoto().isEmpty()) {
+                                filesClient.update(artist.getId(), request.getPhoto());
+                            } else if (existPhoto.isPresent() && request.getPhoto().isEmpty()) {
+                                filesClient.delete(artist.getId());
+                            } else if (existPhoto.isEmpty() && !request.getPhoto().isEmpty()) {
+                                filesClient.add(artist.getId(), request.getPhoto());
+                            }
+
                             responseObserver.onNext(
                                     ArtistMapper.toGrpcResponse(
                                             artistRepository.save(
