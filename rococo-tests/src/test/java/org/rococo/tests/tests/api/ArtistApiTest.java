@@ -3,7 +3,6 @@ package org.rococo.tests.tests.api;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.API;
+import static org.rococo.tests.util.CompareUtil.containsArtists;
 
 @ApiTest
 @Feature("API")
@@ -119,23 +119,13 @@ class ArtistApiTest {
     @Artists(count = 3)
     @Test
     @DisplayName("Can get all artist")
-    void canGetAllArtistsTest(
-            List<ArtistDTO> artists
-    ) {
+    void canGetAllArtistsTest(List<ArtistDTO> artists) {
 
         // Steps
         var result = artistService.findAll();
 
         // Assertions
-        assertThat(result,
-                hasItems(artists.stream()
-                        .map(artist -> allOf(
-                                hasProperty("id", is(artist.getId())),
-                                hasProperty("name", is(artist.getName())),
-                                hasProperty("biography", is(artist.getBiography()))
-                        ))
-                        .toArray(Matcher[]::new)
-                ));
+        assertTrue(containsArtists(artists, result, false));
 
     }
 

@@ -3,7 +3,6 @@ package org.rococo.tests.tests.fake.grpc;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +26,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.GRPC;
+import static org.rococo.tests.util.CompareUtil.containsMuseums;
 
 @GrpcTest
 @Feature("FAKE")
@@ -131,25 +131,14 @@ class MuseumGrpcTest {
 
     @Museums(count = 3)
     @Test
-    @DisplayName("Can get all museum")
-    void canGetAllMuseumsTest(
-            List<MuseumDTO> museums
-    ) {
+    @DisplayName("Can get all museums")
+    void canGetAllMuseumsTest(List<MuseumDTO> museums) {
 
         // Steps
         var result = museumService.findAll();
 
         // Assertions
-        assertThat(result,
-                hasItems(museums.stream()
-                        .map(museum -> allOf(
-                                hasProperty("id", is(museum.getId())),
-                                hasProperty("title", is(museum.getTitle())),
-                                hasProperty("description", is(museum.getDescription())),
-                                hasProperty("location", hasProperty("country", hasProperty("id", is(museum.getLocation().getCountry().getId()))))
-                        ))
-                        .toArray(Matcher[]::new)
-                ));
+        assertTrue(containsMuseums(museums, result, false));
 
     }
 

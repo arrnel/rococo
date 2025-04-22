@@ -3,7 +3,6 @@ package org.rococo.tests.tests.fake.db;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,9 +20,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.DB;
+import static org.rococo.tests.util.CompareUtil.containsArtists;
 
 @DbTest
 @Feature("FAKE")
@@ -124,15 +123,7 @@ class ArtistDbTest {
         var result = artistService.findAll();
 
         // Assertions
-        assertThat(result,
-                hasItems(artists.stream()
-                        .map(artist -> allOf(
-                                hasProperty("id", is(artist.getId())),
-                                hasProperty("name", is(artist.getName())),
-                                hasProperty("biography", is(artist.getBiography()))
-                        ))
-                        .toArray(Matcher[]::new)
-                ));
+        assertTrue(containsArtists(artists, result, false));
 
     }
 
