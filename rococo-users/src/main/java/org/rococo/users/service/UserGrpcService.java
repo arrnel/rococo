@@ -180,11 +180,9 @@ public class UserGrpcService extends UsersServiceGrpc.UsersServiceImplBase {
 
         log.info("Delete user by id: {}", request.getId());
 
-        userRepository.findById(UUID.fromString(request.getId()))
-                .ifPresent(user -> {
-                    userRepository.delete(user);
-                    filesClient.delete(user.getId());
-                });
+        var userId = UUID.fromString(request.getId());
+        userRepository.deleteById(userId);
+        filesClient.delete(userId);
 
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
