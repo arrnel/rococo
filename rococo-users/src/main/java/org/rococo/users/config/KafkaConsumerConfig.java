@@ -18,21 +18,10 @@ public class KafkaConsumerConfig {
 
     private final KafkaProperties kafkaProperties;
 
-//    @Bean
-//    public ConsumerFactory<String, UserDTO> consumerFactory(SslBundles sslBundles) {
-//        final JsonDeserializer<UserDTO> jsonDeserializer = new JsonDeserializer<>();
-//        jsonDeserializer.addTrustedPackages("*");
-//        return new DefaultKafkaConsumerFactory<>(
-//                kafkaProperties.buildConsumerProperties(sslBundles),
-//                new StringDeserializer(),
-//                jsonDeserializer
-//        );
-//    }
-
     @Bean
     public ConsumerFactory<String, UserDTO> consumerFactory(SslBundles sslBundles) {
         final JsonDeserializer<UserDTO> jsonDeserializer = new JsonDeserializer<>(UserDTO.class);
-        jsonDeserializer.setUseTypeHeaders(false); // Необязательно, но добавляет надёжности
+        jsonDeserializer.setUseTypeHeaders(false);
         jsonDeserializer.addTrustedPackages("*");
         return new DefaultKafkaConsumerFactory<>(
                 kafkaProperties.buildConsumerProperties(sslBundles),
