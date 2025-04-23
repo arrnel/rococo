@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -40,6 +41,10 @@ public class ImageMetadataEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "content_id", referencedColumnName = "id")
     private ImageContentEntity content;
+
+    @ToString.Include
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
 
     public static ImageMetadataEntity empty() {
         return new ImageMetadataEntity()

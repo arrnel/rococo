@@ -36,15 +36,16 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
             jdbcTemplate.update(connection -> {
                         PreparedStatement ps = connection.prepareStatement("""
                                         INSERT INTO rococo.museums
-                                            (title, description, country_id, city)
+                                            (title, description, country_id, city, created_date)
                                         VALUES
-                                            (?, ?, ?, ?)""",
+                                            (?, ?, ?, ?, ?)""",
                                 Statement.RETURN_GENERATED_KEYS
                         );
                         ps.setString(1, museum.getTitle());
                         ps.setString(2, museum.getDescription());
                         ps.setObject(3, museum.getCountryId());
                         ps.setString(4, museum.getCity());
+                        ps.setObject(5, museum.getCreatedDate());
                         return ps;
                     },
                     keyHolder

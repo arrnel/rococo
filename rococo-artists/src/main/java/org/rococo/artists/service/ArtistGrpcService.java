@@ -19,6 +19,7 @@ import org.rococo.grpc.common.type.NameType;
 import org.rococo.grpc.files.ImageGrpcResponse;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,9 @@ public class ArtistGrpcService extends ArtistsServiceGrpc.ArtistsServiceImplBase
                             throw new ArtistAlreadyExistsException(request.getName());
                         },
                         () -> {
-                            var savedArtist = artistRepository.save(ArtistMapper.fromGrpcRequest(request));
+                            var savedArtist = artistRepository.save(
+                                    ArtistMapper.fromGrpcRequest(request)
+                                            .setCreatedDate(LocalDateTime.now()));
                             filesClient.add(savedArtist.getId(), request.getPhoto());
                             responseObserver.onNext(
                                     ArtistMapper.toGrpcResponse(savedArtist, request.getPhoto()));
@@ -166,13 +169,7 @@ public class ArtistGrpcService extends ArtistsServiceGrpc.ArtistsServiceImplBase
                         photo -> photo.getContent().toStringUtf8()));
 
         responseObserver.onNext(
-                ArtistMapper.toPageGrpc(
-                        artistRepository.findAll(
-                                artistSpecs.findByCriteria(
-                                        ArtistMapper.fromGrpcFilter(request)),
-                                PageableMapper.fromPageableGrpc(request.getPageable())),
-                        photoMap
-                ));
+                ArtistMapper.toPageGrpc(artistsEntities, photoMap));
 
         responseObserver.onCompleted();
 
@@ -223,11 +220,9 @@ public class ArtistGrpcService extends ArtistsServiceGrpc.ArtistsServiceImplBase
 
         log.info("Delete artist by id: {}", request.getId());
 
-        artistRepository.findById(UUID.fromString(request.getId()))
-                .ifPresent(artist -> {
-                    filesClient.delete(artist.getId());
-                    artistRepository.delete(artist);
-                });
+        var id = UUID.fromString(request.getId());
+        artistRepository.deleteById(id);
+        filesClient.delete(id);
 
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();

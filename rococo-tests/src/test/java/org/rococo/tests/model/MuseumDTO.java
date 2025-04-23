@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import org.rococo.tests.enums.CountryCode;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -80,6 +81,18 @@ public class MuseumDTO implements Serializable {
                         ? null
                         : "\"" + pathToPhoto + "\""
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        MuseumDTO museumDTO = (MuseumDTO) o;
+        return Objects.equals(id, museumDTO.id) && Objects.equals(title, museumDTO.title) && Objects.equals(description, museumDTO.description) && Objects.equals(location, museumDTO.location) && Objects.equals(photo, museumDTO.photo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, location, photo);
     }
 
 }

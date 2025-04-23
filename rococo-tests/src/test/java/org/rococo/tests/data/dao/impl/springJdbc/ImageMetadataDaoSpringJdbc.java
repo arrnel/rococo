@@ -34,9 +34,9 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement("""
                                     INSERT INTO rococo.image_metadata
-                                        (entity_type, entity_id, format, content_hash, content_id)
+                                        (entity_type, entity_id, format, content_hash, content_id, created_date)
                                     VALUES
-                                        (?, ?, ?, ?, ?)""",
+                                        (?, ?, ?, ?, ?, ?)""",
                             Statement.RETURN_GENERATED_KEYS
                     );
                     ps.setString(1, artist.getEntityType().name());
@@ -44,6 +44,7 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
                     ps.setString(3, artist.getFormat());
                     ps.setString(4, artist.getContentHash());
                     ps.setObject(5, artist.getContent().getId());
+                    ps.setObject(6, artist.getCreatedDate());
                     return ps;
                 },
                 keyHolder
@@ -70,7 +71,8 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
                                         m.content_hash as hash,
                                         c.id as content_id,
                                         c.data as data,
-                                        c.thumbnail_data as thumbnail_data
+                                        c.thumbnail_data as thumbnail_data,
+                                        m.created_date as created_date
                                     FROM
                                         rococo.image_metadata m
                                     LEFT JOIN
@@ -103,7 +105,8 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
                             m.content_hash as hash,
                             c.id as content_id,
                             c.data as data,
-                            c.thumbnail_data as thumbnail_data
+                            c.thumbnail_data as thumbnail_data,
+                            m.created_date as created_date
                         FROM
                             rococo.image_metadata m
                         LEFT JOIN

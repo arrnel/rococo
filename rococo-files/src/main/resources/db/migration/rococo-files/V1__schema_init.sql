@@ -10,6 +10,7 @@ create table if not exists rococo.image_metadata
     format       varchar(50) not null,
     content_hash varchar(64) not null,
     content_id   uuid unique not null,
+    created_date timestamp   not null,
     primary key (id)
 );
 

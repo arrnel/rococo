@@ -33,14 +33,15 @@ public class UserDaoSpringJdbc implements UserDao {
             jdbcTemplate.update(connection -> {
                         PreparedStatement ps = connection.prepareStatement("""
                                         INSERT INTO rococo.users
-                                            (username, first_name, last_name)
+                                            (username, first_name, last_name, created_date)
                                         VALUES
-                                            (?, ?, ?)""",
+                                            (?, ?, ?, ?)""",
                                 Statement.RETURN_GENERATED_KEYS
                         );
                         ps.setString(1, user.getUsername());
                         ps.setString(2, user.getFirstName());
                         ps.setString(3, user.getLastName());
+                        ps.setObject(4, user.getCreatedDate());
                         return ps;
                     },
                     keyHolder

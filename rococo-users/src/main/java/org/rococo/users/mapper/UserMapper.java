@@ -1,18 +1,14 @@
 package org.rococo.users.mapper;
 
-import org.rococo.grpc.common.page.DirectionGrpc;
-import org.rococo.grpc.common.page.PageableGrpc;
 import org.rococo.grpc.users.CreateUserGrpcRequest;
 import org.rococo.grpc.users.UpdateUserGrpcRequest;
 import org.rococo.grpc.users.UserGrpcResponse;
 import org.rococo.grpc.users.UsersGrpcResponse;
 import org.rococo.users.data.UserEntity;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
 import java.util.UUID;
@@ -47,11 +43,12 @@ public class UserMapper {
                 .lastName(request.getLastName().isEmpty()
                         ? null
                         : request.getLastName())
+                .createdDate(user.getCreatedDate())
                 .build();
     }
 
     @Nonnull
-    public static UserGrpcResponse toGrpcResponse(UserEntity entity, String photo) {
+    public static UserGrpcResponse toGrpcResponse(UserEntity entity, @Nullable String photo) {
         return UserGrpcResponse.newBuilder()
                 .setId(entity.getId().toString())
                 .setUsername(entity.getUsername())
@@ -65,23 +62,6 @@ public class UserMapper {
                         ? ""
                         : photo)
                 .build();
-    }
-
-    @Nonnull
-    public static Pageable fromPageableGrpc(PageableGrpc pageable) {
-
-        final var grpcDirection = pageable.getSort().getDirection();
-        final var direction = (grpcDirection == DirectionGrpc.DEFAULT || grpcDirection == DirectionGrpc.ASC)
-                ? Sort.Direction.ASC
-                : Sort.Direction.DESC;
-
-        return PageRequest.of(
-                pageable.getPage(),
-                pageable.getSize(),
-                pageable.getSort().getOrder().isEmpty()
-                        ? Sort.unsorted()
-                        : Sort.by(direction, pageable.getSort().getOrder().split(","))
-        );
     }
 
     @Nonnull

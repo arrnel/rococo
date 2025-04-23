@@ -45,6 +45,7 @@ public class MuseumMapper {
                 .description(dto.getDescription())
                 .countryId(dto.getLocation().getCountry().getId())
                 .city(dto.getLocation().getCity())
+                .createdDate(entity.getCreatedDate())
                 .build();
     }
 

@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
@@ -26,6 +27,7 @@ public class PaintingRowMapper implements RowMapper<PaintingEntity> {
                 .description(rs.getString("description"))
                 .artistId(rs.getObject("artist_id", UUID.class))
                 .museumId(rs.getObject("museum_id", UUID.class))
+                .createdDate(rs.getObject("created_date", LocalDateTime.class))
                 .build();
     }
 

@@ -21,6 +21,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -44,7 +45,8 @@ public class ImageGrpcService extends FilesServiceGrpc.FilesServiceImplBase {
         validateContentPattern(request.getContent());
 
         try {
-            var metadataEntity = ImageMapper.fromGrpcRequest(request);
+            var metadataEntity = ImageMapper.fromGrpcRequest(request)
+                    .setCreatedDate(LocalDateTime.now());
             metadataRepository.save(metadataEntity);
         } catch (DataIntegrityViolationException ex) {
             throw new ImageAlreadyExistsException(

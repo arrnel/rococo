@@ -8,6 +8,7 @@ import org.rococo.tests.service.MuseumService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -89,9 +90,15 @@ public class MuseumServiceGrpc implements MuseumService {
 
     @Nonnull
     private List<MuseumDTO> findAllMuseums(@Nullable String name) {
+        // DON'T remove sort. Help to get all museums in parallel test execution
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.by(
+                        Sort.Order.asc("createdDate"),
+                        Sort.Order.asc("id")
+                ));
         List<MuseumDTO> allMuseums = new ArrayList<>();
-        Pageable pageable = PageRequest.of(0, 10);
-
         while (true) {
             Page<MuseumDTO> page = museumClient.findAll(name, pageable);
             allMuseums.addAll(page.getContent());

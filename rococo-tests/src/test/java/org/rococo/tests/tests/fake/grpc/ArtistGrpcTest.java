@@ -3,7 +3,6 @@ package org.rococo.tests.tests.fake.grpc;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,9 +20,10 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.GRPC;
+import static org.rococo.tests.util.CompareUtil.containsArtists;
 
 @GrpcTest
 @Feature("FAKE")
@@ -90,7 +90,7 @@ class ArtistGrpcTest {
 
     @Artist
     @Test
-    @DisplayName("Can get artist by id")
+    @DisplayName("Can get artist by name")
     void canGetArtistByName(ArtistDTO artist) {
 
         // Steps
@@ -116,23 +116,13 @@ class ArtistGrpcTest {
     @Artists(count = 3)
     @Test
     @DisplayName("Can get all artist")
-    void canGetAllArtistsTest(
-            List<ArtistDTO> artists
-    ) {
+    void canGetAllArtistsTest(List<ArtistDTO> artists) {
 
         // Steps
         var result = artistService.findAll();
 
         // Assertions
-        assertThat(result,
-                hasItems(artists.stream()
-                        .map(artist -> allOf(
-                                hasProperty("id", is(artist.getId())),
-                                hasProperty("name", is(artist.getName())),
-                                hasProperty("biography", is(artist.getBiography()))
-                        ))
-                        .toArray(Matcher[]::new)
-                ));
+        assertTrue(containsArtists(artists, result, false));
 
     }
 

@@ -36,15 +36,16 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
             jdbcTemplate.update(connection -> {
                         PreparedStatement ps = connection.prepareStatement("""
                                         INSERT INTO rococo.paintings
-                                            (title, description, artist_id, museum_id)
+                                            (title, description, artist_id, museum_id, created_date)
                                         VALUES
-                                            (?, ?, ?, ?)""",
+                                            (?, ?, ?, ?, ?)""",
                                 Statement.RETURN_GENERATED_KEYS
                         );
                         ps.setString(1, painting.getTitle());
                         ps.setString(2, painting.getDescription());
                         ps.setObject(3, painting.getArtistId());
                         ps.setObject(4, painting.getMuseumId());
+                        ps.setObject(5, painting.getCreatedDate());
                         return ps;
                     },
                     keyHolder

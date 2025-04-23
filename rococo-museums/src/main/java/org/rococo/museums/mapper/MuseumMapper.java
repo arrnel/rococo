@@ -51,31 +51,32 @@ public class MuseumMapper {
                 .city(request.getCity().isEmpty()
                         ? null
                         : request.getCity())
+                .createdDate(entity.getCreatedDate())
                 .build();
     }
 
     @Nonnull
     public static MuseumGrpcResponse toGrpcResponse(MuseumEntity entity, @Nullable CountryGrpcResponse country, @Nullable ImageGrpcResponse image) {
-        return MuseumGrpcResponse.newBuilder()
-                .setId(entity.getId() == null
-                        ? ""
-                        : entity.getId().toString())
-                .setTitle(entity.getTitle() == null
-                        ? ""
-                        : entity.getTitle())
-                .setDescription(entity.getDescription() == null
-                        ? ""
-                        : entity.getDescription())
-                .setCountry(country == null
-                        ? CountryGrpcResponse.getDefaultInstance()
-                        : country)
-                .setCity(entity.getCity() == null
-                        ? ""
-                        : entity.getCity())
-                .setPhoto(image == null
-                        ? ""
-                        : image.getContent().toStringUtf8())
-                .build();
+            return MuseumGrpcResponse.newBuilder()
+                    .setId(entity.getId() == null
+                            ? ""
+                            : entity.getId().toString())
+                    .setTitle(entity.getTitle() == null
+                            ? ""
+                            : entity.getTitle())
+                    .setDescription(entity.getDescription() == null
+                            ? ""
+                            : entity.getDescription())
+                    .setCountry(country == null
+                            ? CountryGrpcResponse.getDefaultInstance()
+                            : country)
+                    .setCity(entity.getCity() == null
+                            ? ""
+                            : entity.getCity())
+                    .setPhoto(image == null
+                            ? ""
+                            : image.getContent().toStringUtf8())
+                    .build();
     }
 
     @Nonnull

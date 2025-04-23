@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
@@ -25,6 +26,7 @@ public class UserRowMapper implements RowMapper<UserEntity> {
                 .username(rs.getString("username"))
                 .firstName(rs.getString("first_name"))
                 .lastName(rs.getString("last_name"))
+                .createdDate(rs.getObject("created_date", LocalDateTime.class))
                 .build();
     }
 

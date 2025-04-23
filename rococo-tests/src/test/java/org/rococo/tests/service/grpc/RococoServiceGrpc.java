@@ -66,8 +66,6 @@ public class RococoServiceGrpc implements RococoService {
         var country = countryService.findByCode(countryCode)
                 .orElseThrow(() -> new CountryNotFoundException(countryCode));
         museum.getLocation().setCountry(country);
-        museumService.add(museum);
-        museum.getLocation().setCountry(country);
         return museumService.add(museum);
     }
 

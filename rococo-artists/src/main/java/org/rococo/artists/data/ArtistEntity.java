@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -31,6 +32,10 @@ public class ArtistEntity {
     @ToString.Include
     @Column(name = "biography")
     private String biography;
+
+    @ToString.Include
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
 
     @Override
     public final boolean equals(Object o) {
