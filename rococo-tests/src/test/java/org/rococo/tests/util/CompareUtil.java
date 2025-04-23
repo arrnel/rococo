@@ -6,7 +6,6 @@ import org.rococo.tests.model.*;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 
 @Slf4j
 @ParametersAreNonnullByDefault
@@ -33,7 +32,7 @@ public class CompareUtil {
                 .comparing(MuseumDTO::getId)
                 .thenComparing(MuseumDTO::getTitle)
                 .thenComparing(MuseumDTO::getDescription)
-                .thenComparing(MuseumDTO::getLocation, getLocationComparator()); // Предполагается, что LocationDTO имеет toString
+                .thenComparing(MuseumDTO::getLocation, getLocationComparator());
 
         if (comparePhoto) {
             comparator = comparator.thenComparing(MuseumDTO::getPhoto);
@@ -90,21 +89,10 @@ public class CompareUtil {
                         .noneMatch(act ->
                                 getMuseumComparator(comparePhotos)
                                         .compare(exp, act) == 0))
-                .collect(Collectors.toList());
+                .toList();
         if (!missingElements.isEmpty())
-            log.error("Actual museums collection not contains: {}", missingElements);
-        return missingElements.isEmpty();
-    }
-
-    public static boolean notContainsMuseums(Collection<MuseumDTO> expected, Collection<MuseumDTO> actual, boolean comparePhotos) {
-        final var missingElements = expected.stream()
-                .filter(exp -> actual.stream()
-                        .anyMatch(act ->
-                                getMuseumComparator(comparePhotos)
-                                        .compare(exp, act) == 0))
-                .collect(Collectors.toList());
-        if (!missingElements.isEmpty())
-            log.error("Actual museums collection contains: {}", missingElements);
+            log.error("Actual museums collection not contains: \n{}\nExpected collection: {}\nActual collection: {}",
+                    missingElements, expected, actual);
         return missingElements.isEmpty();
     }
 
@@ -114,24 +102,11 @@ public class CompareUtil {
                         .noneMatch(act ->
                                 getArtistComparator(comparePhotos)
                                         .compare(exp, act) == 0))
-                .collect(Collectors.toList());
+                .toList();
         if (!missingElements.isEmpty())
-            log.error("Actual artists collection not contains: {}", missingElements);
+            log.error("Actual artists collection not contains: \n{}\nExpected collection: {}\nActual collection: {}",
+                    missingElements, expected, actual);
         return missingElements.isEmpty();
-
-    }
-
-    public static boolean notContainsArtists(Collection<ArtistDTO> expected, Collection<ArtistDTO> actual, boolean comparePhotos) {
-        final var missingElements = expected.stream()
-                .filter(exp -> actual.stream()
-                        .anyMatch(act ->
-                                getArtistComparator(comparePhotos)
-                                        .compare(exp, act) == 0))
-                .collect(Collectors.toList());
-        if (!missingElements.isEmpty())
-            log.error("Actual artists collection contains: {}", missingElements);
-        return missingElements.isEmpty();
-
     }
 
     public static boolean containsPaintings(Collection<PaintingDTO> expected, Collection<PaintingDTO> actual, boolean comparePhotos) {
@@ -140,21 +115,10 @@ public class CompareUtil {
                         .noneMatch(act ->
                                 getPaintingComparator(comparePhotos)
                                         .compare(exp, act) == 0))
-                .collect(Collectors.toList());
+                .toList();
         if (!missingElements.isEmpty())
-            log.error("Actual paintings collection not contains: {}", missingElements);
-        return missingElements.isEmpty();
-    }
-
-    public static boolean notContainsPaintings(Collection<PaintingDTO> expected, Collection<PaintingDTO> actual, boolean comparePhotos) {
-        final var missingElements = expected.stream()
-                .filter(exp -> actual.stream()
-                        .anyMatch(act ->
-                                getPaintingComparator(comparePhotos)
-                                        .compare(exp, act) == 0))
-                .collect(Collectors.toList());
-        if (!missingElements.isEmpty())
-            log.error("Actual paintings collection contains: {}", missingElements);
+            log.error("Actual paintings collection not contains: \n{}\nExpected collection: {}\nActual collection: {}",
+                    missingElements, expected, actual);
         return missingElements.isEmpty();
     }
 
@@ -164,21 +128,10 @@ public class CompareUtil {
                         .noneMatch(act ->
                                 getUserComparator(comparePhotos)
                                         .compare(exp, act) == 0))
-                .collect(Collectors.toList());
+                .toList();
         if (!missingElements.isEmpty())
-            log.error("Actual users collection not contains: {}", missingElements);
-        return missingElements.isEmpty();
-    }
-
-    public static boolean notContainsUsers(Collection<UserDTO> expected, Collection<UserDTO> actual, boolean comparePhotos) {
-        final var missingElements = expected.stream()
-                .filter(exp -> actual.stream()
-                        .anyMatch(act ->
-                                getUserComparator(comparePhotos)
-                                        .compare(exp, act) == 0))
-                .collect(Collectors.toList());
-        if (!missingElements.isEmpty())
-            log.error("Actual users collection contains: {}", missingElements);
+            log.error("Actual users collection not contains: \n{}\nExpected collection: {}\nActual collection: {}",
+                    missingElements, expected, actual);
         return missingElements.isEmpty();
     }
 

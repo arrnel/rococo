@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
@@ -26,6 +27,7 @@ public class MuseumRowMapper implements RowMapper<MuseumEntity> {
                 .description(rs.getString("description"))
                 .countryId(rs.getObject("country_id", UUID.class))
                 .city(rs.getString("city"))
+                .createdDate(rs.getObject("created_date", LocalDateTime.class))
                 .build();
     }
 

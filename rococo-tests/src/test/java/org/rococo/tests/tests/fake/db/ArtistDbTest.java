@@ -87,7 +87,7 @@ class ArtistDbTest {
 
     @Artist
     @Test
-    @DisplayName("Can get artist by id")
+    @DisplayName("Can get artist by name")
     void canGetArtistByName(ArtistDTO artist) {
 
         // Steps

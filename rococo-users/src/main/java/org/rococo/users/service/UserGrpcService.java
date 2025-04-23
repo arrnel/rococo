@@ -19,6 +19,7 @@ import org.rococo.users.mapper.UserMapper;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,8 @@ public class UserGrpcService extends UsersServiceGrpc.UsersServiceImplBase {
                             throw new UserAlreadyExistsException(request.getUsername());
                         },
                         () -> {
-                            var savedUser = userRepository.save(UserMapper.fromGrpcRequest(request));
+                            var savedUser = userRepository.save(UserMapper.fromGrpcRequest(request)
+                                    .setCreatedDate(LocalDateTime.now()));
                             filesClient.add(savedUser.getId(), request.getPhoto());
                             responseObserver.onNext(
                                     UserMapper.toGrpcResponse(savedUser, request.getPhoto()));
@@ -111,7 +113,7 @@ public class UserGrpcService extends UsersServiceGrpc.UsersServiceImplBase {
                 : "thumbnail";
         log.info("Find all users with {} photos by params: {}", isOriginalText, request);
 
-        var userEntities = userRepository.findAll();
+        var userEntities = userRepository.findAll(PageableMapper.fromPageableGrpc(request.getPageable()));
 
         var userIds = userEntities.stream()
                 .map(UserEntity::getId)
@@ -124,10 +126,7 @@ public class UserGrpcService extends UsersServiceGrpc.UsersServiceImplBase {
                         photo -> photo.getContent().toStringUtf8()));
 
         responseObserver.onNext(
-                UserMapper.toPageGrpc(
-                        userRepository.findAll(PageableMapper.fromPageableGrpc(request.getPageable())),
-                        photoMap
-                ));
+                UserMapper.toPageGrpc(userEntities, photoMap));
 
         responseObserver.onCompleted();
 

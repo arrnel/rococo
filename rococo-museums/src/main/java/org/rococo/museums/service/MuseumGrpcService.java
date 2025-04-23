@@ -24,6 +24,7 @@ import org.rococo.museums.specs.MuseumSpecs;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,8 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
                                     .orElseThrow(() -> new CountryNotFoundException(countryId));
 
                             var museum = museumRepository.save(
-                                    MuseumMapper.fromGrpcRequest(request));
+                                    MuseumMapper.fromGrpcRequest(request)
+                                            .setCreatedDate(LocalDateTime.now()));
                             filesClient.add(museum.getId(), request.getPhoto());
 
                             responseObserver.onNext(
@@ -199,10 +201,7 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
 
         responseObserver.onNext(
                 MuseumMapper.toPageGrpc(
-                        museumRepository.findAll(
-                                museumSpecs.findByCriteria(
-                                        MuseumMapper.fromGrpcFilter(request)),
-                                PageableMapper.fromPageableGrpc(request.getPageable())),
+                        museumEntities,
                         countryMap,
                         photoMap
                 ));
@@ -262,15 +261,13 @@ public class MuseumGrpcService extends MuseumsServiceGrpc.MuseumsServiceImplBase
 
     @Override
     @Transactional
-    public void removeById(IdType request, StreamObserver<com.google.protobuf.Empty> responseObserver) {
+    public void removeById(IdType request, StreamObserver<Empty> responseObserver) {
 
         log.info("Delete museum by id: {}", request.getId());
 
-        museumRepository.findById(UUID.fromString(request.getId()))
-                .ifPresent(museum -> {
-                    filesClient.delete(museum.getId());
-                    museumRepository.delete(museum);
-                });
+        var id = UUID.fromString(request.getId());
+        museumRepository.deleteById(id);
+        filesClient.delete(id);
 
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();

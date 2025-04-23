@@ -47,6 +47,7 @@ public class PaintingMapper {
                 .description(request.getDescription())
                 .artistId(request.getArtist().getId())
                 .museumId(request.getMuseum().getId())
+                .createdDate(entity.getCreatedDate())
                 .build();
     }
 

@@ -23,6 +23,7 @@ import org.rococo.tests.service.MuseumService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,11 +52,14 @@ public class MuseumServiceDb implements MuseumService {
         log.info("Add new museum: {}", museum);
 
         return xaTxTemplate.execute(() -> {
+            var currentDate = LocalDateTime.now();
             var country = countryRepository.findById(museum.getLocation().getCountry().getId())
                     .orElseThrow(() -> new CountryNotFoundException(museum.getLocation().getCountry().getId()));
-            var museumEntity = museumRepository.add(MuseumMapper.fromDTO(museum));
+            var museumEntity = museumRepository.add(MuseumMapper.fromDTO(museum)
+                    .setCreatedDate(currentDate));
             var imageMetadata = filesRepository.create(
-                    ImageMapper.fromBase64Image(MUSEUM, museumEntity.getId(), museum.getPhoto()));
+                    ImageMapper.fromBase64Image(MUSEUM, museumEntity.getId(), museum.getPhoto())
+                            .setCreatedDate(currentDate));
 
             return MuseumMapper.toDTO(
                             museumEntity,
@@ -134,9 +138,9 @@ public class MuseumServiceDb implements MuseumService {
                     .ifPresentOrElse(
                             oldMetadata -> {
                                 if (!oldMetadata.getContentHash().equals(newMetadata.getContentHash()))
-                                    filesRepository.update(newMetadata);
+                                    filesRepository.update(newMetadata.setCreatedDate(oldMetadata.getCreatedDate()));
                             },
-                            () -> filesRepository.create(newMetadata)
+                            () -> filesRepository.create(newMetadata.setCreatedDate(LocalDateTime.now()))
                     );
 
             return MuseumMapper.toDTO(museumEntity, country, newMetadata.getContent().getData());

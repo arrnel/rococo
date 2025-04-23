@@ -4,9 +4,10 @@ create schema if not exists rococo;
 
 create table if not exists rococo.users
 (
-    id         UUID        not null unique default uuid_generate_v1(),
-    username   varchar(50) not null unique,
-    first_name varchar(255),
-    last_name  varchar(255),
+    id           UUID        not null unique default uuid_generate_v1(),
+    username     varchar(50) not null unique,
+    first_name   varchar(255),
+    last_name    varchar(255),
+    created_date timestamp   not null,
     primary key (id, username)
 );

@@ -18,6 +18,7 @@ import org.rococo.tests.service.ArtistService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,10 +44,12 @@ public class ArtistServiceDb implements ArtistService {
     public ArtistDTO add(ArtistDTO artist) {
         log.info("Add new artist: {}", artist);
         return xaTxTemplate.execute(() -> {
+            var currentDate = LocalDateTime.now();
             var ae = artistRepository.add(
-                    ArtistMapper.fromDTO(artist));
+                    ArtistMapper.fromDTO(artist)
+                            .setCreatedDate(currentDate));
             var imageMeta = filesRepository.create(
-                    ImageMapper.fromBase64Image(ARTIST, ae.getId(), artist.getPhoto()));
+                    ImageMapper.fromBase64Image(ARTIST, ae.getId(), artist.getPhoto()).setCreatedDate(currentDate));
             return ArtistMapper.toDTO(ae, imageMeta.getContent().getData());
         });
     }
@@ -75,7 +78,7 @@ public class ArtistServiceDb implements ArtistService {
     @Override
     @Step("Find all artists")
     public List<ArtistDTO> findAllByPartialName(String partialName) {
-        log.info("Find all artists by names: names");
+        log.info("Find all artists by names: {}", partialName);
         return xaTxTemplate.execute(() ->
                 enrichAndConvertAllToDTO(artistRepository.findAllByPartialName(partialName)));
     }
@@ -103,11 +106,15 @@ public class ArtistServiceDb implements ArtistService {
                         var newMetadata = ImageMapper.fromBase64Image(ARTIST, artist.getId(), artist.getPhoto());
                         return oldMeta.getContentHash().equals(newMetadata.getContentHash()) && !artist.getPhoto().isEmpty()
                                 ? oldMeta.getContent().getData()
-                                : filesRepository.update(newMetadata).getContent().getData();
+                                : filesRepository.update(newMetadata
+                                        .setCreatedDate(oldMeta.getCreatedDate()))
+                                .getContent().getData();
                     })
                     .orElseGet(() -> artist.getPhoto().isEmpty()
                             ? null
-                            : filesRepository.create(ImageMapper.fromBase64Image(ARTIST, artist.getId(), artist.getPhoto())).getContent().getData()
+                            : filesRepository.create(ImageMapper.fromBase64Image(ARTIST, artist.getId(), artist.getPhoto())
+                                    .setCreatedDate(LocalDateTime.now()))
+                            .getContent().getData()
                     );
 
             return ArtistMapper.toDTO(

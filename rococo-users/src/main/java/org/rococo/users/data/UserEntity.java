@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -33,5 +34,9 @@ public class UserEntity {
     @ToString.Include
     @Column(name = "last_name")
     private String lastName;
+
+    @ToString.Include
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
 
 }

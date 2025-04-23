@@ -37,6 +37,7 @@ public class ArtistMapper {
                 .id(entity.getId())
                 .name(dto.getName())
                 .biography(dto.getBiography())
+                .createdDate(entity.getCreatedDate())
                 .build();
     }
 
