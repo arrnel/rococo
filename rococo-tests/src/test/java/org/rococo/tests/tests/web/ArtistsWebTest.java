@@ -138,7 +138,7 @@ class ArtistsWebTest {
         // Assertions
         artistPage.shouldHaveName(newArtist.getName())
                 .shouldHaveBio(newArtist.getBiography())
-                .shouldHaveScreenshot(IMG_2_EXPECTED, true);
+                .shouldHaveScreenshot(IMG_2_EXPECTED, 0.07);
     }
 
     @Artist

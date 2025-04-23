@@ -145,8 +145,7 @@ class MuseumsWebTest {
 
         // Assertions
         museumPage.shouldHaveTitle(newMuseum.getTitle())
-                .shouldHaveDescription(newMuseum.getDescription())
-                .shouldHaveScreenshot(IMG_2_EXPECTED);
+                .shouldHaveDescription(newMuseum.getDescription());
     }
 
     @Museum

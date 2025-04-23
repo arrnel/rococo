@@ -100,7 +100,14 @@ public class ArtistPage extends BasePage<ArtistPage> {
     @Step("Should have screenshot")
     public ArtistPage shouldHaveScreenshot(String pathToPhoto, boolean rewrite) {
         log.info("Artist should have exact photo screenshot");
-        photoElement.shouldHave(screenshot(pathToPhoto, rewrite));
+        photoElement.shouldHave(screenshot(pathToPhoto, 1000L, rewrite));
+        return this;
+    }
+
+    @Step("Should have screenshot")
+    public ArtistPage shouldHaveScreenshot(String pathToPhoto, double percentOfTolerance) {
+        log.info("Artist should have exact photo screenshot");
+        photoElement.shouldHave(screenshot(pathToPhoto, percentOfTolerance, 1000L));
         return this;
     }
 

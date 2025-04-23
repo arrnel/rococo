@@ -39,7 +39,7 @@
             paintingFormErrorStore.update((prevState) => {
                 return {
                     ...prevState,
-                    photo: validateImage(file),
+                    content: validateImage(file),
                 }
             });
             content = await blobToBase64(file) as string;
