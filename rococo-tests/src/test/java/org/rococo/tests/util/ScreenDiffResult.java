@@ -55,22 +55,20 @@ public class ScreenDiffResult implements BooleanSupplier {
     }
 
     private String buildDiffTable(long expectedDiffSize, double expectedDiffPercent, long actualDiffSize, double actualDiffPercent) {
-        var columnWidth = 15;
-        String separator = "+" + "-".repeat(columnWidth) + "+" + "-".repeat(columnWidth) + "+" + "-".repeat(columnWidth) + "+";
-        String format = "|%-" + columnWidth + "s|%-" + columnWidth + "s|%-" + columnWidth + "s|\n";
+        String separator = "+" + "-".repeat(16) + "+" + "-".repeat(14) + "+" + "-".repeat(14) + "+";
+        String format = "|%-" + 16 + "s|%-" + 14 + "s|%-" + 14 + "s|\n";
 
         StringBuilder table = new StringBuilder();
 
         // Header
         table.append(separator).append("\n")
-                .append("|           Image difference detected           |\n")
+                .append("|         Image difference detected             |\n")
                 .append(separator).append("\n")
-                .append("|               |    Expected   |    Actual     |\n")
+                .append("|                 |   Expected   |    Actual    |\n")
                 .append(separator).append("\n");
-
         // Data rows
         appendRow(table, format, "diff_size", String.valueOf(expectedDiffSize), actualDiffSize);
-        appendRow(table, format, "diff_percent", expectedDiffPercent, actualDiffPercent);
+        appendRow(table, format, "diff_percent", expectedDiffPercent, String.format("%.3f", actualDiffPercent));
 
         table.append(separator);
         return table.toString();

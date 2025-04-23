@@ -107,7 +107,14 @@ public class MuseumPage extends BasePage<MuseumPage> {
     @Step("Museum photo should have expected screenshot")
     public MuseumPage shouldHaveScreenshot(String pathToScreenshot) {
         log.info("Check museum photo have expected screenshot");
-        photoElement.shouldBe(visible).shouldHave(screenshot(pathToScreenshot, 1000L));
+        photoElement.shouldBe(visible).shouldHave(screenshot(pathToScreenshot, 0.1, 1000L));
+        return this;
+    }
+
+    @Step("Museum photo should have expected screenshot")
+    public MuseumPage shouldHaveScreenshot(String pathToScreenshot, double percentOfTolerance) {
+        log.info("Check museum photo have expected screenshot");
+        photoElement.shouldBe(visible).shouldHave(screenshot(pathToScreenshot, percentOfTolerance, 1000L));
         return this;
     }
 
