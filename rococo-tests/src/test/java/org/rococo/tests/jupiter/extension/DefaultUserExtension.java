@@ -15,11 +15,11 @@ public class DefaultUserExtension implements SuiteExtension {
     @Override
     public void beforeSuite(ExtensionContext context) {
         executor.execute(DefaultUserTokenUpdater.INSTANCE);
-        executor.shutdown();
     }
 
     @Override
     public void afterSuite() {
-        DefaultUserTokenUpdater.INSTANCE.shutdown();
+        if (!executor.isShutdown())
+            executor.shutdownNow();
     }
 }
