@@ -17,7 +17,7 @@ public class PaintingFindAllParamsValidationObject {
 
     UUID artistId;
 
-    @Columns({"id", "title"})
+    @Columns({"id", "title", "createdDate"})
     Pageable pageable;
 
 }

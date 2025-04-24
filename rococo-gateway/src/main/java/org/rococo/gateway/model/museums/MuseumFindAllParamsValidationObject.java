@@ -13,7 +13,7 @@ public class MuseumFindAllParamsValidationObject {
     @Size(min = 3, max = 255, message = "{errors.validation.filter.title.size}")
     String title;
 
-    @Columns({"id", "title"})
+    @Columns({"id", "title", "createdDate"})
     Pageable pageable;
 
 }

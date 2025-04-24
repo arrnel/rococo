@@ -13,7 +13,7 @@ public class ArtistFindAllParamsValidationObject {
     @Size(min = 3, max = 255, message = "{errors.validation.filter.name.size}")
     private String name;
 
-    @Columns({"id", "name"})
+    @Columns({"id", "name", "createdDate"})
     private Pageable pageable;
 
 }
