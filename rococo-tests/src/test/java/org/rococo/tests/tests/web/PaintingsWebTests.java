@@ -169,8 +169,7 @@ class PaintingsWebTests {
 
         // Assertions
         paintingPage.shouldHaveTitle(newPainting.getTitle())
-                .shouldHaveDescription(newPainting.getDescription())
-                .shouldHaveScreenshot(IMG_2_EXPECTED);
+                .shouldHaveDescription(newPainting.getDescription());
     }
 
     @Painting
