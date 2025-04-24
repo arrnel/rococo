@@ -225,17 +225,21 @@ class ArtistsWebTest {
     @Test
     @DisplayName("Check artists found by filtered search")
     void shouldFindArtistsWithFilterTest(List<ArtistDTO> artists) {
-        // Steps && Assertion
+        // Data
+        var query = "vAn";
+        var expectedArtistNames = artists.stream()
+                .map(ArtistDTO::getName)
+                .toList();
+
+        // Steps & Assertion
         open(ArtistsPage.URL, ArtistsPage.class)
-                .shouldContainsArtistsInQuerySearch("vAn", artists.stream()
-                        .map(ArtistDTO::getName)
-                        .toList());
+                .shouldContainsArtistsInQuerySearch(query, expectedArtistNames);
     }
 
     @Test
     @DisplayName("Check displayed empty filtered list container if artist not founded by query")
     void shouldDisplayArtistAfterFilteringByNameTest() {
-        // Steps && Assertion
+        // Steps & Assertion
         open(ArtistsPage.URL, ArtistsPage.class)
                 .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
     }
@@ -244,7 +248,7 @@ class ArtistsWebTest {
     @Test
     @DisplayName("Check displayed default empty list if artist not exists")
     void shouldDisplayEmptyListWhenArtistsNotExistsTest() {
-        // Steps && Assertion
+        // Steps & Assertion
         open(ArtistsPage.URL, ArtistsPage.class)
                 .shouldVisibleDefaultEmptyMuseumsList();
     }
