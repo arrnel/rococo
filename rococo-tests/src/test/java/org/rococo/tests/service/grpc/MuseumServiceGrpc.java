@@ -17,19 +17,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Slf4j
 @ParametersAreNonnullByDefault
 public class MuseumServiceGrpc implements MuseumService {
-
-    private final MuseumsGrpcClient museumClient = new MuseumsGrpcClient();
 
     @Nonnull
     @Override
     @Step("Add new museum: [{museum.title}]")
     public MuseumDTO add(MuseumDTO museum) {
         log.info("Add new museum: {}", museum);
-        return museumClient.add(museum);
+        return withClient(museumsClient ->
+                museumsClient.add(museum));
     }
 
     @Nonnull
@@ -37,7 +37,8 @@ public class MuseumServiceGrpc implements MuseumService {
     @Step("Find museum by id: [{id}]")
     public Optional<MuseumDTO> findById(UUID id) {
         log.info("Find museum with id: {}", id);
-        return museumClient.findById(id);
+        return withClient(museumsClient ->
+                museumsClient.findById(id));
     }
 
     @Nonnull
@@ -45,7 +46,8 @@ public class MuseumServiceGrpc implements MuseumService {
     @Step("Find museum by name: [{name}]")
     public Optional<MuseumDTO> findByTitle(String title) {
         log.info("Find museum with title: {}", title);
-        return museumClient.findByTitle(title);
+        return withClient(museumsClient ->
+                museumsClient.findByTitle(title));
     }
 
     @Nonnull
@@ -53,7 +55,8 @@ public class MuseumServiceGrpc implements MuseumService {
     @Step("Find all museums by partial title: [{partialTitle}]")
     public List<MuseumDTO> findAllByPartialTitle(String partialTitle) {
         log.info("Find all museums by partial name: {}", partialTitle);
-        return findAllMuseums(partialTitle);
+        return withClient(museumsClient ->
+                findAllMuseums(museumsClient, partialTitle));
     }
 
     @Nonnull
@@ -61,7 +64,8 @@ public class MuseumServiceGrpc implements MuseumService {
     @Step("Find all museums")
     public List<MuseumDTO> findAll() {
         log.info("Find all museums");
-        return findAllMuseums(null);
+        return withClient(museumsClient ->
+                findAllMuseums(museumsClient, null));
     }
 
     @Nonnull
@@ -69,27 +73,34 @@ public class MuseumServiceGrpc implements MuseumService {
     @Step("Update museum with id: [{museum.id}]")
     public MuseumDTO update(MuseumDTO museum) {
         log.info("Update museum: {}", museum);
-        return museumClient.update(museum);
+        return withClient(museumsClient ->
+                museumsClient.update(museum));
     }
 
     @Override
     @Step("Delete museum with id: [{id}]")
     public void delete(UUID id) {
         log.info("Delete museum with id: {}", id);
-        museumClient.delete(id);
+        withClient(museumsClient -> {
+            museumsClient.delete(id);
+            return null;
+        });
     }
 
     @Override
     @Step("Clear table \"rococo-museums\" and remove all files with entity_type MUSEUM from \"rococo-files\"")
     public void clearAll() {
         log.info("Truncate table \"rococo-museums\" and remove all files with entity_type MUSEUM from \"rococo-files\"");
-        findAllMuseums(null).stream()
-                .map(MuseumDTO::getId)
-                .forEach(this::delete);
+        withClient(museumsClient -> {
+            findAllMuseums(museumsClient, null).stream()
+                    .map(MuseumDTO::getId)
+                    .forEach(museumsClient::delete);
+            return null;
+        });
     }
 
     @Nonnull
-    private List<MuseumDTO> findAllMuseums(@Nullable String name) {
+    private List<MuseumDTO> findAllMuseums(MuseumsGrpcClient museumsClient, @Nullable String name) {
         // DON'T remove sort. Help to get all museums in parallel test execution
         Pageable pageable = PageRequest.of(
                 0,
@@ -100,13 +111,18 @@ public class MuseumServiceGrpc implements MuseumService {
                 ));
         List<MuseumDTO> allMuseums = new ArrayList<>();
         while (true) {
-            Page<MuseumDTO> page = museumClient.findAll(name, pageable);
+            Page<MuseumDTO> page = museumsClient.findAll(name, pageable);
             allMuseums.addAll(page.getContent());
             if (!page.hasNext()) break;
-            pageable = page.nextPageable();
+            pageable = pageable.next();
         }
-
         return allMuseums;
+    }
+
+    private <T> T withClient(Function<MuseumsGrpcClient, T> operation) {
+        try (MuseumsGrpcClient client = new MuseumsGrpcClient()) {
+            return operation.apply(client);
+        }
     }
 
 }
