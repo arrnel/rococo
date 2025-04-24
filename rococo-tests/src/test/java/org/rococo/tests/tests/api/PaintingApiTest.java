@@ -202,10 +202,8 @@ class PaintingApiTest {
     ) {
 
         // Data
-        var temp = DataGenerator.generatePainting();
-        var newPainting = oldPainting
-                .setTitle(temp.getTitle())
-                .setDescription(temp.getDescription())
+        var newPainting = DataGenerator.generatePainting()
+                .setId(oldPainting.getId())
                 .setArtist(newArtist)
                 .setMuseum(newMuseum);
 
