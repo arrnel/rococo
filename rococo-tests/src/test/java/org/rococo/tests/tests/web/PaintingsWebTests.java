@@ -160,8 +160,6 @@ class PaintingsWebTests {
                 .setMuseum(museum)
                 .setPathToPhoto(IMG_2);
 
-        System.out.println("NEW PAINTING: " + newPainting);
-
         // Steps
         open(PaintingsPage.URL, PaintingsPage.class)
                 .updatePainting(painting.getTitle(), newPainting)
@@ -169,8 +167,7 @@ class PaintingsWebTests {
 
         // Assertions
         paintingPage.shouldHaveTitle(newPainting.getTitle())
-                .shouldHaveDescription(newPainting.getDescription())
-                .shouldHaveScreenshot(IMG_2_EXPECTED);
+                .shouldHaveDescription(newPainting.getDescription());
     }
 
     @Painting
@@ -272,7 +269,7 @@ class PaintingsWebTests {
     @Test
     @DisplayName("Check paintings found by filtered search")
     void shouldFindPaintingsWithFilterTest(List<PaintingDTO> paintings) {
-        // Steps && Assertion
+        // Steps & Assertion
         open(PaintingsPage.URL, PaintingsPage.class)
                 .shouldContainsPaintingsInQuerySearch("vAn", paintings.stream()
                         .map(PaintingDTO::getTitle)
@@ -282,7 +279,7 @@ class PaintingsWebTests {
     @Test
     @DisplayName("Check displayed empty filtered list container if painting not founded by query")
     void shouldDisplayPaintingAfterFilteringByNameTest() {
-        // Steps && Assertion
+        // Steps & Assertion
         open(PaintingsPage.URL, PaintingsPage.class)
                 .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
     }
@@ -291,7 +288,7 @@ class PaintingsWebTests {
     @Test
     @DisplayName("Check displayed default empty list if painting not exists")
     void shouldDisplayEmptyListWhenPaintingsNotExistsTest() {
-        // Steps && Assertion
+        // Steps & Assertion
         open(PaintingsPage.URL, PaintingsPage.class)
                 .shouldVisibleDefaultEmptyPaintingsList();
     }

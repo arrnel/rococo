@@ -1,21 +1,49 @@
 package org.rococo.tests.client.grpc;
 
-import io.grpc.Channel;
+import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.rococo.tests.client.grpc.interceptor.GrpcConsoleInterceptor;
 import org.rococo.tests.config.Config;
 
-public abstract class GrpcClient {
+import java.util.concurrent.TimeUnit;
+
+public abstract class GrpcClient implements AutoCloseable {
 
     protected static final Config CFG = Config.getInstance();
-    protected final Channel channel;
+    protected final ManagedChannel channel;
+    private final String host;
+    private final int port;
 
     public GrpcClient(String host, int port) {
-        channel = ManagedChannelBuilder
+        this.host = host;
+        this.port = port;
+        this.channel = getChannel();
+    }
+
+    protected ManagedChannel getChannel() {
+        return channel == null || channel.isShutdown() || channel.isTerminated()
+                ? getNewChannel()
+                : channel;
+    }
+
+    private ManagedChannel getNewChannel() {
+        return ManagedChannelBuilder
                 .forAddress(host, port)
                 .intercept(new GrpcConsoleInterceptor())
                 .usePlaintext()
                 .build();
+    }
+
+    @Override
+    public void close() {
+        if (channel != null && !channel.isShutdown()) {
+            channel.shutdown();
+            try {
+                channel.awaitTermination(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
 }

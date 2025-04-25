@@ -10,6 +10,7 @@ import org.rococo.paintings.model.PaintingFilter;
 import org.springframework.data.domain.Page;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public class PaintingMapper {
     }
 
     @Nonnull
-    public static PaintingGrpcResponse toGrpcResponse(PaintingEntity entity, ArtistGrpcResponse artist, MuseumGrpcResponse museum, String photo) {
+    public static PaintingGrpcResponse toGrpcResponse(PaintingEntity entity, ArtistGrpcResponse artist, MuseumGrpcResponse museum, @Nullable String photo) {
         return PaintingGrpcResponse.newBuilder()
                 .setId(entity.getId().toString())
                 .setTitle(entity.getTitle())
@@ -68,7 +69,9 @@ public class PaintingMapper {
                                 .setCity(museum.getCity())
                                 .setCountry(museum.getCountry())
                                 .build())
-                .setPhoto(photo)
+                .setPhoto(photo == null
+                        ? ""
+                        : photo)
                 .build();
     }
 

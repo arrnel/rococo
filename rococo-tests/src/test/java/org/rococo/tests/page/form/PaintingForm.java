@@ -40,7 +40,7 @@ public final class PaintingForm extends BaseComponent<PaintingForm> {
             closeButton = self.$(byText("Закрыть")).as("Close edit painting form button"),
             titleErrorLabel = self.$x(errorLocatorTpl.formatted("title")).as("Artist name error label"),
             descriptionErrorLabel = self.$x(errorLocatorTpl.formatted("description")).as("Title error label"),
-            photoErrorLabel = self.$x(errorLocatorTpl.formatted("photo")).as("Title error label");
+            photoErrorLabel = self.$x(errorLocatorTpl.formatted("content")).as("Title error label");
 
     private final SelectField artistsSelect = new SelectField(artistsSelectContainer);
     private final SelectField museumsSelect = new SelectField(museumsSelectContainer);
