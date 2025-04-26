@@ -13,23 +13,26 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Slf4j
 @ParametersAreNonnullByDefault
 public class CountryServiceGrpc implements CountryService {
 
-    private final CountriesGrpcClient countryClient = new CountriesGrpcClient();
-
     @Nonnull
     @Override
     public Optional<CountryDTO> findById(UUID id) {
-        return countryClient.findById(id);
+        log.info("Find country by id: {}", id);
+        return withClient(countriesClient ->
+                countriesClient.findById(id));
     }
 
     @Nonnull
     @Override
     public Optional<CountryDTO> findByCode(CountryCode code) {
-        return countryClient.findByCode(code);
+        log.info("Find country by code: {}", code);
+        return withClient(countriesClient ->
+                countriesClient.findByCode(code));
     }
 
     @Nonnull
@@ -37,7 +40,14 @@ public class CountryServiceGrpc implements CountryService {
     public List<CountryDTO> findAll() {
         log.info("Find all countries");
         Pageable pageable = PageRequest.of(0, 300);
-        return countryClient.findAll(pageable).getContent();
+        return withClient(countriesClient ->
+                countriesClient.findAll(pageable).getContent());
+    }
+
+    private <T> T withClient(Function<CountriesGrpcClient, T> operation) {
+        try (CountriesGrpcClient client = new CountriesGrpcClient()) {
+            return operation.apply(client);
+        }
     }
 
 }

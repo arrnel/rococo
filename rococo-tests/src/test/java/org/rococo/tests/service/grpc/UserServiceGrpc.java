@@ -8,6 +8,7 @@ import org.rococo.tests.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -15,19 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Slf4j
 @ParametersAreNonnullByDefault
 public class UserServiceGrpc implements UserService {
-
-    private final UsersGrpcClient userClient = new UsersGrpcClient();
 
     @Nonnull
     @Override
     @Step("Create new user: [{user.username}]")
     public UserDTO create(UserDTO user) {
         log.info("Create new user: {}", user);
-        return userClient.add(user);
+        return withClient(usersClient ->
+                usersClient.add(user));
     }
 
     @Nonnull
@@ -35,7 +36,8 @@ public class UserServiceGrpc implements UserService {
     @Step("Find user by id: [{id}]")
     public Optional<UserDTO> findById(UUID id) {
         log.info("Find user with id: {}", id);
-        return userClient.findById(id);
+        return withClient(usersClient ->
+                usersClient.findById(id));
     }
 
     @Nonnull
@@ -43,7 +45,8 @@ public class UserServiceGrpc implements UserService {
     @Step("Find user by username: [{username}]")
     public Optional<UserDTO> findByUsername(String username) {
         log.info("Find user with username: {}", username);
-        return userClient.findByUsername(username);
+        return withClient(usersClient ->
+                usersClient.findByUsername(username));
     }
 
     @Nonnull
@@ -51,7 +54,7 @@ public class UserServiceGrpc implements UserService {
     @Step("Find all users")
     public List<UserDTO> findAll() {
         log.info("Find all users");
-        return findUsers();
+        return withClient(this::findUsers);
     }
 
     @Nonnull
@@ -59,37 +62,57 @@ public class UserServiceGrpc implements UserService {
     @Step("Update user: [{user.username}]")
     public UserDTO update(UserDTO user) {
         log.info("Update user: {}", user);
-        return userClient.update(user);
+        return withClient(usersClient ->
+                usersClient.update(user));
     }
 
     @Override
     @Step("Delete user: [{username}]")
     public void delete(String username) {
         log.info("Delete user: {}", username);
-        userClient.findByUsername(username)
-                .ifPresent(u -> userClient.delete(u.getId()));
+        withClient(usersClient -> {
+            usersClient.findByUsername(username).ifPresent(u ->
+                    usersClient.delete(u.getId()));
+            return null;
+        });
     }
 
     @Override
     @Step("Delete all users")
     public void clearAll() {
-        findUsers().forEach(u -> {
-            userClient.delete(u.getId());
+        withClient(usersClient -> {
+            findUsers(usersClient).forEach(u -> {
+                usersClient.delete(u.getId());
+            });
+            return null;
         });
     }
 
     @Nonnull
-    private List<UserDTO> findUsers() {
+    private List<UserDTO> findUsers(UsersGrpcClient usersClient) {
+        // DON'T remove sort. Help to get all artists in parallel test execution
         List<UserDTO> allUsers = new ArrayList<>();
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.by(
+                        Sort.Order.asc("createdDate"),
+                        Sort.Order.asc("id")
+                ));
 
         while (true) {
-            Page<UserDTO> users = userClient.findAll(pageable);
+            Page<UserDTO> users = usersClient.findAll(pageable);
             allUsers.addAll(users.getContent());
             if (!users.hasNext()) break;
             pageable = pageable.next();
         }
         return allUsers;
+    }
+
+    private <T> T withClient(Function<UsersGrpcClient, T> operation) {
+        try (UsersGrpcClient client = new UsersGrpcClient()) {
+            return operation.apply(client);
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package org.rococo.tests.service.grpc;
 
 import lombok.extern.slf4j.Slf4j;
-import org.rococo.tests.client.grpc.FilesGrpcClient;
 import org.rococo.tests.client.grpc.PaintingsGrpcClient;
 import org.rococo.tests.model.PaintingDTO;
 import org.rococo.tests.service.PaintingService;
@@ -17,82 +16,90 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static org.rococo.tests.enums.EntityType.PAINTING;
+import java.util.function.Function;
 
 @Slf4j
 @ParametersAreNonnullByDefault
 public class PaintingServiceGrpc implements PaintingService {
 
-    private final PaintingsGrpcClient paintingClient = new PaintingsGrpcClient();
-    private final FilesGrpcClient filesClient = new FilesGrpcClient();
-
     @Nonnull
     @Override
     public PaintingDTO add(PaintingDTO painting) {
         log.info("Add new painting: {}", painting);
-        var newArtist = paintingClient.add(painting);
-        filesClient.addImage(PAINTING, newArtist.getId(), painting.getPhoto());
-        return newArtist.setPhoto(painting.getPhoto());
+        return withClient(paintingsClient ->
+                paintingsClient.add(painting));
     }
 
     @Nonnull
     @Override
     public Optional<PaintingDTO> findById(UUID id) {
         log.info("Find painting with id: {}", id);
-        return paintingClient.findById(id);
+        return withClient(paintingsClient ->
+                paintingsClient.findById(id));
+
     }
 
     @Nonnull
     @Override
     public Optional<PaintingDTO> findByTitle(String title) {
         log.info("Find painting with title: {}", title);
-        return paintingClient.findByTitle(title);
+        return withClient(paintingsClient ->
+                paintingsClient.findByTitle(title));
     }
 
     @Nonnull
     @Override
     public List<PaintingDTO> findAllByPartialTitle(String partialTitle) {
         log.info("Find all paintings by partial title: {}", partialTitle);
-        return findAllPaintings(partialTitle, null);
+        return withClient(paintingsClient ->
+                findAllPaintings(paintingsClient, partialTitle, null));
     }
 
     @Nonnull
     @Override
     public List<PaintingDTO> findAllByArtistId(UUID artistId) {
         log.info("Find all paintings by artist id: {}", artistId);
-        return findAllPaintings(null, artistId);
+        return withClient(paintingsClient ->
+                findAllPaintings(paintingsClient, null, artistId));
     }
 
     @Nonnull
     @Override
     public List<PaintingDTO> findAll() {
         log.info("Find all paintings");
-        return findAllPaintings(null, null);
+        return withClient(paintingsClient ->
+                findAllPaintings(paintingsClient, null, null));
     }
 
     @Nonnull
     @Override
     public PaintingDTO update(PaintingDTO painting) {
         log.info("Update painting: {}", painting);
-        return paintingClient.update(painting);
+        return withClient(paintingsClient ->
+                paintingsClient.update(painting));
     }
 
     @Override
     public void delete(UUID id) {
         log.info("Delete painting with id: {}", id);
-        paintingClient.delete(id);
+        withClient(paintingsClient -> {
+            paintingsClient.delete(id);
+            return null;
+        });
     }
 
     @Override
     public void clearAll() {
         log.info("Truncate table \"rococo-paintings\" and remove all files with entity_type PAINTING from \"rococo-files\"");
-        findAllPaintings(null, null).stream()
-                .map(PaintingDTO::getId)
-                .forEach(this::delete);
+        withClient(paintingsClient -> {
+            findAllPaintings(paintingsClient, null, null).stream()
+                    .map(PaintingDTO::getId)
+                    .forEach(paintingsClient::delete);
+            return null;
+        });
     }
 
-    private List<PaintingDTO> findAllPaintings(@Nullable String title, @Nullable UUID artistId) {
+    private List<PaintingDTO> findAllPaintings(PaintingsGrpcClient paintingsClient, @Nullable String title, @Nullable UUID artistId) {
         // DON'T remove sort. Help to get all paintings in parallel test execution
         Pageable pageable = PageRequest.of(
                 0,
@@ -101,12 +108,18 @@ public class PaintingServiceGrpc implements PaintingService {
                         Sort.Order.asc("id")));
         List<PaintingDTO> allPaintings = new ArrayList<>();
         while (true) {
-            Page<PaintingDTO> paintings = paintingClient.findAll(title, artistId, pageable);
-            allPaintings.addAll(paintings.getContent());
-            if (!paintings.hasNext()) break;
+            Page<PaintingDTO> page = paintingsClient.findAll(title, artistId, pageable);
+            allPaintings.addAll(page.getContent());
+            if (!page.hasNext()) break;
             pageable = pageable.next();
         }
         return allPaintings;
+    }
+
+    private <T> T withClient(Function<PaintingsGrpcClient, T> operation) {
+        try (PaintingsGrpcClient client = new PaintingsGrpcClient()) {
+            return operation.apply(client);
+        }
     }
 
 }

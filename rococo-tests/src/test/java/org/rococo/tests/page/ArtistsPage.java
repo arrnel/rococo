@@ -103,14 +103,14 @@ public class ArtistsPage extends BasePage<ArtistsPage> {
 
     @Step("Check artists not exists: [{artistName}]")
     public ArtistsPage shouldNotExistArtists(List<String> artistsName) {
-        log.info("Check artist not exists: [{}]", artistsName);
+        log.info("Check artists not exists: [{}]", artistsName);
         artistsList.shouldNotContainItems(artistsName);
         return this;
     }
 
     @Step("Check artists founded in search by query: [{artistName}]")
     public ArtistsPage shouldContainsArtistsInQuerySearch(String query, List<String> artistsName) {
-        log.info("Check artist not exists: [{}]", artistsName);
+        log.info("Check artists exists: [{}]", artistsName);
         artistsList.shouldContainsItemsByQuery(query, artistsName);
         return this;
     }

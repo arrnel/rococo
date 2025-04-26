@@ -234,7 +234,7 @@ class MuseumsWebTest {
     @Test
     @DisplayName("Check museums found by filtered search")
     void shouldFindMuseumsWithFilterTest(List<MuseumDTO> museums) {
-        // Steps && Assertion
+        // Steps & Assertion
         open(MuseumsPage.URL, MuseumsPage.class)
                 .shouldContainsMuseumsInQuerySearch("vAn", museums.stream()
                         .map(MuseumDTO::getTitle)
@@ -244,7 +244,7 @@ class MuseumsWebTest {
     @Test
     @DisplayName("Check displayed empty filtered list container if museum not founded by query")
     void shouldDisplayMuseumAfterFilteringByNameTest() {
-        // Steps && Assertion
+        // Steps & Assertion
         open(MuseumsPage.URL, MuseumsPage.class)
                 .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
     }
@@ -253,7 +253,7 @@ class MuseumsWebTest {
     @Test
     @DisplayName("Check displayed default empty list if museum not exists")
     void shouldDisplayEmptyListWhenMuseumsNotExistsTest() {
-        // Steps && Assertion
+        // Steps & Assertion
         open(MuseumsPage.URL, MuseumsPage.class)
                 .shouldVisibleDefaultEmptyMuseumsList();
     }

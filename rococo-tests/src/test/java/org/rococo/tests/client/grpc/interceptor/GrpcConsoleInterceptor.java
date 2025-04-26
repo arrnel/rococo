@@ -20,7 +20,7 @@ public class GrpcConsoleInterceptor implements ClientInterceptor {
             @Override
             public void sendMessage(Object message) {
                 try {
-                    log.info("REQUEST: {}", printer.print((MessageOrBuilder) message));
+                    log.debug("REQUEST: {}", printer.print((MessageOrBuilder) message));
                 } catch (InvalidProtocolBufferException e) {
                     throw new RuntimeException(e);
                 }
@@ -34,7 +34,7 @@ public class GrpcConsoleInterceptor implements ClientInterceptor {
                     @Override
                     public void onMessage(Object message) {
                         try {
-                            log.info("RESPONSE: {}", printer.print((MessageOrBuilder) message));
+                            log.debug("RESPONSE: {}", printer.print((MessageOrBuilder) message));
                         } catch (InvalidProtocolBufferException e) {
                             throw new RuntimeException(e);
                         }

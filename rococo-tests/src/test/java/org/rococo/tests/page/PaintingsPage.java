@@ -99,21 +99,21 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
 
     @Step("Check paintings not exists: [{paintingTitle}]")
     public PaintingsPage shouldNotExistPaintings(List<String> paintingsName) {
-        log.info("Check painting not exists: [{}]", paintingsName);
+        log.info("Check paintings not exists: [{}]", paintingsName);
         paintingsList.shouldNotContainItems(paintingsName);
         return this;
     }
 
     @Step("Check paintings founded in search by query: [{paintingTitle}]")
     public PaintingsPage shouldContainsPaintingsInQuerySearch(String query, List<String> paintingsName) {
-        log.info("Check painting not exists: [{}]", paintingsName);
+        log.info("Check paintings not exists: [{}]", paintingsName);
         paintingsList.shouldContainsItemsByQuery(query, paintingsName);
         return this;
     }
 
     @Step("Check paintings not founded in search by query: [{paintingTitle}]")
     public PaintingsPage shouldNotContainsItemsByQuery(String query, List<String> paintingsName) {
-        log.info("Check painting not exists: [{}]", paintingsName);
+        log.info("Check paintings not exists: [{}]", paintingsName);
         paintingsList.shouldNotContainsItemsByQuery(query, paintingsName);
         return this;
     }
