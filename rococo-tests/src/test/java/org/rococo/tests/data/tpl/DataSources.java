@@ -34,11 +34,10 @@ public class DataSources {
                     props.put("user", CFG.dbUser());
                     props.put("password", CFG.dbPassword());
                     dsBean.setXaProperties(props);
-                    dsBean.setPoolSize(3);
-                    dsBean.setMaxPoolSize(20);
-                    P6DataSource p6DataSource = new P6DataSource(
-                            dsBean
-                    );
+                    dsBean.setPoolSize(10);
+                    dsBean.setMaxPoolSize(50);
+                    dsBean.setBorrowConnectionTimeout(5);
+                    P6DataSource p6DataSource = new P6DataSource(dsBean);
                     try {
                         InitialContext context = new InitialContext();
                         context.bind("java:comp/env/jdbc/" + uniqId, p6DataSource);
