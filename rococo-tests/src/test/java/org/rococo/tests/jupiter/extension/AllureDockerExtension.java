@@ -45,18 +45,21 @@ public class AllureDockerExtension implements SuiteExtension {
 
         log.info("Upload allure results and generate report: {}", allureResultsDirectory);
 
-        var folder = allureResultsDirectory.toFile();
-
-        if (!folder.exists() || !folder.isDirectory())
+        if (!Files.exists(allureResultsDirectory) || !Files.isDirectory(allureResultsDirectory))
             throw new IllegalStateException("Allure results directory does not exist or is not a directory");
 
-        Arrays.stream(folder.listFiles())
-                .forEach(file -> {
-                    var sendFile = new DecodedAllureFile(file.getName(), encodeFileToBase64(file));
-                    allureApiClient.uploadResults(PROJECT_NAME, new AllureResults(List.of(sendFile)));
-                });
-
-        allureApiClient.generateReport(PROJECT_NAME);
+        try (var paths = Files.walk(allureResultsDirectory).filter(Files::isRegularFile)) {
+            paths.forEach(path -> {
+                var sendFile = new DecodedAllureFile(
+                        path.getFileName().toString(),
+                        encodeFileToBase64(path.toFile())
+                );
+                allureApiClient.uploadResults(PROJECT_NAME, new AllureResults(List.of(sendFile)));
+            });
+            allureApiClient.generateReport(PROJECT_NAME);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
