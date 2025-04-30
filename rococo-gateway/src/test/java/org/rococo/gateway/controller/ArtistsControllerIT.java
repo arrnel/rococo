@@ -318,7 +318,7 @@ class ArtistsControllerIT {
                                       {
                                         "domain": "/api/artist",
                                         "reason": "pageable.Columns",
-                                        "message": "[Columns] Request contains invalid columns. Available columns: [id, name]"
+                                        "message": "[Columns] Request contains invalid columns. Available columns: [id, name, createdDate]"
                                       }
                                     ]
                                   }
