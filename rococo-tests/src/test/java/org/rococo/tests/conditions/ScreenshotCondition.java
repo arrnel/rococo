@@ -7,14 +7,15 @@ import com.codeborne.selenide.WebElementCondition;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.qameta.allure.Allure;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
+import org.rococo.tests.config.Config;
 import org.rococo.tests.ex.ExpectedImageNotFoundException;
 import org.rococo.tests.ex.ScreenshotException;
 import org.rococo.tests.model.allure.ScreenDiff;
 import org.rococo.tests.util.ScreenDiffResult;
-import org.springframework.core.io.ClassPathResource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -22,6 +23,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,40 +31,43 @@ import java.util.Base64;
 
 import static com.codeborne.selenide.CheckResult.accepted;
 
+@Slf4j
 @ParametersAreNonnullByDefault
 public final class ScreenshotCondition {
 
-    private static final String PATH_TO_RESOURCES = "rococo-tests/src/test/resources/";
+    private static final Config CFG = Config.getInstance();
     private static final ObjectMapper OM = new ObjectMapper();
     private static final Base64.Encoder encoder = Base64.getEncoder();
     private static final double DEFAULT_PERCENTAGE_TOLERANCE = 0.02;
 
     /**
-     * @param urlToScreenshot           Path to expected screenshot
-     * @param percentOfTolerance        Allowed percent of difference [0; 0.2].
-     * @param millis                    Wait before making screenshot
-     * @param rewriteExpectedAfterCheck Create and save new expected screenshot
+     * @param urlToScreenshot    Path to expected screenshot
+     * @param percentOfTolerance Allowed percent of difference [0; 0.2].
+     * @param millis             Wait before making screenshot
+     * @param rewriteExpected    Create and save new expected screenshot
      */
     @Nonnull
     public static WebElementCondition screenshot(
             String urlToScreenshot,
             double percentOfTolerance,
             long millis,
-            boolean rewriteExpectedAfterCheck
+            boolean rewriteExpected
     ) {
 
         Selenide.sleep(millis);
+        var relativeUrl = urlToScreenshot.charAt(0) == '/'
+                ? urlToScreenshot.substring(0, urlToScreenshot.length() - 1)
+                : urlToScreenshot;
+        var expectedScreenshotUrl = Path.of(CFG.screenshotBaseDir() + relativeUrl);
 
-        return new WebElementCondition("expected screenshot: [%s]".formatted(urlToScreenshot)) {
+        return new WebElementCondition("expected screenshot: [%s]".formatted(expectedScreenshotUrl.toString())) {
 
             @NotNull
             @Override
             public CheckResult check(Driver driver, WebElement element) {
 
-                final BufferedImage expectedScreenshot = getExpectedScreenshot(urlToScreenshot);
+                final BufferedImage expectedScreenshot = getExpectedScreenshot(expectedScreenshotUrl);
                 BufferedImage actualScreenshot = takeElementScreenshot(element);
-                if (rewriteExpectedAfterCheck)
-                    saveNewExpectedScreenshot(actualScreenshot, urlToScreenshot);
 
                 ScreenDiffResult diff = new ScreenDiffResult(
                         expectedScreenshot,
@@ -84,6 +89,9 @@ public final class ScreenshotCondition {
                             : "Expected and actual screenshots has difference greater then: " + percentOfTolerance;
                     throw new ScreenshotException(message);
                 }
+
+                if (CFG.rewriteAllImages() || rewriteExpected)
+                    saveNewExpectedScreenshot(actualScreenshot, expectedScreenshotUrl);
 
                 return accepted();
 
@@ -119,23 +127,23 @@ public final class ScreenshotCondition {
     }
 
     /**
-     * @param urlToScreenshot           Path to expected screenshot;
-     * @param millis                    Wait before making screenshot;
-     * @param rewriteExpectedAfterCheck Create and save new expected screenshot;
+     * @param urlToScreenshot Path to expected screenshot;
+     * @param millis          Wait before making screenshot;
+     * @param rewriteExpected Create and save new expected screenshot;
      * @apiNote * percentOfTolerance = DEFAULT_PERCENTAGE_TOLERANCE.
      */
     @Nonnull
     public static WebElementCondition screenshot(
             String urlToScreenshot,
             long millis,
-            boolean rewriteExpectedAfterCheck
+            boolean rewriteExpected
     ) {
-        return (screenshot(urlToScreenshot, DEFAULT_PERCENTAGE_TOLERANCE, millis, rewriteExpectedAfterCheck));
+        return (screenshot(urlToScreenshot, DEFAULT_PERCENTAGE_TOLERANCE, millis, rewriteExpected));
     }
 
     /**
-     * @param urlToScreenshot           Path to expected screenshot
-     * @param rewriteExpectedAfterCheck Create and save new expected screenshot
+     * @param urlToScreenshot Path to expected screenshot
+     * @param rewriteExpected Create and save new expected screenshot
      * @apiNote * percentOfTolerance = DEFAULT_PERCENTAGE_TOLERANCE.
      * <br>
      * * millis = 0
@@ -143,9 +151,9 @@ public final class ScreenshotCondition {
     @Nonnull
     public static WebElementCondition screenshot(
             String urlToScreenshot,
-            boolean rewriteExpectedAfterCheck
+            boolean rewriteExpected
     ) {
-        return (screenshot(urlToScreenshot, DEFAULT_PERCENTAGE_TOLERANCE, 0, rewriteExpectedAfterCheck));
+        return (screenshot(urlToScreenshot, DEFAULT_PERCENTAGE_TOLERANCE, 0, rewriteExpected));
     }
 
     /**
@@ -159,37 +167,28 @@ public final class ScreenshotCondition {
         return (screenshot(urlToScreenshot, DEFAULT_PERCENTAGE_TOLERANCE, 0, false));
     }
 
-    @NotNull
-    private static File getFile(String urlToScreenshot) {
+    private static BufferedImage getExpectedScreenshot(Path expectedScreenshotUrl) {
 
-        urlToScreenshot = urlToScreenshot.charAt(0) == '/'
-                ? urlToScreenshot.substring(0, urlToScreenshot.length() - 1)
-                : urlToScreenshot;
-        File expectedScreenshotFile = new File(PATH_TO_RESOURCES + urlToScreenshot);
-        Path path = expectedScreenshotFile.toPath();
+        if (Files.notExists(expectedScreenshotUrl))
+            throw new ExpectedImageNotFoundException("File not found by path: " + expectedScreenshotUrl.toAbsolutePath());
 
-        if (Files.notExists(path))
-            throw new ExpectedImageNotFoundException("File not found by path: " + expectedScreenshotFile.getAbsolutePath());
+        if (Files.isDirectory(expectedScreenshotUrl))
+            throw new IllegalStateException(expectedScreenshotUrl.toAbsolutePath() + " (Is a directory)");
 
-        if (Files.isDirectory(path))
-            throw new IllegalStateException(expectedScreenshotFile.getAbsolutePath() + " (Is a directory)");
+        log.info("Expected screenshot path: {} \n absolute path: {}", expectedScreenshotUrl, expectedScreenshotUrl.toAbsolutePath());
 
-        return expectedScreenshotFile;
-
-    }
-
-    private static BufferedImage getExpectedScreenshot(String pathToFile) {
-        try {
-            return ImageIO.read(new ClassPathResource(pathToFile).getInputStream());
+        try (FileInputStream fis = new FileInputStream(expectedScreenshotUrl.toFile().getAbsolutePath())) {
+            return ImageIO.read(fis);
         } catch (IOException e) {
-            throw new ScreenshotException("Unable to parse expected file from: " + pathToFile, e);
+            throw new ScreenshotException("Unable to parse expected file from: %s. message: %s".formatted(expectedScreenshotUrl, e.getMessage()), e);
         }
+
     }
 
-    private static void saveNewExpectedScreenshot(BufferedImage img, String urlToScreenshot) {
+    private static void saveNewExpectedScreenshot(BufferedImage img, Path expectedScreenshotUrl) {
         try {
             Files.write(
-                    Path.of(PATH_TO_RESOURCES + urlToScreenshot).toAbsolutePath(),
+                    expectedScreenshotUrl.toAbsolutePath(),
                     imageToBytes(img));
         } catch (IOException e) {
             throw new RuntimeException(e);

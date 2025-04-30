@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.tests.conditions.ScreenshotCondition;
+import org.rococo.tests.config.Config;
 import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.page.component.BaseComponent;
 
@@ -19,6 +20,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public final class ArtistForm extends BaseComponent<ArtistForm> {
 
+    private static final Config CFG = Config.getInstance();
     private static final String ADD_ARTIST_TITLE = "Новый художник";
     private static final String UPDATE_ARTIST_TITLE = "Редактировать художника";
 
@@ -57,7 +59,7 @@ public final class ArtistForm extends BaseComponent<ArtistForm> {
     private void fillForm(ArtistDTO artist) {
         nameInput.setValue(artist.getName());
         bioInput.setValue(artist.getBiography());
-        photoInput.uploadFromClasspath(artist.getPathToPhoto());
+        photoInput.uploadFromClasspath(CFG.originalPhotoBaseDir() + artist.getPathToPhoto());
     }
 
     @Step("Press add button")

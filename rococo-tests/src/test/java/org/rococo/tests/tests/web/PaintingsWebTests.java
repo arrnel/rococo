@@ -31,11 +31,11 @@ class PaintingsWebTests {
 
     private static final Faker FAKE = new Faker();
     private static final String
-            IMG_1 = "img/original/img.jpg",
-            IMG_1_EXPECTED = "img/expected/painting/img.jpg",
-            IMG_2 = "img/original/img.png",
-            IMG_2_EXPECTED = "img/expected/painting/img.png",
-            ILLEGAL_FORMAT_IMG = "img/original/img.gif";
+            IMG_1 = "img.jpg",
+            IMG_1_EXPECTED = "painting/img.jpg",
+            IMG_2 = "img.png",
+            IMG_2_EXPECTED = "painting/img.png",
+            ILLEGAL_FORMAT_IMG = "img.gif";
 
     private final PaintingsPage paintingsPage = new PaintingsPage();
     private final PaintingPage paintingPage = new PaintingPage();

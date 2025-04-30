@@ -29,11 +29,11 @@ class ArtistsWebTest {
 
     private static final Faker FAKE = new Faker();
     private static final String
-            IMG_1 = "img/original/img.jpg",
-            IMG_1_EXPECTED = "img/expected/artist/img.jpg",
-            IMG_2 = "img/original/img.png",
-            IMG_2_EXPECTED = "img/expected/artist/img.png",
-            ILLEGAL_FORMAT_IMG = "img/original/img.gif";
+            IMG_1 = "img.jpg",
+            IMG_1_EXPECTED = "artist/img.jpg",
+            IMG_2 = "img.png",
+            IMG_2_EXPECTED = "artist/img.png",
+            ILLEGAL_FORMAT_IMG = "img.gif";
 
     private final ArtistsPage artistsPage = new ArtistsPage();
     private final ArtistPage artistPage = new ArtistPage();

@@ -83,18 +83,21 @@ public class BrowserExtension implements BeforeEachCallback, AfterEachCallback, 
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        savePage();
         doScreenshot();
         throw throwable;
     }
 
     @Override
     public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        savePage();
         doScreenshot();
         throw throwable;
     }
 
     @Override
     public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        savePage();
         doScreenshot();
         throw throwable;
     }
@@ -106,6 +109,17 @@ public class BrowserExtension implements BeforeEachCallback, AfterEachCallback, 
                     new ByteArrayInputStream(
                             ((TakesScreenshot) WebDriverRunner.getWebDriver()).getScreenshotAs(OutputType.BYTES)
                     )
+            );
+        }
+    }
+
+    private static void savePage() {
+        if (WebDriverRunner.hasWebDriverStarted()) {
+            Allure.addAttachment(
+                    "Page html",
+                    "text/html",
+                    WebDriverRunner.getWebDriver().getPageSource(),
+                    "html"
             );
         }
     }

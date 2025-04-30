@@ -29,11 +29,11 @@ class MuseumsWebTest {
 
     private static final Faker FAKE = new Faker();
     private static final String
-            IMG_1 = "img/original/img.jpg",
-            IMG_1_EXPECTED = "img/expected/museum/img.jpg",
-            IMG_2 = "img/original/img.png",
-            IMG_2_EXPECTED = "img/expected/museum/img.png",
-            ILLEGAL_FORMAT_IMG = "img/original/img.gif";
+            IMG_1 = "img.jpg",
+            IMG_1_EXPECTED = "museum/img.jpg",
+            IMG_2 = "img.png",
+            IMG_2_EXPECTED = "museum/img.png",
+            ILLEGAL_FORMAT_IMG = "img.gif";
 
     private final MuseumsPage museumsPage = new MuseumsPage();
     private final MuseumPage museumPage = new MuseumPage();
@@ -180,8 +180,8 @@ class MuseumsWebTest {
     @Museum
     @ParameterizedTest(name = "Case: [{0}]")
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidMuseumData")
-    @DisplayName("Check errors visible on update museum form if fields have greater than max characters length")
-    void shouldVisibleErrorsOnMuseumUpdateFormIfMuseumFieldsHaveGreaterThanMaxLengthTest(
+    @DisplayName("Check errors visible on update museum form if fields have invalid data length")
+    void shouldVisibleErrorsOnMuseumUpdateFormIfMuseumFieldsHaveInvalidDataLengthTest(
             String caseName,
             String museumTitle,
             String museumDescription,

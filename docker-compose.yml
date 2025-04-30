@@ -204,6 +204,7 @@ services:
       - GITHUB_TOKEN_NAME=${GITHUB_TOKEN_NAME}
     volumes:
       - allure-results:/rococo/rococo-tests/build/allure-results
+      - ./rococo-tests/.screen-output/screenshots/selenoid:/rococo/rococo-tests/.screen-output/screenshots/selenoid
     depends_on:
       frontend.rococo.dc:
         condition: service_started

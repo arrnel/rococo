@@ -11,6 +11,7 @@ import lombok.Getter;
 import org.rococo.tests.enums.EntityType;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -148,6 +149,9 @@ public class ItemsListComponent extends BaseComponent<ItemsListComponent> {
         searchComponent.search(itemText);
         Selenide.sleep(UPDATE_LIST_TIMEOUT);
 
+        if (!self.is(visible, Duration.ofSeconds(5)))
+            return Optional.empty();
+
         while (true) {
             var currentItemsCount = self.$$("li").size();
             var foundedItem = findElementInTableInRange(itemText, previousItemsCount, currentItemsCount);
@@ -176,6 +180,9 @@ public class ItemsListComponent extends BaseComponent<ItemsListComponent> {
 
         searchComponent.search(query);
         Selenide.sleep(UPDATE_LIST_TIMEOUT);
+
+        if (!self.is(visible, Duration.ofSeconds(5)))
+            return result;
 
         while (true) {
             var currentItemsCount = self.$$("li").size();

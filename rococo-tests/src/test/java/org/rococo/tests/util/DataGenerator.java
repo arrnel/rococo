@@ -18,7 +18,7 @@ public class DataGenerator {
     }
 
     public static String randomImagePath(boolean isVertical) {
-        return "img/original/img%s.%s".formatted(
+        return "img%s.%s".formatted(
                 isVertical
                         ? "_vertical"
                         : "",

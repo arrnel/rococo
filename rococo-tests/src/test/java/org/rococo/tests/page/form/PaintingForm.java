@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.tests.conditions.ScreenshotCondition;
+import org.rococo.tests.config.Config;
 import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.model.PaintingDTO;
@@ -23,6 +24,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public final class PaintingForm extends BaseComponent<PaintingForm> {
 
+    private static final Config CFG = Config.getInstance();
     private static final String ADD_PAINTING_TITLE = "Новая картина";
     private static final String UPDATE_PAINTING_TITLE = "Редактировать картину";
 
@@ -79,7 +81,7 @@ public final class PaintingForm extends BaseComponent<PaintingForm> {
 
     @Step("Upload painting photo: {paintingPhoto}")
     private void uploadPhoto(String paintingPhoto) {
-        photoInput.uploadFromClasspath(paintingPhoto);
+        photoInput.uploadFromClasspath(CFG.originalPhotoBaseDir() + paintingPhoto);
     }
 
     @Step("Fill title: {title}")

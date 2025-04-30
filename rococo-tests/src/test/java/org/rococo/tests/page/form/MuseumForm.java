@@ -3,6 +3,7 @@ package org.rococo.tests.page.form;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
+import org.rococo.tests.config.Config;
 import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.page.component.BaseComponent;
 import org.rococo.tests.page.component.SelectField;
@@ -19,6 +20,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public final class MuseumForm extends BaseComponent<MuseumForm> {
 
+    private static final Config CFG = Config.getInstance();
     private static final String ADD_MUSEUM_TITLE = "Новый музей";
     private static final String UPDATE_MUSEUM_TITLE = "Редактировать музей";
 
@@ -68,7 +70,7 @@ public final class MuseumForm extends BaseComponent<MuseumForm> {
         descriptionInput.setValue(museum.getDescription());
         city.setValue(museum.getLocation().getCity());
         countrySelect.selectByExactName(museum.getLocation().getCountry().getName());
-        photoInput.uploadFromClasspath(museum.getPathToPhoto());
+        photoInput.uploadFromClasspath(CFG.originalPhotoBaseDir() + museum.getPathToPhoto());
     }
 
     @Step("Check country select contains country with name: {countryTitle}")
