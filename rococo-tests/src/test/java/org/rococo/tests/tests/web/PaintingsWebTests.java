@@ -3,7 +3,6 @@ package org.rococo.tests.tests.web;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -284,7 +283,7 @@ class PaintingsWebTests {
                 .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
     }
 
-    @Disabled
+    @DisabledByIssue(issueId = "32")
     @Test
     @DisplayName("Check displayed default empty list if painting not exists")
     void shouldDisplayEmptyListWhenPaintingsNotExistsTest() {

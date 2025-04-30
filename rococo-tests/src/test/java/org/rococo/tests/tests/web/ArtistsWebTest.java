@@ -3,15 +3,11 @@ package org.rococo.tests.tests.web;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.rococo.tests.jupiter.annotation.ApiLogin;
-import org.rococo.tests.jupiter.annotation.Artist;
-import org.rococo.tests.jupiter.annotation.Artists;
-import org.rococo.tests.jupiter.annotation.User;
+import org.rococo.tests.jupiter.annotation.*;
 import org.rococo.tests.jupiter.annotation.meta.WebTest;
 import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.page.ArtistPage;
@@ -244,7 +240,7 @@ class ArtistsWebTest {
                 .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
     }
 
-    @Disabled
+    @DisabledByIssue(issueId = "32")
     @Test
     @DisplayName("Check displayed default empty list if artist not exists")
     void shouldDisplayEmptyListWhenArtistsNotExistsTest() {

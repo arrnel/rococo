@@ -46,57 +46,73 @@
 
 # Сетевые порты и их назначение
 
-| Сервис    | Порт | Описание сервиса                                       |
-|-----------|------|--------------------------------------------------------|
-| FRONTEND  | 3000 | Клиент                                                 |
+| Сервис    | Порт | Описание сервиса                                        |
+|-----------|------|---------------------------------------------------------|
+| FRONTEND  | 3000 | Клиент                                                  |
 | AUTH      | 9000 | Необходим для регистрации, аутентификации и авторизации |
-| GATEWAY   | 9001 | Маршрутизирующий сервис                                |
-| ARTISTS   | 9002 | Хранит информацию о художниках                         |
-| COUNTRIES | 9003 | Хранит информацию о художниках                         |
-| FILES     | 9004 | Хранит информацию об изображениях сущностей            |
-| MUSEUMS   | 9005 | Хранит информацию о музеях                             |
-| PAINTINGS | 9006 | Хранит информацию о картинах                           |
-| USERS     | 9007 | Хранит информацию о пользователях                      |
+| GATEWAY   | 9001 | Маршрутизирующий сервис                                 |
+| ARTISTS   | 9002 | Хранит информацию о художниках                          |
+| COUNTRIES | 9003 | Хранит информацию о художниках                          |
+| FILES     | 9004 | Хранит информацию об изображениях сущностей             |
+| MUSEUMS   | 9005 | Хранит информацию о музеях                              |
+| PAINTINGS | 9006 | Хранит информацию о картинах                            |
+| USERS     | 9007 | Хранит информацию о пользователях                       |
 
 Прочее (при запуске в Docker)
 
-| Сервис      | Порт  |
-|-------------|-------|
-| FRONTEND    | 8080  |
-| ALLURE      | 5050  |
-| ALLURE-UI   | 5051  |
-| SELENOID    | 4444  |
-| SELENOID-UI | 5052  |
+| Сервис      | Порт |
+|-------------|------|
+| FRONTEND    | 8080 |
+| ALLURE      | 5050 |
+| ALLURE-UI   | 5051 |
+| SELENOID    | 4444 |
+| SELENOID-UI | 5052 |
 
-При локальном запуске через docker-compose.local.yml или docker-compose.local-mock.yml можно конфигурировать порты приложения.
-В иных случаях конфигурация не обязательна, так как все существующие контейнеры удаляются и используются значения по умолчанию.
+При локальном запуске через docker-compose.local.yml или docker-compose.local-mock.yml можно конфигурировать порты
+приложения.
+В иных случаях конфигурация не обязательна, так как все существующие контейнеры удаляются и используются значения по
+умолчанию.
 
 <details>
 <summary>Полный список используемых переменных окружений в локальной среде</summary>
 
 Если у вас операционная система на базе Linux, то переменные окружения лучше сохранять в /etc/environment.
-Так переменные окружения будут присутствовать в переменных окружения ОС.
+Так переменные окружения будут присутствовать в переменных окружения ОС в IDEA.
 
-| Ключ                    | Значение       |
-|-------------------------|----------------|
-| ROCOCO_DB_PORT          | 5432           |
-| ROCOCO_DB_USER          | postgres       |
-| ROCOCO_DB_PASSWORD      | secret         |
-| ROCOCO_PGADMIN_PORT     | 5433           |
-| ROCOCO_PGADMIN_EMAIL    | mymail@mail.ru |
-| ROCOCO_PGADMIN_PASSWORD | 12345          |
-| ROCOCO_KAFKA_PORT       | 9092           |
-| ROCOCO_ZOOKEEPER_PORT   | 2181           |
-| ROCOCO_FRONT_PORT       | 3000           |
-| ROCOCO_WIREMOCK_PORT    | 9001           |
-| ROCOCO_AUTH_PORT        | 9000           |
-| ROCOCO_GATEWAY_PORT     | 9001           |
-| ROCOCO_ARTISTS_PORT     | 9002           |
-| ROCOCO_COUNTRIES_PORT   | 9003           |
-| ROCOCO_FILES_PORT       | 9004           |
-| ROCOCO_MUSEUMS_PORT     | 9005           |
-| ROCOCO_PAINTINGS_PORT   | 9006           |
-| ROCOCO_USERS_PORT       | 9007           |
+### !!! Для запуска тестов необходимо сгенерировать Fine-grained personal access token и его наименовнание.
+
+Сгенерировать Fine-grained personal access token ключ по ссылке: https://github.com/settings/personal-access-tokens
+
+<span style = "color:#ff001e"> * Обязательные переменные и проперти</span>
+
+Переменные окружения:
+
+| Ключ                    | Значение        |
+|-------------------------|-----------------|
+| * GITHUB_TOKEN_NAME     | _**Имя PAT**_   |
+| * GITHUB_TOKEN          | _**Сам токен**_ |
+| ROCOCO_DB_PORT          | 5432            |
+| ROCOCO_DB_USER          | postgres        |
+| ROCOCO_DB_PASSWORD      | secret          |
+| ROCOCO_PGADMIN_PORT     | 5433            |
+| ROCOCO_PGADMIN_EMAIL    | mymail@mail.ru  |
+| ROCOCO_PGADMIN_PASSWORD | 12345           |
+| ROCOCO_KAFKA_PORT       | 9092            |
+| ROCOCO_ZOOKEEPER_PORT   | 2181            |
+| ROCOCO_FRONT_PORT       | 3000            |
+| ROCOCO_WIREMOCK_PORT    | 9001            |
+| ROCOCO_AUTH_PORT        | 9000            |
+| ROCOCO_GATEWAY_PORT     | 9001            |
+| ROCOCO_ARTISTS_PORT     | 9002            |
+| ROCOCO_COUNTRIES_PORT   | 9003            |
+| ROCOCO_FILES_PORT       | 9004            |
+| ROCOCO_MUSEUMS_PORT     | 9005            |
+| ROCOCO_PAINTINGS_PORT   | 9006            |
+| ROCOCO_USERS_PORT       | 9007            |
+
+| Ключ       | Значение |
+|------------|----------|
+| * test.env | local    |
 
 </details>
 
@@ -107,7 +123,8 @@
 Во-первых, и в-главных, необходимо использовать [bash terminal](https://www.geeksforgeeks.org/working-on-git-bash/), а
 не powershell.
 [Полезное и короткое видео о git bash](https://www.youtube.com/watch?v=zM9Mb-otqww)
-Обязательно добавьте bash терминал в [качестве терминала в вашей IDE (IDEA, PyCharm)](https://stackoverflow.com/questions/20573213/embed-git-bash-in-pycharm-as-external-tool-and-work-with-it-in-pycharm-window-w)
+Обязательно добавьте bash терминал
+в [качестве терминала в вашей IDE (IDEA, PyCharm)](https://stackoverflow.com/questions/20573213/embed-git-bash-in-pycharm-as-external-tool-and-work-with-it-in-pycharm-window-w)
 Во-вторых, если у вас что-то не работает - пишите в TG чат группы - будем вместе дополнять README, т.к. изначально
 проект разработан под nix
 
@@ -227,9 +244,12 @@ OpenJDK 64-Bit Server VM Temurin-21.0.1+12 (build 21.0.1+12-LTS, mixed mode)
 
 # Запуск Rococo локально в IDE:
 
-#### 1. Выбрать какой фронтенд предполагается запускать - REST или GraphQL, и перейти в соответсвующий каталог
+#### 0. Добавить необходимые переменные окружения.
+Генерируем Fine-grained personal access token тут: https://github.com/settings/personal-access-tokens с
+минимальными правами на чтение issue.
+Добавляем переменные окружения: **GITHUB_TOKEN_NAME** (имя ключа) и **GITHUB_TOKEN** (сам ключ).
 
-для REST:
+#### 1. Перейти в каталог
 
 ```posh
 User-MacBook-Pro rococo % cd rococo-frontend
@@ -260,44 +280,67 @@ User-MacBook-Pro rococo-auth % gradle bootRun --args='--spring.profiles.active=l
 выполнен предыдущий пункт)
 
 Если сервис не стартует с ошибкой:
+
 ```posh
 FATAL: database "rococo-auth" does not exist
 ```
-то необходимо проверить, было ли сообщение об автоматическом создании баз данныхз в логе контейнера с Postgres (rococo-db):
+
+то необходимо проверить, было ли сообщение об автоматическом создании баз данныхз в логе контейнера с Postgres (
+rococo-db):
+
 ```posh
 docker logs -f rococo-db
 ... 
 Multiple database creation requested: rococo-artists,rococo-auth,rococo-countries,rococo-files,rococo-museums,rococo-paintings,rococo-users"
 ...
 ```
+
 Если сообщения нет, то необходимо создать базы данных вручную (при этом, мы создаем только пустые БД, без таблиц):
+
 - Установить одну из программ для визуальной работы с Postgres. Например, PgAdmin, DBeaver или Datagrip.
-- Подключиться к БД postgres (host: localhost, port: 5432, user: postgres, pass: secret, database name: postgres) из PgAdmin и создать пустые БД микросервисов
+- Подключиться к БД postgres (host: localhost, port: 5432, user: postgres, pass: secret, database name: postgres) из
+  PgAdmin и создать пустые БД микросервисов
+
 ```sql
-   create database "rococo-artists" with owner postgres;
-   create database "rococo-auth" with owner postgres;
-   create database "rococo-countries" with owner postgres;
-   create database "rococo-files" with owner postgres;
-   create database "rococo-museums" with owner postgres;
-   create database "rococo-paintings" with owner postgres;
-   create database "rococo-users" with owner postgres;
+   create
+database "rococo-artists" with owner postgres;
+   create
+database "rococo-auth" with owner postgres;
+   create
+database "rococo-countries" with owner postgres;
+   create
+database "rococo-files" with owner postgres;
+   create
+database "rococo-museums" with owner postgres;
+   create
+database "rococo-paintings" with owner postgres;
+   create
+database "rococo-users" with owner postgres;
 ```
+
 Если при запуске сервисов выходит ошибка:
+
 ```
 Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
 
 
 Reason: Failed to determine a suitable driver class
 ```
+
 Значит не был передан профиль, либо он не корректный
 
-#### 5.  Запустить в любой последовательности другие сервисы: rococo-artists,rococo-countries,rococo-files,rococo-gateway,rococo-museums,rococo-paintings,rococo-users
+#### 5. Запустить в любой последовательности другие сервисы: rococo-artists,rococo-countries,rococo-files,rococo-gateway,rococo-museums,rococo-paintings,rococo-users
 
-#### 6.  Запуск тестов в IDE
+#### 6. Запуск тестов в IDE
 
 При запуске тестов необходимо передавать параметр `-Dtest.env=local`
 
 # Развёртывание Rococo в Docker
+
+#### 0. Добавить необходимые переменные окружения.
+Генерируем Fine-grained personal access token тут: https://github.com/settings/personal-access-tokens с
+минимальными правами на чтение issue.
+Добавляем переменные окружения: **GITHUB_TOKEN_NAME** (имя ключа) и **GITHUB_TOKEN** (сам ключ).
 
 #### 1. Создать бесплатную учетную запись на https://hub.docker.com/ (если отсутствует)
 
@@ -404,12 +447,14 @@ User-MacBook-Pro rococo % cd rococo
 ```posh
 bash docker-compose-e2e.sh
 ```
+
 Если нужно указать браузер, то отправляем параметр chrome или firefox.
 При повторных запусках можно использовать флаг skip-build, чтобы повторно не собирать приложение.
 
 ```posh
 bash docker-compose-e2e.sh chrome
 ```
+
 ```posh
 bash docker-compose-e2e.sh firefox --skip-build
 ```
@@ -422,4 +467,5 @@ bash docker-compose-e2e.sh firefox --skip-build
 
 # Образец отчёта о тестировании
 
-<img src="/images/allure-report.png" alt="services" width="800"/>
+<img src="/images/allure-report.png" alt="allure-report" width="800"/>
+<img src="/images/allure-report-behaviours.png" alt="allure-report behaviors" width="800"/>
