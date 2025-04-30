@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=${ROCOCO_DB_PASSWORD:-secret}
       - TZ=GMT+3
       - PGTZ=GMT+3
-    command: [ "postgres", "-c", "max_prepared_transactions=100" ]
+    command: postgres -c max_connections=200 -c max_prepared_transactions=100
     volumes:
       - ./env/docker/postgres/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
     healthcheck:
@@ -205,37 +205,10 @@ services:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - GITHUB_TOKEN_NAME=${GITHUB_TOKEN_NAME}
     volumes:
-      - ./rococo-tests/.screen-output/screenshots/selenoid:/rococo/rococo-tests/.screen-output/screenshots/selenoid
+      - ./rococo-tests/.screen-output/screenshots/remote:/rococo/rococo-tests/.screen-output/screenshots/remote
     depends_on:
       frontend.rococo.dc:
         condition: service_started
-    networks:
-      - rococo-network
-
-  allure:
-    profiles: [ test ]
-    container_name: allure
-    image: frankescobar/allure-docker-service:2.27.0
-    depends_on:
-      - rococo-tests
-    environment:
-      - CHECK_RESULTS_EVERY_SECONDS=NONE
-      - KEEP_HISTORY=1
-    ports:
-      - "5050:5050"
-    networks:
-      - rococo-network
-
-  allure-ui:
-    profiles: [ test ]
-    container_name: allure-ui
-    image: frankescobar/allure-docker-service-ui:7.0.3
-    depends_on:
-      - allure
-    environment:
-      - ALLURE_DOCKER_PUBLIC_API_URL=http://localhost:5050
-    ports:
-      - "5051:5252"
     networks:
       - rococo-network
 
@@ -255,20 +228,6 @@ services:
     command: [ "-conf", "/etc/selenoid/browsers.json", "-limit", "3", "-video-output-dir", "/opt/selenoid/video", "-log-output-dir", "/opt/selenoid/logs", "-container-network", "rococo_rococo-network" ]
     ports:
       - "4444:4444"
-    networks:
-      - rococo-network
-
-  selenoid-ui:
-    profiles:
-      - test
-    container_name: selenoid-ui
-    image: aerokube/selenoid-ui:1.10.11
-    depends_on:
-      - selenoid
-    restart: unless-stopped
-    ports:
-      - "5052:8080"
-    command: [ "--selenoid-uri", "http://selenoid:4444" ]
     networks:
       - rococo-network
 

@@ -106,7 +106,7 @@ public interface Config {
     }
 
     default boolean addServicesLogsToAllure() {
-        return Boolean.parseBoolean(System.getProperty("addServicesLogsToAllure", "false"));
+        return "true".equalsIgnoreCase(System.getenv("ADD_SERVICES_LOGS_TO_ALLURE"));
     }
 
     default int updateTokenTimeoutMillis() {
