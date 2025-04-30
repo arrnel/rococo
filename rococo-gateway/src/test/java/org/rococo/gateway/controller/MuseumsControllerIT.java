@@ -432,7 +432,7 @@ class MuseumsControllerIT {
                                       {
                                         "domain": "/api/museum",
                                         "reason": "pageable.Columns",
-                                        "message": "[Columns] Request contains invalid columns. Available columns: [id, title]"
+                                        "message": "[Columns] Request contains invalid columns. Available columns: [id, title, createdDate]"
                                       }
                                     ]
                                   }
