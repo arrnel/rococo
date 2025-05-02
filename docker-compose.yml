@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=${ROCOCO_DB_PASSWORD:-secret}
       - TZ=GMT+3
       - PGTZ=GMT+3
-    command: [ "postgres", "-c", "max_prepared_transactions=100" ]
+    command: postgres -c max_connections=200 -c max_prepared_transactions=100
     volumes:
       - ./env/docker/postgres/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
     healthcheck:

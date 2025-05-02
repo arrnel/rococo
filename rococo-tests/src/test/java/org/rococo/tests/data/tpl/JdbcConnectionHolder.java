@@ -1,5 +1,7 @@
 package org.rococo.tests.data.tpl;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -8,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class JdbcConnectionHolder implements AutoCloseable {
 
     private final DataSource dataSource;
@@ -40,7 +43,7 @@ public class JdbcConnectionHolder implements AutoCloseable {
                             connection.close();
                         }
                     } catch (SQLException e) {
-                        // NOP
+                        log.error("Failed to close connection", e);
                     }
                 });
     }
@@ -53,7 +56,7 @@ public class JdbcConnectionHolder implements AutoCloseable {
                             connection.close();
                         }
                     } catch (SQLException e) {
-                        // NOP
+                        log.error("Failed to close connection", e);
                     }
                 }
         );
