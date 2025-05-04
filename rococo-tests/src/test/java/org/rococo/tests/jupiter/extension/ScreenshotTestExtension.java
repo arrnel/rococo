@@ -5,21 +5,23 @@ import io.qameta.allure.Allure;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
+import org.rococo.tests.config.Config;
+import org.rococo.tests.ex.ScreenshotException;
 import org.rococo.tests.jupiter.annotation.meta.ScreenshotTest;
 import org.rococo.tests.model.allure.ScreenDiff;
-import org.springframework.core.io.ClassPathResource;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-public class ScreenshotTestExtension implements
-        ParameterResolver,
-        TestExecutionExceptionHandler {
+public class ScreenshotTestExtension implements ParameterResolver, TestExecutionExceptionHandler {
+
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenshotTestExtension.class);
+    private static final Config CFG = Config.getInstance();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Base64.Encoder encoder = Base64.getEncoder();
 
@@ -32,9 +34,13 @@ public class ScreenshotTestExtension implements
     @SneakyThrows
     @Override
     public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        ScreenshotTest screenShotTest = extensionContext.getRequiredTestMethod().getAnnotation(ScreenshotTest.class);
-        String imagePath = screenShotTest.value();
-        return ImageIO.read(new ClassPathResource(imagePath).getInputStream());
+        ScreenshotTest screenshotAnno = extensionContext.getRequiredTestMethod().getAnnotation(ScreenshotTest.class);
+        String imagePath = CFG.screenshotBaseDir() + screenshotAnno.value();
+        try (FileInputStream fis = new FileInputStream(imagePath)) {
+            return ImageIO.read(fis);
+        } catch (IOException e) {
+            throw new ScreenshotException("Unable to parse expected file from: %s. Message: %s".formatted(imagePath, e.getMessage()), e);
+        }
     }
 
     @Override
@@ -42,10 +48,10 @@ public class ScreenshotTestExtension implements
         ScreenshotTest screenShotTest = context.getRequiredTestMethod().getAnnotation(ScreenshotTest.class);
         if (throwable.getMessage().contains("Screen comparison failure")) {
 
-            if (screenShotTest.rewriteExpected()) {
+            if (CFG.rewriteAllImages() || screenShotTest.rewriteExpected()) {
                 BufferedImage actual = getActual();
                 if (actual != null) {
-                    ImageIO.write(actual, "png", new File("src/test/resources/" + screenShotTest.value()));
+                    ImageIO.write(actual, "png", new File(CFG.screenshotBaseDir() + screenShotTest.value()));
                 }
             }
 
@@ -62,7 +68,6 @@ public class ScreenshotTestExtension implements
             );
         }
 
-        // If not throw, all tests will be passed )))
         throw throwable;
     }
 

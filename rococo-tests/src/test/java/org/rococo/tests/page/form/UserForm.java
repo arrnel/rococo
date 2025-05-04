@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.rococo.tests.conditions.ScreenshotCondition;
+import org.rococo.tests.config.Config;
 import org.rococo.tests.model.UserDTO;
 import org.rococo.tests.page.LoginPage;
 import org.rococo.tests.page.component.BaseComponent;
@@ -15,6 +16,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 public final class UserForm extends BaseComponent<UserForm> {
 
+    private static final Config CFG = Config.getInstance();
     private static final String PROFILE = "Профиль";
 
     private final SelenideElement username = self.$("h4").as("Username"),
@@ -58,7 +60,7 @@ public final class UserForm extends BaseComponent<UserForm> {
         firstName.setValue(user.getFirstName());
         lastName.setValue(user.getFirstName());
         if (user.getPathToPhoto() != null)
-            photoInput.uploadFromClasspath(user.getPathToPhoto());
+            photoInput.uploadFromClasspath(CFG.originalPhotoBaseDir() + user.getPathToPhoto());
         return this;
     }
 

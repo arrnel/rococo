@@ -85,6 +85,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     @Step("Check museum exists: [{museumName}]")
     public MuseumsPage shouldExistMuseum(String museumName) {
         log.info("Check museum exists: [{}]", museumName);
+        museumListContainer.shouldBe(visible);
         museumsList.shouldContainsItem(museumName);
         return this;
     }
@@ -92,6 +93,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     @Step("Check museum not exists: [{museumName}]")
     public MuseumsPage shouldNotExistMuseum(String museumName) {
         log.info("Check museum not exists: [{}]", museumName);
+        museumListContainer.shouldBe(visible);
         museumsList.shouldNotContainItem(museumName);
         return this;
     }
@@ -99,6 +101,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     @Step("Check museums exists: [{museumName}]")
     public MuseumsPage shouldExistMuseums(List<String> museumsName) {
         log.info("Check museums exists: [{}]", museumsName);
+        museumListContainer.shouldBe(visible);
         museumsList.shouldContainItems(museumsName);
         return this;
     }
@@ -106,6 +109,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     @Step("Check museums not exists: [{museumName}]")
     public MuseumsPage shouldNotExistMuseums(List<String> museumsName) {
         log.info("Check museums not exists: [{}]", museumsName);
+        museumListContainer.shouldBe(visible);
         museumsList.shouldNotContainItems(museumsName);
         return this;
     }
@@ -113,6 +117,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     @Step("Check museums founded in search by query: [{museumName}]")
     public MuseumsPage shouldContainsMuseumsInQuerySearch(String query, List<String> museumsName) {
         log.info("Check museums not exists: [{}]", museumsName);
+        museumListContainer.shouldBe(visible);
         museumsList.shouldContainsItemsByQuery(query, museumsName);
         return this;
     }
@@ -120,6 +125,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     @Step("Check museums not founded in search by query: [{museumName}]")
     public MuseumsPage shouldNotContainsMuseumsByQuery(String query, List<String> museumsName) {
         log.info("Check museums not exists: [{}]", museumsName);
+        museumListContainer.shouldBe(visible);
         museumsList.shouldNotContainsItemsByQuery(query, museumsName);
         return this;
     }
@@ -127,6 +133,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     @Step("Check add new museum button not exists")
     public MuseumsPage shouldNotExistsAddNewMuseumButton() {
         log.info("Check add new museum button not exists");
+        museumListContainer.shouldBe(visible);
         addNewMuseumButton.shouldNot(exist);
         return this;
     }

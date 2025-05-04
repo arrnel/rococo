@@ -165,4 +165,17 @@ enum DockerConfig implements Config {
         return "secret";
     }
 
+    @Override
+    public String allureDockerUrl() {
+        final String url = System.getenv("ALLURE_DOCKER_API");
+        return url == null
+                ? "http://allure:5050"
+                : url;
+    }
+
+    @Override
+    public String screenshotBaseDir() {
+        return "rococo-tests/.screen-output/screenshots/remote/";
+    }
+
 }

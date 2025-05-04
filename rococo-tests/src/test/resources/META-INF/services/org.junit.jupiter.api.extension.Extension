@@ -5,3 +5,4 @@ org.rococo.tests.jupiter.extension.CookieJarExtension
 org.rococo.tests.jupiter.extension.KafkaExtension
 org.rococo.tests.jupiter.extension.DefaultUserExtension
 org.rococo.tests.jupiter.extension.InjectServiceExtension
+org.rococo.tests.jupiter.extension.AllureDockerExtension

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.EnumUtils;
 import org.rococo.tests.enums.ServiceType;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.nio.file.Path;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
@@ -17,6 +18,8 @@ public interface Config {
             default -> throw new IllegalArgumentException("Unknown env: " + env);
         };
     }
+
+    String PROJECT_NAME = "rococo-arrnel";
 
     String artistsJdbcUrl();
 
@@ -78,6 +81,22 @@ public interface Config {
 
     String dbPassword();
 
+    String allureDockerUrl();
+
+    default Path pathToAllureResults() {
+        return Path.of("./rococo-tests/build/allure-results");
+    }
+
+    default String originalPhotoBaseDir() {
+        return "img/original/";
+    }
+
+    String screenshotBaseDir();
+
+    default boolean rewriteAllImages() {
+        return "true".equalsIgnoreCase(System.getenv("REWRITE_ALL_IMAGES"));
+    }
+
     default ServiceType serviceType() {
         return EnumUtils.getEnum(ServiceType.class, System.getProperty("services.type", "DB"), ServiceType.DB);
     }
@@ -86,9 +105,8 @@ public interface Config {
         return "https://api.github.com";
     }
 
-    // Properties
     default boolean addServicesLogsToAllure() {
-        return Boolean.parseBoolean(System.getProperty("addServicesLogsToAllure", "false"));
+        return "true".equalsIgnoreCase(System.getenv("ADD_SERVICES_LOGS_TO_ALLURE"));
     }
 
     default int updateTokenTimeoutMillis() {

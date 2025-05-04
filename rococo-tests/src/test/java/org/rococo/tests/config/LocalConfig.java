@@ -136,6 +136,16 @@ enum LocalConfig implements Config {
         return getEnvVar("ROCOCO_DB_PASSWORD", "secret");
     }
 
+    @Override
+    public String allureDockerUrl() {
+        return "http://127.0.0.1:5050";
+    }
+
+    @Override
+    public String screenshotBaseDir() {
+        return "rococo-tests/.screen-output/screenshots/local/";
+    }
+
     public String testUserName() {
         return getEnvVar("ROCOCO_TEST_USERNAME", "test_user");
     }

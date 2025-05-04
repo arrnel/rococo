@@ -5,6 +5,7 @@ import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.model.Label;
 import io.qameta.allure.model.TestResult;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.rococo.tests.config.Config;
 
 import java.io.IOException;
@@ -13,13 +14,20 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 public class AllureBackendLogsExtension implements SuiteExtension {
 
+    public static final Config CFG = Config.getInstance();
     public static final String CASE_NAME = "Backend logs";
 
     private static void addLogsToAllure(AllureLifecycle allureLifecycle) throws IOException {
 
-        if (!Config.getInstance().addServicesLogsToAllure()) return;
+        if (!CFG.addServicesLogsToAllure()) {
+            log.info("Skip add backend logs to allure");
+            return;
+        }
+
+        log.info("Adding backend logs to allure. Case name: {}", CASE_NAME);
 
         addLogToAllure(
                 allureLifecycle,
@@ -55,6 +63,8 @@ public class AllureBackendLogsExtension implements SuiteExtension {
                 "rococo-users log",
                 Path.of("./logs/rococo-users/app.log"));
 
+        log.info("Successfully added backend logs to allure");
+
     }
 
     private static void addLogToAllure(AllureLifecycle allureLifecycle, String name, Path pathToLog) throws IOException {
@@ -88,6 +98,7 @@ public class AllureBackendLogsExtension implements SuiteExtension {
 
         allureLifecycle.stopTestCase(caseId);
         allureLifecycle.writeTestCase(caseId);
+
     }
 
 }

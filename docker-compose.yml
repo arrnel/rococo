@@ -200,10 +200,13 @@ services:
       - EXECUTION_TYPE=${EXECUTION_TYPE}
       - SELENOID_BROWSER=${SELENOID_BROWSER:-chrome}
       - CLEAR_DB_AFTER_TESTS=${TESTS_DB_CLEANUP:-false}
+      - REWRITE_ALL_IMAGES=${REWRITE_ALL_IMAGES:-false}
+      - ADD_SERVICES_LOGS_TO_ALLURE=${ADD_SERVICES_LOGS_TO_ALLURE:-false}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - GITHUB_TOKEN_NAME=${GITHUB_TOKEN_NAME}
     volumes:
       - allure-results:/rococo/rococo-tests/build/allure-results
+      - ./rococo-tests/.screen-output/screenshots/remote:/rococo/rococo-tests/.screen-output/screenshots/remote
     depends_on:
       frontend.rococo.dc:
         condition: service_started

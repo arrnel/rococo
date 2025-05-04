@@ -1,0 +1,236 @@
+services:
+
+  postgres:
+    container_name: rococo-db
+    image: postgres:16.8
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - CREATE_DATABASES=rococo-artists,rococo-auth,rococo-countries,rococo-files,rococo-museums,rococo-paintings,rococo-users
+      - POSTGRES_USER=${ROCOCO_DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${ROCOCO_DB_PASSWORD:-secret}
+      - TZ=GMT+3
+      - PGTZ=GMT+3
+    command: postgres -c max_connections=200 -c max_prepared_transactions=100
+    volumes:
+      - ./env/docker/postgres/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${ROCOCO_DB_USER:-postgres}", "-d", "postgres" ]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    networks:
+      - rococo-network
+
+  zookeeper:
+    container_name: rococo-zookeeper
+    image: confluentinc/cp-zookeeper:7.3.2
+    restart: unless-stopped
+    expose:
+      - 2181
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+    networks:
+      - rococo-network
+
+  kafka:
+    container_name: rococo-kafka
+    image: confluentinc/cp-kafka:7.3.2
+    restart: unless-stopped
+    ports:
+      - "9092:9092"
+    depends_on:
+      zookeeper:
+        condition: service_started
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+    healthcheck:
+      test: kafka-topics --bootstrap-server localhost:9092 --list
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    networks:
+      - rococo-network
+
+  auth.rococo.dc:
+    container_name: auth.rococo.dc
+    image: ${PREFIX}/rococo-auth-docker:latest
+    ports:
+      - "9000:9000"
+    environment:
+      - ROCOCO_TEST_USERNAME=${ROCOCO_TEST_USERNAME:-test_user}
+      - ROCOCO_TEST_USER_PASSWORD=${ROCOCO_TEST_USERNAME:-12345}
+    healthcheck:
+      test: "wget --spider http://localhost:9000/actuator/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - rococo-network
+
+  gateway.rococo.dc:
+    container_name: gateway.rococo.dc
+    image: ${PREFIX}/rococo-gateway-docker:latest
+    ports:
+      - "9001:9001"
+    healthcheck:
+      test: "wget --spider http://localhost:9001/actuator/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    depends_on:
+      auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+
+  artists.rococo.dc:
+    container_name: artists.rococo.dc
+    image: ${PREFIX}/rococo-artists-docker:latest
+    ports:
+      - "9002:9002"
+    restart: unless-stopped
+    depends_on:
+      auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+
+  countries.rococo.dc:
+    container_name: countries.rococo.dc
+    image: ${PREFIX}/rococo-countries-docker:latest
+    ports:
+      - "9003:9003"
+    restart: unless-stopped
+    depends_on:
+      auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+
+  files.rococo.dc:
+    container_name: files.rococo.dc
+    image: ${PREFIX}/rococo-files-docker:latest
+    ports:
+      - "9004:9004"
+    restart: unless-stopped
+    depends_on:
+      auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+
+  museums.rococo.dc:
+    container_name: museums.rococo.dc
+    image: ${PREFIX}/rococo-museums-docker:latest
+    ports:
+      - "9005:9005"
+    restart: unless-stopped
+    depends_on:
+      auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+
+  paintings.rococo.dc:
+    container_name: paintings.rococo.dc
+    image: ${PREFIX}/rococo-paintings-docker:latest
+    ports:
+      - "9006:9006"
+    restart: unless-stopped
+    depends_on:
+      auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+
+  users.rococo.dc:
+    container_name: users.rococo.dc
+    image: ${PREFIX}/rococo-users-docker:latest
+    ports:
+      - "9007:9007"
+    restart: unless-stopped
+    depends_on:
+      auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+
+  frontend.rococo.dc:
+    container_name: frontend.rococo.dc
+    image: ${PREFIX}/rococo-frontend-docker:latest
+    build:
+      context: ./rococo-frontend
+      dockerfile: ./Dockerfile
+      args:
+        NPM_COMMAND: build:docker
+    ports:
+      - "8080:80"
+    depends_on:
+      gateway.rococo.dc:
+        condition: service_started
+    networks:
+      - rococo-network
+
+  rococo-tests:
+    profiles: [ test ]
+    container_name: rococo-tests
+    image: ${PREFIX}/rococo-tests:latest
+    build:
+      context: ./
+      dockerfile: ./rococo-tests/Dockerfile
+    environment:
+      - ALLURE_DOCKER_API=${ALLURE_DOCKER_API}
+      - BUILD_URL=${BUILD_URL}
+      - HEAD_COMMIT_MESSAGE=${HEAD_COMMIT_MESSAGE}
+      - EXECUTION_TYPE=${EXECUTION_TYPE}
+      - SELENOID_BROWSER=${SELENOID_BROWSER:-chrome}
+      - CLEAR_DB_AFTER_TESTS=${TESTS_DB_CLEANUP:-false}
+      - REWRITE_ALL_IMAGES=${REWRITE_ALL_IMAGES:-false}
+      - ADD_SERVICES_LOGS_TO_ALLURE=${ADD_SERVICES_LOGS_TO_ALLURE:-false}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_TOKEN_NAME=${GITHUB_TOKEN_NAME}
+    volumes:
+      - ./rococo-tests/.screen-output/screenshots/remote:/rococo/rococo-tests/.screen-output/screenshots/remote
+    depends_on:
+      frontend.rococo.dc:
+        condition: service_started
+    networks:
+      - rococo-network
+
+  selenoid:
+    profiles:
+      - test
+    container_name: selenoid
+    image: aerokube/selenoid:1.11.3
+    platform: linux/${ARCH}
+    volumes:
+      - ./env/docker/selenoid:/etc/selenoid
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./env/docker/selenoid/browsers.json:/etc/selenoid/browsers.json
+    environment:
+      - TZ=Europe/Moscow
+    restart: unless-stopped
+    command: [ "-conf", "/etc/selenoid/browsers.json", "-limit", "3", "-video-output-dir", "/opt/selenoid/video", "-log-output-dir", "/opt/selenoid/logs", "-container-network", "rococo_rococo-network" ]
+    ports:
+      - "4444:4444"
+    networks:
+      - rococo-network
+
+networks:
+  rococo-network:
+    driver: bridge

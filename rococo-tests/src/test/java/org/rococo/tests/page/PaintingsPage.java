@@ -25,13 +25,12 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
     private final SelenideElement title = root.$("h2").as("Paintings page title"),
             addNewPaintingButton = root.$(byText("Добавить картину")).as("Add new painting button"),
             searchFieldContainer = root.$(byAttribute("data-testid", "search")),
-            paintingsListContainer = root.$(byAttribute("data-testid", "paintings-list")).as("Paintings list component"),
-            paintingListContainer = root.$(byAttribute("data-testid", "paintings-list")).as("Artist list component"),
-            emptyPaintingListContainer = root.$(byAttribute("data-testid", "empty-paintings-list")).as("Artist list component");
+            paintingListContainer = root.$(byAttribute("data-testid", "paintings-list")).as("Painting list component"),
+            emptyPaintingListContainer = root.$(byAttribute("data-testid", "empty-paintings-list")).as("Empty painting list component");
 
     private final PaintingPage paintingPage = new PaintingPage();
     private final PaintingForm paintingForm = new PaintingForm();
-    private final ItemsListComponent paintingsList = new ItemsListComponent(PAINTING, paintingsListContainer, searchFieldContainer);
+    private final ItemsListComponent paintingsList = new ItemsListComponent(PAINTING, paintingListContainer, searchFieldContainer);
 
     @Step("Open painting by name: [{paintingTitle}]")
     public PaintingPage openPainting(String paintingTitle) {
@@ -79,6 +78,7 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
     @Step("Check painting exists: [{paintingTitle}]")
     public PaintingsPage shouldExistPainting(String paintingTitle) {
         log.info("Check painting exists: [{}]", paintingTitle);
+        paintingListContainer.shouldBe(visible);
         paintingsList.shouldContainsItem(paintingTitle);
         return this;
     }
@@ -86,6 +86,7 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
     @Step("Check painting not exists: [{paintingTitle}]")
     public PaintingsPage shouldNotExistPainting(String paintingTitle) {
         log.info("Check painting not exists: [{}]", paintingTitle);
+        paintingListContainer.shouldBe(visible);
         paintingsList.shouldNotContainItem(paintingTitle);
         return this;
     }
@@ -93,6 +94,7 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
     @Step("Check paintings exists: [{paintingTitle}]")
     public PaintingsPage shouldExistPaintings(List<String> paintingsName) {
         log.info("Check paintings exists: [{}]", paintingsName);
+        paintingListContainer.shouldBe(visible);
         paintingsList.shouldContainItems(paintingsName);
         return this;
     }
@@ -100,6 +102,7 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
     @Step("Check paintings not exists: [{paintingTitle}]")
     public PaintingsPage shouldNotExistPaintings(List<String> paintingsName) {
         log.info("Check paintings not exists: [{}]", paintingsName);
+        paintingListContainer.shouldBe(visible);
         paintingsList.shouldNotContainItems(paintingsName);
         return this;
     }
@@ -107,6 +110,7 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
     @Step("Check paintings founded in search by query: [{paintingTitle}]")
     public PaintingsPage shouldContainsPaintingsInQuerySearch(String query, List<String> paintingsName) {
         log.info("Check paintings not exists: [{}]", paintingsName);
+        paintingListContainer.shouldBe(visible);
         paintingsList.shouldContainsItemsByQuery(query, paintingsName);
         return this;
     }
@@ -114,6 +118,7 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
     @Step("Check paintings not founded in search by query: [{paintingTitle}]")
     public PaintingsPage shouldNotContainsItemsByQuery(String query, List<String> paintingsName) {
         log.info("Check paintings not exists: [{}]", paintingsName);
+        paintingListContainer.shouldBe(visible);
         paintingsList.shouldNotContainsItemsByQuery(query, paintingsName);
         return this;
     }
