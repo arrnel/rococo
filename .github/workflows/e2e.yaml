@@ -16,6 +16,7 @@ jobs:
       CLEAR_DB_AFTER_TESTS: ${{ vars.CLEAR_DB_AFTER_TESTS }}
       REWRITE_ALL_IMAGES: ${{ vars.REWRITE_ALL_IMAGES }}
       ADD_SERVICES_LOGS_TO_ALLURE: ${{ vars.ADD_SERVICES_LOGS_TO_ALLURE }}
+      TESTS_PASSED_PERCENTAGE: ${{ vars.TESTS_PASSED_PERCENTAGE }}
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       GITHUB_TOKEN_NAME: ${{ secrets.GH_TOKEN_NAME }}
       BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -55,15 +56,42 @@ jobs:
           docker compose -f docker-compose.ci.yml up -d
           docker ps -a
           docker wait rococo-tests
-          exit_code=$(docker inspect -f '{{.State.ExitCode}}' rococo-tests)
-          echo "E2E_EXIT_CODE=$exit_code" >> $GITHUB_OUTPUT
           echo "### Test logs ###"
           docker logs rococo-tests
-          if [ "$exit_code" -eq "0" ]; then
-            echo "Tests passed successfully!"
+
+      - name: Get test statistics
+        id: test_stats
+        run: |
+          response=$(curl -s -X GET "http://logs.rococo.dc:9008/api/stat/tests/last")
+          echo "Test statistics: $response"
+          id=$(echo $response | jq -r '.id')
+          failed=$(echo $response | jq -r '.failed')
+          broken=$(echo $response | jq -r '.broken')
+          skipped=$(echo $response | jq -r '.skipped')
+          passed=$(echo $response | jq -r '.passed')
+          unknown=$(echo $response | jq -r '.unknown')
+          total=$(echo $response | jq -r '.total')
+          is_passed=$(echo $response | jq -r '.is_passed')
+          passed_percentage=$(echo $response | jq -r '.passed_percentage')
+          
+          echo "id=$id" >> $GITHUB_OUTPUT
+          echo "failed=$failed" >> $GITHUB_OUTPUT
+          echo "broken=$broken" >> $GITHUB_OUTPUT
+          echo "skipped=$skipped" >> $GITHUB_OUTPUT
+          echo "passed=$passed" >> $GITHUB_OUTPUT
+          echo "unknown=$unknown" >> $GITHUB_OUTPUT
+          echo "total=$total" >> $GITHUB_OUTPUT
+          echo "is_passed=$is_passed" >> $GITHUB_OUTPUT
+          echo "passed_percentage=$passed_percentage" >> $GITHUB_OUTPUT
+
+      - name: Quality gate
+        id: quality_gate
+        run: |
+          if [ "${{ steps.test_stats.outputs.is_passed }}" = "true" ]; then
+            echo "Quality gate passed"
             exit 0
           else
-            echo "Tests failed!"
+            echo "Quality gate failed"
             exit 1
           fi
 
@@ -72,15 +100,41 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const exitCode = ${{ steps.e2e.outputs.E2E_EXIT_CODE }}
-            const reportUrl = 'https://allure.niffler-stage.qa.guru/api/allure-docker-service/projects/rococo-arrnel/reports/latest/index.html'
-            const historyUrl = 'https://allure.niffler-stage.qa.guru/allure-docker-service-ui/projects/rococo-arrnel'
-            const message = exitCode == '0' ?
-              `✅ TEST RUN PASSED ✅ There is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})` :
-              `🔴 TEST RUN FAILED 🔴 There is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})`
+            const isPassed = '${{ steps.test_stats.outputs.is_passed }}' === 'true';
+            const reportUrl = 'https://allure.niffler-stage.qa.guru/api/allure-docker-service/projects/rococo-arrnel/reports/latest/index.html';
+            const historyUrl = 'https://allure.niffler-stage.qa.guru/allure-docker-service-ui/projects/rococo-arrnel';
+            
+            const stats = {
+              passed: ${{ steps.test_stats.outputs.passed }},
+              failed: ${{ steps.test_stats.outputs.failed }},
+              broken: ${{ steps.test_stats.outputs.broken }},
+              skipped: ${{ steps.test_stats.outputs.skipped }},
+              unknown: ${{ steps.test_stats.outputs.unknown }},
+              total: ${{ steps.test_stats.outputs.total }},
+              passedPercentage: ${{ steps.test_stats.outputs.passed_percentage }}
+            };
+            
+            const statsMessage = `
+            📋 **Test Statistics:**
+  
+            | Status       | Count                      |
+            |:-------------|:---------------------------|
+            | ✅ Passed     | ${stats.passed}            |
+            | 🔴 Failed    | ${stats.failed}            |
+            | 🟠 Broken    | ${stats.broken}            |
+            | ⏩  Skipped   | ${stats.skipped}           |
+            | ❓ Unknown    | ${stats.unknown}           |
+            | 📊 Total     | ${stats.total}             |
+            | 📈 Pass Rate | ${stats.passedPercentage}% |
+            `;
+            
+            const message = isPassed ?
+              `✅ TEST RUN PASSED ✅\n${statsMessage}\nThere is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})` :
+              `🔴 TEST RUN FAILED 🔴\n${statsMessage}\nThere is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})`;
+            
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: message
-            })
+            });
