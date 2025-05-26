@@ -62,17 +62,22 @@ jobs:
       - name: Get test statistics
         id: test_stats
         run: |
-          response=$(curl -s -X GET "http://logs.rococo.dc:9008/api/stat/tests/last")
+          response=$(curl -s -f "http://logs.rococo.dc:9008/api/stat/tests/last" || echo "{}")
+          echo "Raw response: $response"
+          if [ -z "$response" ] || [ "$response" = "{}" ]; then
+            echo "Error: Failed to fetch test statistics or empty response"
+            exit 1
+          fi
           echo "Test statistics: $response"
-          id=$(echo $response | jq -r '.id')
-          failed=$(echo $response | jq -r '.failed')
-          broken=$(echo $response | jq -r '.broken')
-          skipped=$(echo $response | jq -r '.skipped')
-          passed=$(echo $response | jq -r '.passed')
-          unknown=$(echo $response | jq -r '.unknown')
-          total=$(echo $response | jq -r '.total')
-          is_passed=$(echo $response | jq -r '.is_passed')
-          passed_percentage=$(echo $response | jq -r '.passed_percentage')
+          id=$(echo "$response" | jq -r '.id // 0')
+          failed=$(echo "$response" | jq -r '.failed // 0')
+          broken=$(echo "$response" | jq -r '.broken // 0')
+          skipped=$(echo "$response" | jq -r '.skipped // 0')
+          passed=$(echo "$response" | jq -r '.passed // 0')
+          unknown=$(echo "$response" | jq -r '.unknown // 0')
+          total=$(echo "$response" | jq -r '.total // 0')
+          is_passed=$(echo "$response" | jq -r '.is_passed // false')
+          passed_percentage=$(echo "$response" | jq -r '.passed_percentage // 0')
           
           echo "id=$id" >> $GITHUB_OUTPUT
           echo "failed=$failed" >> $GITHUB_OUTPUT
@@ -105,24 +110,26 @@ jobs:
             const historyUrl = 'https://allure.niffler-stage.qa.guru/allure-docker-service-ui/projects/rococo-arrnel';
             
             const stats = {
-              passed: ${{ steps.test_stats.outputs.passed }},
-              failed: ${{ steps.test_stats.outputs.failed }},
-              broken: ${{ steps.test_stats.outputs.broken }},
-              skipped: ${{ steps.test_stats.outputs.skipped }},
-              unknown: ${{ steps.test_stats.outputs.unknown }},
-              total: ${{ steps.test_stats.outputs.total }},
-              passedPercentage: ${{ steps.test_stats.outputs.passed_percentage }}
+              passed: Number('${{ steps.test_stats.outputs.passed }}') || 0,
+              failed: Number('${{ steps.test_stats.outputs.failed }}') || 0,
+              broken: Number('${{ steps.test_stats.outputs.broken }}') || 0,
+              skipped: Number('${{ steps.test_stats.outputs.skipped }}') || 0,
+              unknown: Number('${{ steps.test_stats.outputs.unknown }}') || 0,
+              total: Number('${{ steps.test_stats.outputs.total }}') || 0,
+              passedPercentage: Number('${{ steps.test_stats.outputs.passed_percentage }}') || 0
             };
+            
+            console.log('Stats:', stats); // Debug output
             
             const statsMessage = `
             📋 **Test Statistics:**
-  
+            
             | Status       | Count                      |
             |:-------------|:---------------------------|
             | ✅ Passed     | ${stats.passed}            |
             | 🔴 Failed    | ${stats.failed}            |
             | 🟠 Broken    | ${stats.broken}            |
-            | ⏩  Skipped   | ${stats.skipped}           |
+            | ⏩ Skipped   | ${stats.skipped}           |
             | ❓ Unknown    | ${stats.unknown}           |
             | 📊 Total     | ${stats.total}             |
             | 📈 Pass Rate | ${stats.passedPercentage}% |
@@ -132,7 +139,7 @@ jobs:
               `✅ TEST RUN PASSED ✅\n${statsMessage}\nThere is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})` :
               `🔴 TEST RUN FAILED 🔴\n${statsMessage}\nThere is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})`;
             
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
