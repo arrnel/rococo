@@ -25,6 +25,10 @@ logging:
     root: INFO
     org.springframework.web: INFO
 
+tests:
+  quality_gate:
+    min_passed_percentage: ${TESTS_PASSED_PERCENTAGE:95.0}
+
 ---
 spring:
   config:
