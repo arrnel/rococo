@@ -63,9 +63,9 @@ spring:
       group-id: 'userdata'
       auto-offset-reset: earliest
   datasource:
-    url: 'jdbc:postgresql://rococo-db:${ROCOCO_DB_PORT:5432}/rococo-users'
-    username: ${ROCOCO_DB_USER:postgres}
-    password: ${ROCOCO_DB_PASSWORD:secret}
+    url: 'jdbc:postgresql://rococo-db:5432/rococo-users'
+    username: postgres
+    password: secret
 
 grpc:
   server:

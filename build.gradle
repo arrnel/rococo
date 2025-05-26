@@ -25,8 +25,9 @@ allprojects {
 subprojects {
     ext {
         dockerHubName = "arrnel"
-
         apacheCommonsVersion = '3.17.0'
+        logbackKafkaAppenderVersion = '0.2.0-RC2'
+        janinoVersion = '3.1.12'
         lombokVersion = '1.18.34'
         springKafkaVersion = '3.2.2'
         postgresDriverVersion = '42.7.3'

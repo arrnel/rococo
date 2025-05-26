@@ -25,6 +25,9 @@ dependencies {
     implementation "org.flywaydb:flyway-database-postgresql:${project.ext.flywayVersion}"
     implementation "net.devh:grpc-client-spring-boot-starter:${project.ext.springGrpcVersion}"
     implementation "com.google.code.findbugs:jsr305:${project.ext.jsr305Version}"
+    implementation "org.springframework.kafka:spring-kafka"
+    implementation "com.github.danielwegener:logback-kafka-appender:${logbackKafkaAppenderVersion}"
+    implementation "org.codehaus.janino:janino:${project.ext.janinoVersion}"
     compileOnly "org.projectlombok:lombok"
     runtimeOnly "org.postgresql:postgresql"
     annotationProcessor "org.projectlombok:lombok"
@@ -58,6 +61,15 @@ jib {
     to {
         image = "${project.ext.dockerHubName}/${project.name}-${System.env.PROFILE}"
         tags = ['latest', "${project.version}"]
+    }
+}
+
+tasks.jib.dependsOn test
+tasks.jibDockerBuild.dependsOn test
+
+tasks.register('printVersion') {
+    doLast {
+        println project.version
     }
 }
 
