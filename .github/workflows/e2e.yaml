@@ -63,7 +63,7 @@ jobs:
       - name: Get test statistics
         id: test_stats
         run: |
-          response=$(curl -s -f "${LAST_TEST_STAT_URL}" || echo "{}")
+          response=$(curl -s -f "${{ env.LAST_TEST_STAT_URL }}" || echo "{}")
           echo "Raw response: $response"
           if [ -z "$response" ] || [ "$response" = "{}" ]; then
             echo "Error: Failed to fetch test statistics or empty response"
