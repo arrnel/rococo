@@ -47,14 +47,15 @@ public record TestsStatDTO(
         return """
                 {
                   "id": "%s",
-                  "statistic": {
-                    "failed": %s,
-                    "broken": %s,
-                    "skipped": %s,
-                    "passed": %s,
-                    "unknown": %s,
-                    "total": %s
-                }""".formatted(id.toString(), failed, broken, skipped, passed, unknown, total);
+                  "failed": %s,
+                  "broken": %s,
+                  "skipped": %s,
+                  "passed": %s,
+                  "unknown": %s,
+                  "total": %s,
+                  "is_passed": %s,
+                  "passed_percentage": %s
+                }""".formatted(id.toString(), failed, broken, skipped, passed, unknown, total, isPassed, passedPercentage);
     }
 
 

@@ -47,6 +47,8 @@ public interface Config {
 
     String gatewayUrl();
 
+    String logsUrl();
+
     String museumsJdbcUrl();
 
     String museumsGrpcHost();
