@@ -5,7 +5,7 @@ import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.rococo.tests.client.gateway.core.RestClient;
 import org.rococo.tests.model.ServiceName;
-import org.rococo.tests.model.allure.logService.AllureHistoryDTO;
+import org.rococo.tests.model.allure.logService.TestsStatDTO;
 import retrofit2.Call;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -44,6 +44,15 @@ public class LogsApiClient extends RestClient {
     @Step("Send request DELETE:[rococo-logs]/api/logs/service")
     public void clearLogs() {
         logsApi.clearLogs();
+    }
+
+    @Step("Send request POST:[rococo-logs]/api/stat/tests")
+    public void addNewTestsStat(TestsStatDTO testsStat) {
+        try {
+            logsApi.addNewTestsStat(testsStat).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private File downloadLogFile(Call<ResponseBody> call, String fileName, String suffix) {
