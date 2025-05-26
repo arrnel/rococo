@@ -19,6 +19,7 @@ jobs:
       TESTS_PASSED_PERCENTAGE: ${{ vars.TESTS_PASSED_PERCENTAGE }}
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       GITHUB_TOKEN_NAME: ${{ secrets.GH_TOKEN_NAME }}
+      LAST_TEST_STAT_URL: ${{ vars.LAST_TEST_STAT_URL }}
       BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       EXECUTION_TYPE: github
 
@@ -62,7 +63,7 @@ jobs:
       - name: Get test statistics
         id: test_stats
         run: |
-          response=$(curl -s -f "http://logs.rococo.dc:9008/api/stat/tests/last" || echo "{}")
+          response=$(curl -s -f "${LAST_TEST_STAT_URL}" || echo "{}")
           echo "Raw response: $response"
           if [ -z "$response" ] || [ "$response" = "{}" ]; then
             echo "Error: Failed to fetch test statistics or empty response"
