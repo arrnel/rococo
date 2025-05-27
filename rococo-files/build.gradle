@@ -28,13 +28,16 @@ dependencies {
     implementation "org.flywaydb:flyway-database-postgresql"
     implementation "net.devh:grpc-server-spring-boot-starter:${project.ext.springGrpcVersion}"
     implementation "net.coobird:thumbnailator:${thumbnailatorVersion}"
+    implementation "org.springframework.kafka:spring-kafka"
+    implementation "com.github.danielwegener:logback-kafka-appender:${logbackKafkaAppenderVersion}"
+    implementation "org.codehaus.janino:janino:${project.ext.janinoVersion}"
+    compileOnly "org.projectlombok:lombok"
+    runtimeOnly "org.postgresql:postgresql"
+    annotationProcessor "org.projectlombok:lombok"
     testImplementation "org.springframework.boot:spring-boot-testcontainers"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${project.ext.junitJupiterVersion}"
     testImplementation "org.testcontainers:postgresql"
-    compileOnly "org.projectlombok:lombok"
-    runtimeOnly "org.postgresql:postgresql"
-    annotationProcessor "org.projectlombok:lombok"
 }
 
 jib {

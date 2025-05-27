@@ -7,7 +7,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - CREATE_DATABASES=rococo-artists,rococo-auth,rococo-countries,rococo-files,rococo-museums,rococo-paintings,rococo-users
+      - CREATE_DATABASES=rococo-artists,rococo-auth,rococo-countries,rococo-files,rococo-logs,rococo-museums,rococo-paintings,rococo-users
       - POSTGRES_USER=${ROCOCO_DB_USER:-postgres}
       - POSTGRES_PASSWORD=${ROCOCO_DB_PASSWORD:-secret}
       - TZ=GMT+3
@@ -35,7 +35,7 @@ services:
       - rococo-network
 
   kafka:
-    container_name: rococo-kafka
+    container_name: kafka
     image: confluentinc/cp-kafka:7.3.2
     restart: unless-stopped
     ports:
@@ -64,20 +64,21 @@ services:
     image: ${PREFIX}/rococo-auth-docker:latest
     ports:
       - "9000:9000"
+    restart: unless-stopped
     environment:
       - ROCOCO_TEST_USERNAME=${ROCOCO_TEST_USERNAME:-test_user}
       - ROCOCO_TEST_USER_PASSWORD=${ROCOCO_TEST_USERNAME:-12345}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     healthcheck:
-      test: "wget --spider http://localhost:9000/actuator/health || exit 1"
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
+      test: wget --spider http://localhost:9000/actuator/health || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 10
     depends_on:
       postgres:
         condition: service_healthy
       kafka:
-        condition: service_started
+        condition: service_healthy
     networks:
       - rococo-network
 
@@ -86,12 +87,13 @@ services:
     image: ${PREFIX}/rococo-gateway-docker:latest
     ports:
       - "9001:9001"
+    restart: unless-stopped
+
     healthcheck:
       test: "wget --spider http://localhost:9001/actuator/health || exit 1"
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
+      interval: 10s
+      timeout: 10s
+      retries: 10
     depends_on:
       auth.rococo.dc:
         condition: service_healthy
@@ -107,6 +109,7 @@ services:
     depends_on:
       auth.rococo.dc:
         condition: service_healthy
+
     networks:
       - rococo-network
 
@@ -116,6 +119,7 @@ services:
     ports:
       - "9003:9003"
     restart: unless-stopped
+
     depends_on:
       auth.rococo.dc:
         condition: service_healthy
@@ -128,6 +132,7 @@ services:
     ports:
       - "9004:9004"
     restart: unless-stopped
+
     depends_on:
       auth.rococo.dc:
         condition: service_healthy
@@ -140,6 +145,7 @@ services:
     ports:
       - "9005:9005"
     restart: unless-stopped
+
     depends_on:
       auth.rococo.dc:
         condition: service_healthy
@@ -152,6 +158,7 @@ services:
     ports:
       - "9006:9006"
     restart: unless-stopped
+
     depends_on:
       auth.rococo.dc:
         condition: service_healthy
@@ -164,8 +171,23 @@ services:
     ports:
       - "9007:9007"
     restart: unless-stopped
+
     depends_on:
       auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+
+  logs.rococo.dc:
+    container_name: logs.rococo.dc
+    image: ${PREFIX}/rococo-logs-docker:latest
+    ports:
+      - "9008:9008"
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
         condition: service_healthy
     networks:
       - rococo-network
@@ -201,7 +223,7 @@ services:
       - SELENOID_BROWSER=${SELENOID_BROWSER:-chrome}
       - CLEAR_DB_AFTER_TESTS=${TESTS_DB_CLEANUP:-false}
       - REWRITE_ALL_IMAGES=${REWRITE_ALL_IMAGES:-false}
-      - ADD_SERVICES_LOGS_TO_ALLURE=${ADD_SERVICES_LOGS_TO_ALLURE:-false}
+      - ADD_SERVICES_LOGS_TO_ALLURE=${ADD_SERVICES_LOGS_TO_ALLURE:-true}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - GITHUB_TOKEN_NAME=${GITHUB_TOKEN_NAME}
     volumes:
@@ -274,7 +296,6 @@ services:
     command: [ "--selenoid-uri", "http://selenoid:4444" ]
     networks:
       - rococo-network
-
 
 networks:
   rococo-network:

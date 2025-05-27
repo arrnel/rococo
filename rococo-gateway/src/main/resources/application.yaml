@@ -19,6 +19,8 @@ spring:
   config:
     activate:
       on-profile: 'local'
+  kafka:
+    bootstrap-servers: 'localhost:${ROCOCO_KAFKA_PORT:9092}'
   security:
     oauth2:
       resourceserver:
@@ -27,7 +29,6 @@ spring:
 
 server:
   port: ${ROCOCO_GATEWAY_PORT:9001}
-
 
 rococo-front:
   base-uri: http://127.0.0.1:${ROCOCO_FRONT_PORT:3000}
@@ -63,6 +64,8 @@ spring:
   config:
     activate:
       on-profile: 'docker'
+  kafka:
+    bootstrap-servers: 'kafka:9092'
   security:
     oauth2:
       resourceserver:

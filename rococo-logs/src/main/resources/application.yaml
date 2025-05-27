@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: rococo-logs
+
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    generate-ddl: true
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    schemas: flyway
+    locations: classpath:db/migration/rococo-logs
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+
+tests:
+  quality_gate:
+    min_passed_percentage: ${TESTS_PASSED_PERCENTAGE:95.0}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'local'
+  kafka:
+    bootstrap-servers: 'localhost:${ROCOCO_KAFKA_PORT:9092}'
+    consumer:
+      group-id: 'rococo-logs'
+      auto-offset-reset: earliest
+  datasource:
+    url: 'jdbc:postgresql://localhost:${ROCOCO_DB_PORT:5432}/rococo-logs'
+    username: ${ROCOCO_DB_USER:postgres}
+    password: ${ROCOCO_DB_PASSWORD:secret}
+
+server:
+  port: ${ROCOCO_LOGS_PORT:9008}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  kafka:
+    bootstrap-servers: 'kafka:9092'
+    consumer:
+      group-id: 'rococo-logs'
+      auto-offset-reset: earliest
+  datasource:
+    url: 'jdbc:postgresql://rococo-db:5432/rococo-logs'
+    username: postgres
+    password: secret
+
+server:
+  port: 9008

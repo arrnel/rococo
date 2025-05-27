@@ -83,6 +83,11 @@ enum DockerConfig implements Config {
         return "http://gateway.rococo.dc:9001";
     }
 
+    @Override
+    public String logsUrl() {
+        return "http://logs.rococo.dc:9008";
+    }
+
     @Nonnull
     @Override
     public String museumsGrpcHost() {

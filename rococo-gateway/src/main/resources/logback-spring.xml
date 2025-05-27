@@ -1,23 +1,42 @@
 <configuration>
+
+    <springProperty scope="context" name="KAFKA_BROKERS" source="spring.kafka.bootstrap-servers"/>
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
+    <property name="ACKS" value = "0"/>
+    <property name="LINGER_MS" value = "100"/>
+    <property name="MAX_BLOCK_MS" value = "5000"/>
     <property name="LOG_LEVEL" value="INFO"/>
-    <property name="LOG_PATH" value="${LOG_PATH:-./logs/rococo-gateway}/app.log"/>
+
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+
+    <if condition='!isDefined("test.gradle")'>
+        <then>
+            <appender name="KAFKA" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+                <encoder>
+                    <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+                </encoder>
+                <topic>${APP_NAME}</topic>
+                <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy"/>
+                <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+                <producerConfig>bootstrap.servers=${KAFKA_BROKERS}</producerConfig>
+                <producerConfig>acks=${ACKS}</producerConfig>
+                <producerConfig>linger.ms=${LINGER_MS}</producerConfig>
+                <producerConfig>max.block.ms=${MAX_BLOCK_MS}</producerConfig>
+            </appender>
+        </then>
+    </if>
+
     <root level="${LOG_LEVEL}">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
+        <if condition='!("${SPRING_PROFILES_ACTIVE}".contains("test"))'>
+            <then>
+                <appender-ref ref="KAFKA"/>
+            </then>
+        </if>
     </root>
+
 </configuration>

@@ -20,7 +20,7 @@ services:
     ports:
       - "${ROCOCO_DB_PORT:-5432}:5432"
     environment:
-      - CREATE_DATABASES=rococo-artists,rococo-auth,rococo-countries,rococo-files,rococo-museums,rococo-paintings,rococo-users
+      - CREATE_DATABASES=rococo-artists,rococo-auth,rococo-countries,rococo-files,rococo-logs,rococo-museums,rococo-paintings,rococo-users
       - POSTGRES_USER=${ROCOCO_DB_USER:-postgres}
       - POSTGRES_PASSWORD=${ROCOCO_DB_PASSWORD:-secret}
     command: postgres -c max_connections=200 -c max_prepared_transactions=100

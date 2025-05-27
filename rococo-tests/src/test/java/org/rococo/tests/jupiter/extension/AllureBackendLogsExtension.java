@@ -4,101 +4,97 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.model.Label;
 import io.qameta.allure.model.TestResult;
-import lombok.SneakyThrows;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+import org.rococo.tests.client.gateway.LogsApiClient;
 import org.rococo.tests.config.Config;
+import org.rococo.tests.model.ServiceName;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 public class AllureBackendLogsExtension implements SuiteExtension {
 
-    public static final Config CFG = Config.getInstance();
-    public static final String CASE_NAME = "Backend logs";
+    private static final Config CFG = Config.getInstance();
+    private static final String CASE_NAME = "Backend logs";
+    private static final AllureLifecycle ALLURE_LIFECYCLE = Allure.getLifecycle();
 
-    private static void addLogsToAllure(AllureLifecycle allureLifecycle) throws IOException {
+    @Override
+    public void afterSuite() {
 
         if (!CFG.addServicesLogsToAllure()) {
             log.info("Skip add backend logs to allure");
             return;
         }
 
-        log.info("Adding backend logs to allure. Case name: {}", CASE_NAME);
-
-        addLogToAllure(
-                allureLifecycle,
-                "rococo-artists log",
-                Path.of("./logs/rococo-artists/app.log"));
-
-        addLogToAllure(
-                allureLifecycle,
-                "rococo-auth log",
-                Path.of("./logs/rococo-auth/app.log"));
-
-        addLogToAllure(
-                allureLifecycle,
-                "rococo-countries log",
-                Path.of("./logs/rococo-countries/app.log"));
-
-        addLogToAllure(
-                allureLifecycle,
-                "rococo-files log",
-                Path.of("./logs/rococo-files/app.log"));
-
-        addLogToAllure(allureLifecycle,
-                "rococo-museums log",
-                Path.of("./logs/rococo-museums/app.log"));
-
-        addLogToAllure(
-                allureLifecycle,
-                "rococo-paintings log",
-                Path.of("./logs/rococo-paintings/app.log"));
-
-        addLogToAllure(
-                allureLifecycle,
-                "rococo-users log",
-                Path.of("./logs/rococo-users/app.log"));
-
-        log.info("Successfully added backend logs to allure");
-
-    }
-
-    private static void addLogToAllure(AllureLifecycle allureLifecycle, String name, Path pathToLog) throws IOException {
-        allureLifecycle.addAttachment(
-                name,
-                "text/html",
-                ".log",
-                Files.newInputStream(pathToLog)
-        );
-    }
-
-    @SneakyThrows
-    @Override
-    public void afterSuite() {
-
-        final AllureLifecycle allureLifecycle = Allure.getLifecycle();
         final String caseId = UUID.randomUUID().toString();
 
         List<Label> labels = List.of(
                 new Label().setName("story").setValue(CASE_NAME));
 
-        allureLifecycle.scheduleTestCase(
+        ALLURE_LIFECYCLE.scheduleTestCase(
                 new TestResult()
                         .setUuid(caseId)
                         .setName(CASE_NAME)
                         .setLabels(labels));
 
-        allureLifecycle.startTestCase(caseId);
+        ALLURE_LIFECYCLE.startTestCase(caseId);
 
-        addLogsToAllure(allureLifecycle);
+        addLogsToAllure();
 
-        allureLifecycle.stopTestCase(caseId);
-        allureLifecycle.writeTestCase(caseId);
+        ALLURE_LIFECYCLE.stopTestCase(caseId);
+        ALLURE_LIFECYCLE.writeTestCase(caseId);
 
+    }
+
+    private static void addLogsToAllure() {
+
+        log.info("Adding backend logs to allure. Case name: {}", CASE_NAME);
+        LogsApiClient logsApiClient = new LogsApiClient();
+
+        // Added services logs
+        Arrays.stream(ServiceName.values())
+                .forEach(serviceName -> addLogToAllure(
+                        serviceName.getServiceName(),
+                        logsApiClient.downloadServiceLogs(serviceName)
+                ));
+
+        // Added all services archived logs
+        addLogToAllure(
+                "rococo_all_services_logs",
+                logsApiClient.downloadAllServicesLogs()
+        );
+
+        log.info("Successfully added backend logs to allure");
+
+    }
+
+    private static void addLogToAllure(String serviceName, File file) {
+        try (InputStream is = new FileInputStream(file)) {
+            ALLURE_LIFECYCLE.addAttachment(
+                    serviceName,
+                    "text/html",
+                    ".%s".formatted(FilenameUtils.getExtension(file.getName())),
+                    is
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    private enum LogExtension {
+        LOG(".log"), ARCHIVE(".zip");
+        private final String extension;
     }
 
 }

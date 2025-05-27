@@ -45,6 +45,8 @@ spring:
   config:
     activate:
       on-profile: 'local'
+  kafka:
+    bootstrap-servers: 'localhost:${ROCOCO_KAFKA_PORT:9092}'
   datasource:
     url: 'jdbc:postgresql://localhost:${ROCOCO_DB_PORT:5432}/rococo-files'
     username: ${ROCOCO_DB_USER:postgres}
@@ -59,6 +61,8 @@ spring:
   config:
     activate:
       on-profile: 'docker'
+  kafka:
+    bootstrap-servers: 'kafka:9092'
   datasource:
     url: 'jdbc:postgresql://rococo-db:5432/rococo-files'
     username: postgres
