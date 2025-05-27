@@ -484,5 +484,6 @@ bash docker-compose-e2e.sh firefox --skip-build
 
 # Образец отчёта о тестировании
 
+<img src="/images/pull_request_message.png" alt="pull request message"/>
 <img src="/images/allure-report.png" alt="allure-report" width="800"/>
 <img src="/images/allure-report-behaviours.png" alt="allure-report behaviors" width="800"/>
