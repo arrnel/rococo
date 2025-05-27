@@ -1,51 +1,51 @@
 package org.rococo.tests.data.tpl;
 
-import com.atomikos.icatch.jta.UserTransactionManager;
+import com.atomikos.icatch.jta.UserTransactionImp;
+import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class XaTransactionTemplate {
 
-    private static final ThreadLocal<UserTransaction> TRANSACTION_HOLDER = new ThreadLocal<>();
     private final JdbcConnectionHolders holders;
+    private final AtomicBoolean closeAfterAction = new AtomicBoolean(true);
 
     public XaTransactionTemplate(String... jdbcUrl) {
         this.holders = Connections.holders(jdbcUrl);
     }
 
+    @Nonnull
+    public XaTransactionTemplate holdConnectionAfterAction() {
+        this.closeAfterAction.set(false);
+        return this;
+    }
+
     @SafeVarargs
     @Nullable
     public final <T> T execute(Supplier<T>... actions) {
-        UserTransaction ut = TRANSACTION_HOLDER.get();
-        boolean newTransaction = (ut == null);
-
-        if (newTransaction) {
-            ut = new UserTransactionManager();
-            TRANSACTION_HOLDER.set(ut);
-        }
-
+        UserTransaction ut = new UserTransactionImp();
         try {
-            if (newTransaction) ut.begin();
+            ut.begin();
             T result = null;
             for (Supplier<T> action : actions) {
                 result = action.get();
             }
-            if (newTransaction) ut.commit();
+            ut.commit();
             return result;
         } catch (Exception e) {
-            if (newTransaction) {
-                try {
-                    ut.rollback();
-                } catch (Exception rollbackEx) {
-                    e.addSuppressed(rollbackEx);
-                }
+            try {
+                ut.rollback();
+            } catch (SystemException ex) {
+                throw new RuntimeException(ex);
             }
             throw new RuntimeException(e);
         } finally {
-            if (newTransaction) TRANSACTION_HOLDER.remove();
-            holders.close();
+            if (closeAfterAction.get())
+                holders.close();
         }
     }
 }
