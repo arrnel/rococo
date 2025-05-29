@@ -35,7 +35,7 @@ public class ArtistsPage extends BasePage<ArtistsPage> {
 
     @Step("Open artist by name: [{artistName}]")
     public ArtistPage openArtist(String artistName) {
-        artistsList.getByName(artistName).click();
+        artistsList.getByName(artistName).$("a").click();
         return artistPage;
     }
 
@@ -56,19 +56,19 @@ public class ArtistsPage extends BasePage<ArtistsPage> {
         return artistForm;
     }
 
-    @Step("Update artist: {artist.name}")
+    @Step("Update artist: {artistName}")
     public ArtistPage updateArtist(String artistName, ArtistDTO artist) {
         log.info("Update artist: {}", artistName);
-        artistsList.getByName(artistName).click();
+        openArtist(artistName);
         artistPage.editArtist(artist);
         artistForm.shouldNotVisibleComponent();
         return artistPage;
     }
 
-    @Step("Update artist: {artist.name}")
+    @Step("Update artist: {artistName}")
     public ArtistForm updateArtistWithError(String artistName, ArtistDTO artist) {
         log.info("Update artist: {}", artistName);
-        artistsList.getByName(artistName).click();
+        openArtist(artistName);
         artistPage.editArtist(artist);
         return artistForm;
     }

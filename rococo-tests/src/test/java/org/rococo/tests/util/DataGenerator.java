@@ -117,7 +117,13 @@ public class DataGenerator {
     }
 
     public static String generatePassword(int min, int max, boolean excludeSpecial) {
+
         var number = FAKE.number().numberBetween(min, max);
+        if (number < 0)
+            throw new IllegalArgumentException("Invalid [min; max] range");
+        if (number < 3)
+            return FAKE.lorem().characters(number);
+
         var textBuilder = Text.TextSymbolsBuilder.builder()
                 .len(number)
                 .with(EN_LOWERCASE, 1)

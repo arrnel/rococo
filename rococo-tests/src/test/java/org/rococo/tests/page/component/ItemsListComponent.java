@@ -1,5 +1,6 @@
 package org.rococo.tests.page.component;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
@@ -25,8 +26,8 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public class ItemsListComponent extends BaseComponent<ItemsListComponent> {
 
-    private static final long UPDATE_LIST_TIMEOUT = 100L;
-
+    private static final long UPDATE_LIST_TIMEOUT = 200L;
+    private final ElementsCollection listItems = self.$$("li");
     private final SearchField searchComponent;
     private final String itemType;
     private final String itemsType;
@@ -153,8 +154,8 @@ public class ItemsListComponent extends BaseComponent<ItemsListComponent> {
             return Optional.empty();
 
         while (true) {
-            var currentItemsCount = self.$$("li").size();
-            var foundedItem = findElementInTableInRange(itemText, previousItemsCount, currentItemsCount);
+            var currentItemsCount = listItems.size();
+            var foundedItem = findItemInRange(itemText, previousItemsCount, currentItemsCount);
 
             if (foundedItem.isPresent()) return foundedItem;
 
@@ -185,9 +186,9 @@ public class ItemsListComponent extends BaseComponent<ItemsListComponent> {
             return result;
 
         while (true) {
-            var currentItemsCount = self.$$("li").size();
+            var currentItemsCount = listItems.size();
             itemsName.forEach(itemName ->
-                    findElementInTableInRange(itemName, previousItemsCount.get(), currentItemsCount)
+                    findItemInRange(itemName, previousItemsCount.get(), currentItemsCount)
                             .ifPresent(foundedItem -> result.foundItem(itemName)));
 
             scrollToLastAndWait();
@@ -202,16 +203,15 @@ public class ItemsListComponent extends BaseComponent<ItemsListComponent> {
 
     }
 
-    private Optional<SelenideElement> findElementInTableInRange(String itemName, int start, int end) {
-        var items = self.$$("li .item-title");
+    private Optional<SelenideElement> findItemInRange(String itemName, int start, int end) {
         return IntStream.range(start, end)
-                .filter(i -> items.get(i).has(text(itemName)))
-                .mapToObj(items::get)
+                .filter(i -> listItems.get(i).$(".item-title").has(text(itemName)))
+                .mapToObj(listItems::get)
                 .findFirst();
     }
 
     private void scrollToLastAndWait() {
-        self.$$("li").last().scrollIntoView(true);
+        listItems.last().scrollIntoView(true);
         Selenide.sleep(UPDATE_LIST_TIMEOUT);
     }
 

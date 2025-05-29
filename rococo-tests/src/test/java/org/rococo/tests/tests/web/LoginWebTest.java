@@ -32,7 +32,7 @@ class LoginWebTest {
 
     @User
     @Test
-    @DisplayName("[WEB] Should login by correct credentials")
+    @DisplayName("Should login by correct credentials")
     void shouldLoginWithCorrectCredentialsTest(UserDTO user) {
         open(MainPage.URL, MainPage.class)
                 .getHeader()
@@ -43,7 +43,7 @@ class LoginWebTest {
 
     @User
     @Test
-    @DisplayName("[WEB] Should not login by incorrect credentials")
+    @DisplayName("Should not login by incorrect credentials")
     void shouldDisplayBadCredentialsErrorIfPasswordIsIncorrectTest(UserDTO user) {
         open(MainPage.URL, MainPage.class)
                 .getHeader()
@@ -53,7 +53,7 @@ class LoginWebTest {
     }
 
     @Test
-    @DisplayName("[WEB] Should display bad credentials error, if sign in with unknown username")
+    @DisplayName("Should display bad credentials error, if sign in with unknown username")
     void shouldDisplayBadCredentialsErrorIfUsernameUnknownTest() {
         open(MainPage.URL, MainPage.class)
                 .getHeader()
@@ -64,7 +64,7 @@ class LoginWebTest {
 
     @ApiLogin(@User)
     @Test
-    @DisplayName("[WEB] Should log out")
+    @DisplayName("Should log out")
     void canLogOutTest() {
         open(MainPage.URL, MainPage.class)
                 .getHeader()

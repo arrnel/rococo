@@ -52,7 +52,7 @@ public final class UserForm extends BaseComponent<UserForm> {
 
     @Step("Press logout button")
     public LoginPage logout() {
-        logoutButton.click();
+        logoutButton.shouldBe(clickable).click();
         return new LoginPage();
     }
 

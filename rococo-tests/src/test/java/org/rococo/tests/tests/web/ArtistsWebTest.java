@@ -70,8 +70,10 @@ class ArtistsWebTest {
     @ParameterizedTest(name = "Case: [{0}]")
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validArtistData")
     @DisplayName("Check artist creates if data length is valid")
-    void shouldCreateArtistWithValidLengthDataTest(String caseName, String artistName, String artistBio) {
+    void shouldCreateArtistWithValidLengthDataTest(String caseName, int artistNameLength, int artistBioLength) {
         // Data
+        var artistName = FAKE.lorem().characters(artistNameLength);
+        var artistBio = FAKE.lorem().characters(artistBioLength);
         var artist = DataGenerator.generateArtist()
                 .setName(artistName)
                 .setBiography(artistBio);
@@ -88,8 +90,14 @@ class ArtistsWebTest {
     @ParameterizedTest(name = "Case: [{0}]")
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidArtistData")
     @DisplayName("Check errors visible on add new artist form if fields have greater than max characters length")
-    void shouldDisplayErrorsOnAddAristFormIfArtistFieldsHaveGreaterThanMaxLengthTest(String caseName, String artistName, String artistBio, String[] errors) {
+    void shouldDisplayErrorsOnAddAristFormIfArtistFieldsHaveGreaterThanMaxLengthTest(String caseName,
+                                                                                     int artistNameLength,
+                                                                                     int artistBioLength,
+                                                                                     String[] errors
+    ) {
         // Data
+        var artistName = FAKE.lorem().characters(artistNameLength);
+        var artistBio = FAKE.lorem().characters(artistBioLength);
         var artist = DataGenerator.generateArtist()
                 .setName(artistName)
                 .setBiography(artistBio);
@@ -104,7 +112,7 @@ class ArtistsWebTest {
 
     @ApiLogin(@User)
     @Test
-    @DisplayName("Check errors visible on add new artist form if fields have greater than max characters length")
+    @DisplayName("Check errors visible on add new artist form if fields image has invalid format")
     void shouldDisplayErrorOnAddArtistFormWhenUploadingInvalidImageFormat() {
         // Data
         var artist = DataGenerator.generateArtist()
@@ -154,8 +162,14 @@ class ArtistsWebTest {
     @ParameterizedTest(name = "Case: [{0}]")
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validArtistData")
     @DisplayName("Check artist updates if data length is valid")
-    void shouldUpdateArtistWithValidLengthDataTest(String caseName, String artistName, String artistBio, ArtistDTO artist) {
+    void shouldUpdateArtistWithValidLengthDataTest(String caseName,
+                                                   int artistNameLength,
+                                                   int artistBioLength,
+                                                   ArtistDTO artist
+    ) {
         // Data
+        var artistName = FAKE.lorem().characters(artistNameLength);
+        var artistBio = FAKE.lorem().characters(artistBioLength);
         var newArtist = DataGenerator.generateArtist()
                 .setName(artistName)
                 .setBiography(artistBio);
@@ -173,15 +187,17 @@ class ArtistsWebTest {
     @Artist
     @ParameterizedTest(name = "Case: [{0}]")
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidArtistData")
-    @DisplayName("Check errors visible on add new artist form if fields have greater than max characters length")
-    void shouldVisibleErrorsOnArtistCreationFormIfArtistFieldsHaveGreaterThanMaxLengthTest(
+    @DisplayName("Check errors visible on update artist form if fields have greater than max characters length")
+    void shouldVisibleErrorsOnArtistUpdateFormIfArtistFieldsHaveGreaterThanMaxLengthTest(
             String caseName,
-            String artistName,
-            String artistBio,
+            int artistNameLength,
+            int artistBioLength,
             String[] errors,
             ArtistDTO artist
     ) {
         // Data
+        var artistName = FAKE.lorem().characters(artistNameLength);
+        var artistBio = FAKE.lorem().characters(artistBioLength);
         var newArtist = DataGenerator.generateArtist()
                 .setName(artistName)
                 .setBiography(artistBio);

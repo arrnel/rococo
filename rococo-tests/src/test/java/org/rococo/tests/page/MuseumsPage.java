@@ -35,9 +35,9 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     private final MuseumPage museumPage = new MuseumPage();
     private final MuseumForm museumForm = new MuseumForm(museumFormContainer);
 
-    @Step("Open museum by title: [{museumName}]")
-    public MuseumPage openMuseum(String museumName) {
-        museumsList.getByName(museumName).click();
+    @Step("Open museum by title: [{museumTitle}]")
+    public MuseumPage openMuseum(String museumTitle) {
+        museumsList.getByName(museumTitle).$("a").click();
         return new MuseumPage();
     }
 
@@ -58,19 +58,19 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
         return museumForm;
     }
 
-    @Step("Update museum: {museum.title}")
-    public MuseumsPage updateMuseum(String museumName, MuseumDTO museum) {
-        log.info("Update museum: {}", museumName);
-        museumsList.getByName(museumName).click();
+    @Step("Update museum: {museumTitle}")
+    public MuseumsPage updateMuseum(String museumTitle, MuseumDTO museum) {
+        log.info("Update museum: {}", museumTitle);
+        openMuseum(museumTitle);
         museumPage.updateMuseum(museum);
         museumForm.shouldNotVisibleComponent();
         return this;
     }
 
-    @Step("Update museum: {museum.title}")
-    public MuseumForm updateMuseumWithError(String museumName, MuseumDTO museum) {
-        log.info("Update museum: {}", museumName);
-        museumsList.getByName(museumName).click();
+    @Step("Update museum: {museumTitle}")
+    public MuseumForm updateMuseumWithError(String museumTitle, MuseumDTO museum) {
+        log.info("Update museum: {}", museumTitle);
+        openMuseum(museumTitle);
         museumPage.updateMuseumWithError(museum);
         return museumForm;
     }
@@ -82,23 +82,23 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
         return new MuseumForm();
     }
 
-    @Step("Check museum exists: [{museumName}]")
-    public MuseumsPage shouldExistMuseum(String museumName) {
-        log.info("Check museum exists: [{}]", museumName);
+    @Step("Check museum exists: [{museumTitle}]")
+    public MuseumsPage shouldExistMuseum(String museumTitle) {
+        log.info("Check museum exists: [{}]", museumTitle);
         museumListContainer.shouldBe(visible);
-        museumsList.shouldContainsItem(museumName);
+        museumsList.shouldContainsItem(museumTitle);
         return this;
     }
 
-    @Step("Check museum not exists: [{museumName}]")
-    public MuseumsPage shouldNotExistMuseum(String museumName) {
-        log.info("Check museum not exists: [{}]", museumName);
+    @Step("Check museum not exists: [{museumTitle}]")
+    public MuseumsPage shouldNotExistMuseum(String museumTitle) {
+        log.info("Check museum not exists: [{}]", museumTitle);
         museumListContainer.shouldBe(visible);
-        museumsList.shouldNotContainItem(museumName);
+        museumsList.shouldNotContainItem(museumTitle);
         return this;
     }
 
-    @Step("Check museums exists: [{museumName}]")
+    @Step("Check museums exists: [{museumTitle}]")
     public MuseumsPage shouldExistMuseums(List<String> museumsName) {
         log.info("Check museums exists: [{}]", museumsName);
         museumListContainer.shouldBe(visible);
@@ -106,7 +106,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
         return this;
     }
 
-    @Step("Check museums not exists: [{museumName}]")
+    @Step("Check museums not exists: [{museumTitle}]")
     public MuseumsPage shouldNotExistMuseums(List<String> museumsName) {
         log.info("Check museums not exists: [{}]", museumsName);
         museumListContainer.shouldBe(visible);
@@ -114,7 +114,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
         return this;
     }
 
-    @Step("Check museums founded in search by query: [{museumName}]")
+    @Step("Check museums founded in search by query: [{museumTitle}]")
     public MuseumsPage shouldContainsMuseumsInQuerySearch(String query, List<String> museumsName) {
         log.info("Check museums not exists: [{}]", museumsName);
         museumListContainer.shouldBe(visible);
@@ -122,7 +122,7 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
         return this;
     }
 
-    @Step("Check museums not founded in search by query: [{museumName}]")
+    @Step("Check museums not founded in search by query: [{museumTitle}]")
     public MuseumsPage shouldNotContainsMuseumsByQuery(String query, List<String> museumsName) {
         log.info("Check museums not exists: [{}]", museumsName);
         museumListContainer.shouldBe(visible);

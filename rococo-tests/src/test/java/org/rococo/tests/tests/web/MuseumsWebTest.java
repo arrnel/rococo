@@ -70,8 +70,13 @@ class MuseumsWebTest {
     @ParameterizedTest(name = "Case: [{0}]")
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validMuseumData")
     @DisplayName("Check museum creates if data length is valid")
-    void shouldCreateMuseumWithValidLengthDataTest(String caseName, String museumTitle, String museumDescription) {
+    void shouldCreateMuseumWithValidLengthDataTest(String caseName,
+                                                   int museumTitleLength,
+                                                   int museumDescriptionLength
+    ) {
         // Data
+        var museumTitle = FAKE.lorem().characters(museumTitleLength);
+        var museumDescription = FAKE.lorem().characters(museumDescriptionLength);
         var museum = DataGenerator.generateMuseum()
                 .setTitle(museumTitle)
                 .setDescription(museumDescription);
@@ -89,12 +94,15 @@ class MuseumsWebTest {
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidMuseumData")
     @DisplayName("Check errors visible on add new museum form if fields have greater than max characters length")
     void shouldDisplayErrorsOnAddAristFormIfMuseumFieldsHaveGreaterThanMaxLengthTest(String caseName,
-                                                                                     String museumTitle,
-                                                                                     String museumDescription,
-                                                                                     String city,
+                                                                                     int museumTitleLength,
+                                                                                     int museumDescriptionLength,
+                                                                                     int cityTitleLength,
                                                                                      String[] errors
     ) {
         // Data
+        var museumTitle = FAKE.lorem().characters(museumTitleLength);
+        var museumDescription = FAKE.lorem().characters(museumDescriptionLength);
+        var city = FAKE.lorem().characters(cityTitleLength);
         var museum = DataGenerator.generateMuseum()
                 .setTitle(museumTitle)
                 .setDescription(museumDescription);
@@ -161,8 +169,14 @@ class MuseumsWebTest {
     @ParameterizedTest(name = "Case: [{0}]")
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validMuseumData")
     @DisplayName("Check museum updates if data length is valid")
-    void shouldUpdateMuseumWithValidLengthDataTest(String caseName, String museumTitle, String museumDescription, MuseumDTO museum) {
+    void shouldUpdateMuseumWithValidLengthDataTest(String caseName,
+                                                   int museumTitleLength,
+                                                   int museumDescriptionLength,
+                                                   MuseumDTO museum
+    ) {
         // Data
+        var museumTitle = FAKE.lorem().characters(museumTitleLength);
+        var museumDescription = FAKE.lorem().characters(museumDescriptionLength);
         var newMuseum = DataGenerator.generateMuseum()
                 .setTitle(museumTitle)
                 .setDescription(museumDescription);
@@ -183,13 +197,16 @@ class MuseumsWebTest {
     @DisplayName("Check errors visible on update museum form if fields have invalid data length")
     void shouldVisibleErrorsOnMuseumUpdateFormIfMuseumFieldsHaveInvalidDataLengthTest(
             String caseName,
-            String museumTitle,
-            String museumDescription,
-            String city,
+            int museumTitleLength,
+            int museumDescriptionLength,
+            int cityTitleLength,
             String[] errors,
             MuseumDTO museum
     ) {
         // Data
+        var museumTitle = FAKE.lorem().characters(museumTitleLength);
+        var museumDescription = FAKE.lorem().characters(museumDescriptionLength);
+        var city = FAKE.lorem().characters(cityTitleLength);
         var newMuseum = DataGenerator.generateMuseum()
                 .setTitle(museumTitle)
                 .setDescription(museumDescription);

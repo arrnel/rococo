@@ -56,7 +56,7 @@ class UserApiTest {
         var result = userService.findById(UUID.randomUUID());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check user not found by unknown id");
 
     }
 
@@ -78,22 +78,20 @@ class UserApiTest {
 
     @Test
     @DisplayName("Returns Optional.empty() if search user by unknown username")
-    void canGetEmptyUserByUnknownNameTest() {
+    void canGetEmptyUserByUnknownUsernameTest() {
 
         // Steps
         var result = userService.findByUsername(new Faker().internet().username());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check user not found by unknown username");
 
     }
 
     @Users(count = 3)
     @Test
     @DisplayName("Can get all users")
-    void canGetAllUsersTest(
-            List<UserDTO> users
-    ) {
+    void canGetAllUsersTest(List<UserDTO> users) {
 
         // Steps
         var result = userService.findAll();

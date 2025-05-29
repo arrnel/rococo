@@ -34,7 +34,7 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
 
     @Step("Open painting by name: [{paintingTitle}]")
     public PaintingPage openPainting(String paintingTitle) {
-        paintingsList.getByName(paintingTitle).click();
+        paintingsList.getByName(paintingTitle).$("a").click();
         return new PaintingPage();
     }
 
@@ -62,7 +62,7 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
         return paintingPage.updatePainting(painting);
     }
 
-    @Step("Update painting: {painting.title}")
+    @Step("Update painting: {paintingTitle}")
     public PaintingForm updatePaintingWithError(String paintingTitle, PaintingDTO painting) {
         openPainting(paintingTitle);
         return paintingPage.updatePaintingWithError(painting);
