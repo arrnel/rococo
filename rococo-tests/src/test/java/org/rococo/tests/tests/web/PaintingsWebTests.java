@@ -58,7 +58,7 @@ class PaintingsWebTests {
                 .addNewPainting(painting);
 
         // Assertions
-        paintingsPage.shouldExistPainting(painting.getTitle());
+        paintingsPage.shouldFoundPainting(painting.getTitle());
     }
 
     @Test
@@ -78,12 +78,14 @@ class PaintingsWebTests {
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validPaintingData")
     @DisplayName("Check painting creates if data length is valid")
     void shouldCreatePaintingWithValidLengthDataTest(String caseName,
-                                                     String paintingTitle,
-                                                     String paintingDescription,
+                                                     int paintingTitleLength,
+                                                     int paintingDescriptionLength,
                                                      ArtistDTO artist,
                                                      MuseumDTO museumDTO
     ) {
         // Data
+        var paintingTitle = FAKE.lorem().characters(paintingTitleLength);
+        var paintingDescription = FAKE.lorem().characters(paintingDescriptionLength);
         var painting = DataGenerator.generatePainting()
                 .setTitle(paintingTitle)
                 .setDescription(paintingDescription)
@@ -95,7 +97,7 @@ class PaintingsWebTests {
                 .addNewPainting(painting);
 
         // Assertions
-        paintingsPage.shouldExistPainting(paintingTitle);
+        paintingsPage.shouldFoundPainting(paintingTitle);
     }
 
     @ApiLogin(@User)
@@ -105,13 +107,15 @@ class PaintingsWebTests {
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidPaintingData")
     @DisplayName("Check errors visible on add new painting form if fields have greater than max characters length")
     void shouldDisplayErrorsOnAddAristFormIfPaintingFieldsHaveGreaterThanMaxLengthTest(String caseName,
-                                                                                       String paintingTitle,
-                                                                                       String paintingDescription,
+                                                                                       int paintingTitleLength,
+                                                                                       int paintingDescriptionLength,
                                                                                        String[] errors,
                                                                                        ArtistDTO artist,
                                                                                        MuseumDTO museum
     ) {
         // Data
+        var paintingTitle = FAKE.lorem().characters(paintingTitleLength);
+        var paintingDescription = FAKE.lorem().characters(paintingDescriptionLength);
         var painting = DataGenerator.generatePainting()
                 .setTitle(paintingTitle)
                 .setDescription(paintingDescription)
@@ -189,13 +193,15 @@ class PaintingsWebTests {
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validPaintingData")
     @DisplayName("Check painting updates if data length is valid")
     void shouldUpdatePaintingWithValidLengthDataTest(String caseName,
-                                                     String paintingTitle,
-                                                     String paintingDescription,
+                                                     int paintingTitleLength,
+                                                     int paintingDescriptionLength,
                                                      PaintingDTO painting,
                                                      ArtistDTO artist,
                                                      MuseumDTO museum
     ) {
         // Data
+        var paintingTitle = FAKE.lorem().characters(paintingTitleLength);
+        var paintingDescription = FAKE.lorem().characters(paintingDescriptionLength);
         var newPainting = DataGenerator.generatePainting()
                 .setArtist(artist)
                 .setMuseum(museum)
@@ -220,14 +226,16 @@ class PaintingsWebTests {
     @DisplayName("Check errors visible on update painting form if fields have greater than max characters length")
     void shouldVisibleErrorsOnPaintingUpdateFormIfPaintingFieldsHaveGreaterThanMaxLengthTest(
             String caseName,
-            String paintingTitle,
-            String paintingDescription,
+            int paintingTitleLength,
+            int paintingDescriptionLength,
             String[] errors,
             PaintingDTO painting,
             ArtistDTO artist,
             MuseumDTO museum
     ) {
         // Data
+        var paintingTitle = FAKE.lorem().characters(paintingTitleLength);
+        var paintingDescription = FAKE.lorem().characters(paintingDescriptionLength);
         var newPainting = DataGenerator.generatePainting()
                 .setTitle(paintingTitle)
                 .setDescription(paintingDescription)
@@ -270,7 +278,7 @@ class PaintingsWebTests {
     void shouldFindPaintingsWithFilterTest(List<PaintingDTO> paintings) {
         // Steps & Assertion
         open(PaintingsPage.URL, PaintingsPage.class)
-                .shouldContainsPaintingsInQuerySearch("vAn", paintings.stream()
+                .shouldFoundPaintings("vAn", paintings.stream()
                         .map(PaintingDTO::getTitle)
                         .toList());
     }
@@ -280,7 +288,7 @@ class PaintingsWebTests {
     void shouldDisplayPaintingAfterFilteringByNameTest() {
         // Steps & Assertion
         open(PaintingsPage.URL, PaintingsPage.class)
-                .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
+                .shouldHaveEmptySearchResult(FAKE.lorem().paragraph());
     }
 
     @DisabledByIssue(issueId = "32")

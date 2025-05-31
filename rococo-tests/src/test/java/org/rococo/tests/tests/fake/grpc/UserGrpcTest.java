@@ -84,7 +84,7 @@ class UserGrpcTest {
         var result = userService.findById(UUID.randomUUID());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check user not found by unknown id");
 
     }
 
@@ -109,7 +109,7 @@ class UserGrpcTest {
         var result = userService.findByUsername(new Faker().internet().username());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check user not found by unknown username");
 
     }
 
@@ -122,7 +122,7 @@ class UserGrpcTest {
         var result = userService.findAll();
 
         // Assertions
-        assertTrue(containsUsers(users, result, false));
+        assertTrue(containsUsers(users, result, false), "Check expected users exists in findAll request");
 
     }
 
@@ -145,6 +145,19 @@ class UserGrpcTest {
                 hasProperty("firstName", is(newUser.getFirstName())),
                 hasProperty("lastName", is(newUser.getLastName()))
         ));
+
+    }
+
+    @User
+    @Test
+    @DisplayName("Can delete user")
+    void canDeleteUserTest(UserDTO user) {
+
+        // Steps
+        userService.delete(user.getUsername());
+
+        // Assertions
+        assertTrue(userService.findById(user.getId()).isEmpty(), "Check user not found by id after removing");
 
     }
 

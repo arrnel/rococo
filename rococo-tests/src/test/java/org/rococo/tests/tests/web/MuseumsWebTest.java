@@ -52,7 +52,7 @@ class MuseumsWebTest {
                 .addNewMuseum(museum);
 
         // Assertions
-        museumsPage.shouldExistMuseum(museum.getTitle());
+        museumsPage.shouldFoundMuseum(museum.getTitle());
     }
 
     @Test
@@ -63,15 +63,20 @@ class MuseumsWebTest {
                 .shouldVisiblePage();
 
         // Assertions
-        museumsPage.shouldNotExistsAddNewMuseumButton();
+        museumsPage.shouldNotExistAddNewMuseumButton();
     }
 
     @ApiLogin(@User)
     @ParameterizedTest(name = "Case: [{0}]")
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validMuseumData")
     @DisplayName("Check museum creates if data length is valid")
-    void shouldCreateMuseumWithValidLengthDataTest(String caseName, String museumTitle, String museumDescription) {
+    void shouldCreateMuseumWithValidLengthDataTest(String caseName,
+                                                   int museumTitleLength,
+                                                   int museumDescriptionLength
+    ) {
         // Data
+        var museumTitle = FAKE.lorem().characters(museumTitleLength);
+        var museumDescription = FAKE.lorem().characters(museumDescriptionLength);
         var museum = DataGenerator.generateMuseum()
                 .setTitle(museumTitle)
                 .setDescription(museumDescription);
@@ -81,7 +86,7 @@ class MuseumsWebTest {
                 .addNewMuseum(museum);
 
         // Assertions
-        museumsPage.shouldExistMuseum(museumTitle);
+        museumsPage.shouldFoundMuseum(museumTitle);
     }
 
     @ApiLogin(@User)
@@ -89,12 +94,15 @@ class MuseumsWebTest {
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidMuseumData")
     @DisplayName("Check errors visible on add new museum form if fields have greater than max characters length")
     void shouldDisplayErrorsOnAddAristFormIfMuseumFieldsHaveGreaterThanMaxLengthTest(String caseName,
-                                                                                     String museumTitle,
-                                                                                     String museumDescription,
-                                                                                     String city,
+                                                                                     int museumTitleLength,
+                                                                                     int museumDescriptionLength,
+                                                                                     int cityTitleLength,
                                                                                      String[] errors
     ) {
         // Data
+        var museumTitle = FAKE.lorem().characters(museumTitleLength);
+        var museumDescription = FAKE.lorem().characters(museumDescriptionLength);
+        var city = FAKE.lorem().characters(cityTitleLength);
         var museum = DataGenerator.generateMuseum()
                 .setTitle(museumTitle)
                 .setDescription(museumDescription);
@@ -161,8 +169,14 @@ class MuseumsWebTest {
     @ParameterizedTest(name = "Case: [{0}]")
     @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validMuseumData")
     @DisplayName("Check museum updates if data length is valid")
-    void shouldUpdateMuseumWithValidLengthDataTest(String caseName, String museumTitle, String museumDescription, MuseumDTO museum) {
+    void shouldUpdateMuseumWithValidLengthDataTest(String caseName,
+                                                   int museumTitleLength,
+                                                   int museumDescriptionLength,
+                                                   MuseumDTO museum
+    ) {
         // Data
+        var museumTitle = FAKE.lorem().characters(museumTitleLength);
+        var museumDescription = FAKE.lorem().characters(museumDescriptionLength);
         var newMuseum = DataGenerator.generateMuseum()
                 .setTitle(museumTitle)
                 .setDescription(museumDescription);
@@ -183,13 +197,16 @@ class MuseumsWebTest {
     @DisplayName("Check errors visible on update museum form if fields have invalid data length")
     void shouldVisibleErrorsOnMuseumUpdateFormIfMuseumFieldsHaveInvalidDataLengthTest(
             String caseName,
-            String museumTitle,
-            String museumDescription,
-            String city,
+            int museumTitleLength,
+            int museumDescriptionLength,
+            int cityTitleLength,
             String[] errors,
             MuseumDTO museum
     ) {
         // Data
+        var museumTitle = FAKE.lorem().characters(museumTitleLength);
+        var museumDescription = FAKE.lorem().characters(museumDescriptionLength);
+        var city = FAKE.lorem().characters(cityTitleLength);
         var newMuseum = DataGenerator.generateMuseum()
                 .setTitle(museumTitle)
                 .setDescription(museumDescription);
@@ -232,7 +249,7 @@ class MuseumsWebTest {
     void shouldFindMuseumsWithFilterTest(List<MuseumDTO> museums) {
         // Steps & Assertion
         open(MuseumsPage.URL, MuseumsPage.class)
-                .shouldContainsMuseumsInQuerySearch("vAn", museums.stream()
+                .shouldFoundMuseums("vAn", museums.stream()
                         .map(MuseumDTO::getTitle)
                         .toList());
     }
@@ -242,7 +259,7 @@ class MuseumsWebTest {
     void shouldDisplayMuseumAfterFilteringByNameTest() {
         // Steps & Assertion
         open(MuseumsPage.URL, MuseumsPage.class)
-                .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
+                .shouldHaveEmptySearchResult(FAKE.lorem().paragraph());
     }
 
     @DisabledByIssue(issueId = "32")

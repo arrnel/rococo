@@ -72,6 +72,7 @@ public class BrowserExtension implements BeforeEachCallback, AfterEachCallback, 
         SelenideLogger.addListener("Allure-selenide", new AllureSelenide()
                 .savePageSource(false)
                 .screenshots(false)
+                .includeSelenideSteps(false)
         );
     }
 

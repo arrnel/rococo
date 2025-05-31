@@ -18,7 +18,6 @@ import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.model.PaintingDTO;
 import org.rococo.tests.service.PaintingService;
-import org.rococo.tests.util.CompareUtil;
 import org.rococo.tests.util.DataGenerator;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -29,6 +28,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.enums.ServiceType.GRPC;
+import static org.rococo.tests.util.CompareUtil.containsPaintings;
 
 @GrpcTest
 @Feature("FAKE")
@@ -125,7 +125,7 @@ class PaintingGrpcTest {
         var result = paintingService.findById(UUID.randomUUID());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check painting not found by unknown id");
 
     }
 
@@ -156,7 +156,7 @@ class PaintingGrpcTest {
         var result = paintingService.findByTitle(new Faker().detectiveConan().characters());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check painting not found by unknown title");
 
     }
 
@@ -174,7 +174,7 @@ class PaintingGrpcTest {
         var result = paintingService.findAllByArtistId(artist.getId());
 
         // Assertions
-        assertTrue(CompareUtil.containsPaintings(paintings, result, false));
+        assertTrue(containsPaintings(paintings, result, false), "Check expected museums exists in findAllByArtistId request");
 
     }
 
@@ -187,7 +187,7 @@ class PaintingGrpcTest {
         var result = paintingService.findAll();
 
         // Assertions
-        assertTrue(CompareUtil.containsPaintings(paintings, result, false));
+        assertTrue(containsPaintings(paintings, result, false), "Check expected paintings exists in findAll request");
 
     }
 
@@ -270,7 +270,7 @@ class PaintingGrpcTest {
         paintingService.delete(painting.getId());
 
         // Assertions
-        assertTrue(paintingService.findById(painting.getId()).isEmpty());
+        assertTrue(paintingService.findById(painting.getId()).isEmpty(), "Check painting not found by id after removing");
 
     }
 

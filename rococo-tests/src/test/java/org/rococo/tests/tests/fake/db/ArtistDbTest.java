@@ -81,7 +81,7 @@ class ArtistDbTest {
         var result = artistService.findById(UUID.randomUUID());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check artist not found by unknown id");
 
     }
 
@@ -110,7 +110,7 @@ class ArtistDbTest {
         var result = artistService.findByName(new Faker().detectiveConan().characters());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check artist not found by unknown name");
 
     }
 
@@ -123,7 +123,7 @@ class ArtistDbTest {
         var result = artistService.findAll();
 
         // Assertions
-        assertTrue(containsArtists(artists, result, false));
+        assertTrue(containsArtists(artists, result, false), "Check expected artists exists in findAll request");
 
     }
 
@@ -168,7 +168,7 @@ class ArtistDbTest {
         artistService.delete(artist.getId());
 
         // Assertions
-        assertTrue(artistService.findById(artist.getId()).isEmpty());
+        assertTrue(artistService.findById(artist.getId()).isEmpty(), "Check artist not found by id after removing");
 
     }
 

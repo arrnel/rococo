@@ -51,7 +51,7 @@ class CountryDbTest {
         var result = countryService.findById(UUID.randomUUID());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check country not found by unknown id");
 
     }
 
@@ -79,7 +79,7 @@ class CountryDbTest {
         var result = countryService.findByCode(CountryCode.EMPTY);
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check country not found by unknown code");
 
     }
 
@@ -91,7 +91,7 @@ class CountryDbTest {
         var result = countryService.findAll();
 
         // Assertions
-        assertEquals(251, result.size());
+        assertEquals(251, result.size(), "Check countries service has expected count of countries");
 
     }
 

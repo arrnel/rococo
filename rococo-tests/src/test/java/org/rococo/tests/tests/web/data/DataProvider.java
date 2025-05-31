@@ -48,40 +48,39 @@ public class DataProvider {
 
     static Stream<Arguments> validArtistsName() {
         return Stream.of(
-                Arguments.of("min", FAKE.lorem().characters(artistNameRange.min())),
-                Arguments.of("max", FAKE.lorem().characters(artistNameRange.max()))
+                Arguments.of("min", artistNameRange.min()),
+                Arguments.of("max", artistNameRange.max())
         );
     }
 
     static Stream<Arguments> validArtistData() {
         return Stream.of(
                 Arguments.of("min",
-                        FAKE.lorem().characters(artistNameRange.min()),
-                        FAKE.lorem().characters(artistBiographyRange.min())),
+                        artistNameRange.min(),
+                        artistBiographyRange.min()),
                 Arguments.of("max",
-                        FAKE.lorem().characters(artistNameRange.max()),
-                        FAKE.lorem().characters(artistBiographyRange.max()))
+                        artistNameRange.max(),
+                        artistBiographyRange.max())
         );
     }
 
     static Stream<Arguments> invalidArtistData() {
         return Stream.of(
-                // Ignore empty case. Artist's name and biography inputs marked as required
                 Arguments.of("1",
-                        FAKE.lorem().characters(1),
-                        FAKE.lorem().characters(1),
+                        1,
+                        1,
                         new String[]{NAME_LENGTH_CONSTRAINT_MIN, BIOGRAPHY_LENGTH_CONSTRAINT_MIN}),
                 Arguments.of("min - 1",
-                        FAKE.lorem().characters(artistNameRange.min() - 1),
-                        FAKE.lorem().characters(artistBiographyRange.min() - 1),
+                        artistNameRange.min() - 1,
+                        artistBiographyRange.min() - 1,
                         new String[]{NAME_LENGTH_CONSTRAINT_MIN, BIOGRAPHY_LENGTH_CONSTRAINT_MIN}),
                 Arguments.of("max + 1",
-                        FAKE.lorem().characters(artistNameRange.max() + 1),
-                        FAKE.lorem().characters(artistBiographyRange.max() + 1),
+                        artistNameRange.max() + 1,
+                        artistBiographyRange.max() + 1,
                         new String[]{NAME_LENGTH_CONSTRAINT_MAX, BIOGRAPHY_LENGTH_CONSTRAINT_MAX}),
                 Arguments.of("max + 10",
-                        FAKE.lorem().characters(artistNameRange.max() + 10),
-                        FAKE.lorem().characters(artistBiographyRange.max() + 10),
+                        artistNameRange.max() + 10,
+                        artistBiographyRange.max() + 10,
                         new String[]{NAME_LENGTH_CONSTRAINT_MAX, BIOGRAPHY_LENGTH_CONSTRAINT_MAX})
         );
     }
@@ -89,36 +88,35 @@ public class DataProvider {
     static Stream<Arguments> validMuseumData() {
         return Stream.of(
                 Arguments.of("min",
-                        FAKE.lorem().characters(museumTitleRange.min()),
-                        FAKE.lorem().characters(museumDescriptionRange.min())),
+                        museumTitleRange.min(),
+                        museumDescriptionRange.min()),
                 Arguments.of("max",
-                        FAKE.lorem().characters(museumTitleRange.max()),
-                        FAKE.lorem().characters(museumDescriptionRange.max()))
+                        museumTitleRange.max(),
+                        museumDescriptionRange.max())
         );
     }
 
     static Stream<Arguments> invalidMuseumData() {
         return Stream.of(
-                // Ignore empty case. Artist's name and biography inputs marked as required
                 Arguments.of("1",
-                        FAKE.lorem().characters(1),
-                        FAKE.lorem().characters(1),
-                        FAKE.lorem().characters(1),
+                        1,
+                        1,
+                        1,
                         new String[]{TITLE_LENGTH_CONSTRAINT_MIN, DESCRIPTION_LENGTH_CONSTRAINT_MIN, CITY_LENGTH_CONSTRAINT_MIN}),
                 Arguments.of("min - 1",
-                        FAKE.lorem().characters(museumTitleRange.min() - 1),
-                        FAKE.lorem().characters(museumDescriptionRange.min() - 1),
-                        FAKE.lorem().characters(museumCityRange.min() - 1),
+                        museumTitleRange.min() - 1,
+                        museumDescriptionRange.min() - 1,
+                        museumCityRange.min() - 1,
                         new String[]{TITLE_LENGTH_CONSTRAINT_MIN, DESCRIPTION_LENGTH_CONSTRAINT_MIN, CITY_LENGTH_CONSTRAINT_MIN}),
                 Arguments.of("max + 1",
-                        FAKE.lorem().characters(museumTitleRange.max() + 1),
-                        FAKE.lorem().characters(museumDescriptionRange.max() + 1),
-                        FAKE.lorem().characters(museumCityRange.max() + 1),
+                        museumTitleRange.max() + 1,
+                        museumDescriptionRange.max() + 1,
+                        museumCityRange.max() + 1,
                         new String[]{TITLE_LENGTH_CONSTRAINT_MAX, DESCRIPTION_LENGTH_CONSTRAINT_MAX, CITY_LENGTH_CONSTRAINT_MAX}),
                 Arguments.of("max + 10",
-                        FAKE.lorem().characters(museumTitleRange.max() + 10),
-                        FAKE.lorem().characters(museumDescriptionRange.max() + 10),
-                        FAKE.lorem().characters(museumCityRange.max() + 10),
+                        museumTitleRange.max() + 10,
+                        museumDescriptionRange.max() + 10,
+                        museumCityRange.max() + 10,
                         new String[]{TITLE_LENGTH_CONSTRAINT_MAX, DESCRIPTION_LENGTH_CONSTRAINT_MAX, CITY_LENGTH_CONSTRAINT_MAX})
         );
     }
@@ -126,11 +124,11 @@ public class DataProvider {
     static Stream<Arguments> validPaintingData() {
         return Stream.of(
                 Arguments.of("min",
-                        FAKE.lorem().characters(paintingTitleRange.min()),
-                        FAKE.lorem().characters(paintingDescriptionRange.min())),
+                        paintingTitleRange.min(),
+                        paintingDescriptionRange.min()),
                 Arguments.of("max",
-                        FAKE.lorem().characters(paintingTitleRange.max()),
-                        FAKE.lorem().characters(paintingDescriptionRange.max()))
+                        paintingTitleRange.max(),
+                        paintingDescriptionRange.max())
         );
     }
 
@@ -138,57 +136,57 @@ public class DataProvider {
         return Stream.of(
                 // Ignore empty case. Artist's name and biography inputs marked as required
                 Arguments.of("1",
-                        FAKE.lorem().characters(1),
-                        FAKE.lorem().characters(1),
+                        1,
+                        1,
                         new String[]{TITLE_LENGTH_CONSTRAINT_MIN, DESCRIPTION_LENGTH_CONSTRAINT_MIN}),
                 Arguments.of("min - 1",
-                        FAKE.lorem().characters(paintingTitleRange.min() - 1),
-                        FAKE.lorem().characters(paintingDescriptionRange.min() - 1),
+                        paintingTitleRange.min() - 1,
+                        paintingDescriptionRange.min() - 1,
                         new String[]{TITLE_LENGTH_CONSTRAINT_MIN, DESCRIPTION_LENGTH_CONSTRAINT_MIN}),
                 Arguments.of("max + 1",
-                        FAKE.lorem().characters(paintingTitleRange.max() + 1),
-                        FAKE.lorem().characters(paintingDescriptionRange.max() + 1),
+                        paintingTitleRange.max() + 1,
+                        paintingDescriptionRange.max() + 1,
                         new String[]{TITLE_LENGTH_CONSTRAINT_MAX, DESCRIPTION_LENGTH_CONSTRAINT_MAX}),
                 Arguments.of("max + 10",
-                        FAKE.lorem().characters(paintingTitleRange.max() + 10),
-                        FAKE.lorem().characters(paintingDescriptionRange.max() + 10),
+                        paintingTitleRange.max() + 10,
+                        paintingDescriptionRange.max() + 10,
                         new String[]{TITLE_LENGTH_CONSTRAINT_MAX, DESCRIPTION_LENGTH_CONSTRAINT_MAX})
         );
     }
 
     static Stream<Arguments> validProfileData() {
         return Stream.of(
-                Arguments.of("min", FAKE.lorem().characters(userFirstNameRange.min()), FAKE.lorem().characters(userLastNameRange.min())),
-                Arguments.of("max", FAKE.lorem().characters(userFirstNameRange.max()), FAKE.lorem().characters(userLastNameRange.max()))
+                Arguments.of("min", userFirstNameRange.min(), userLastNameRange.min()),
+                Arguments.of("max", userFirstNameRange.max(), userLastNameRange.max())
         );
     }
 
     static Stream<Arguments> invalidProfileData() {
         return Stream.of(
                 Arguments.of("1",
-                        FAKE.lorem().characters(1),
-                        FAKE.lorem().characters(1),
+                        1,
+                        1,
                         new String[]{
                                 NAME_LENGTH_CONSTRAINT_MIN,
                                 LASTNAME_LENGTH_CONSTRAINT_MIN,
                         }),
                 Arguments.of("min - 1",
-                        FAKE.lorem().characters(userFirstNameRange.min() - 1),
-                        FAKE.lorem().characters(userLastNameRange.min() - 1),
+                        userFirstNameRange.min() - 1,
+                        userLastNameRange.min() - 1,
                         new String[]{
                                 NAME_LENGTH_CONSTRAINT_MIN,
                                 LASTNAME_LENGTH_CONSTRAINT_MIN
                         }),
                 Arguments.of("max + 1",
-                        FAKE.lorem().characters(userFirstNameRange.max() + 1),
-                        FAKE.lorem().characters(userLastNameRange.max() + 1),
+                        userFirstNameRange.max() + 1,
+                        userLastNameRange.max() + 1,
                         new String[]{
                                 NAME_LENGTH_CONSTRAINT_MAX,
                                 LASTNAME_LENGTH_CONSTRAINT_MAX
                         }),
                 Arguments.of("max + 10",
-                        FAKE.lorem().characters(userFirstNameRange.max() + 10),
-                        FAKE.lorem().characters(userLastNameRange.max() + 10),
+                        userFirstNameRange.max() + 10,
+                        userLastNameRange.max() + 10,
                         new String[]{
                                 NAME_LENGTH_CONSTRAINT_MAX,
                                 LASTNAME_LENGTH_CONSTRAINT_MAX
@@ -196,59 +194,62 @@ public class DataProvider {
         );
     }
 
-    static Stream<Arguments> validRegistrationData() {
+    static Stream<Arguments> validRegistrationDataLength() {
         return Stream.of(
                 Arguments.of("min",
-                        FAKE.lorem().characters(usernameRange.min()),
-                        DataGenerator.generatePassword(passwordRange.min())),
+                        usernameRange.min(),
+                        passwordRange.min()),
                 Arguments.of("max",
-                        FAKE.lorem().characters(usernameRange.max()),
-                        DataGenerator.generatePassword(passwordRange.max()))
+                        usernameRange.max(),
+                        passwordRange.max())
         );
     }
 
-    static Stream<Arguments> invalidRegistrationData() {
+    static Stream<Arguments> invalidRegistrationDataLength() {
         return Stream.of(
                 Arguments.of("1",
-                        FAKE.lorem().characters(1),
-                        FAKE.lorem().characters(1),
+                        1,
+                        1,
                         new String[]{USERNAME_PATTERN_ERROR_MESSAGE, PASSWORD_PATTERN_ERROR_MESSAGE}),
                 Arguments.of("min - 1",
-                        FAKE.lorem().characters(usernameRange.min() - 1),
-                        DataGenerator.generatePassword(passwordRange.min() - 1),
+                        usernameRange.min() - 1,
+                        passwordRange.min() - 1,
                         new String[]{USERNAME_PATTERN_ERROR_MESSAGE, PASSWORD_PATTERN_ERROR_MESSAGE}),
                 Arguments.of("max + 1",
-                        FAKE.lorem().characters(usernameRange.max() + 1, false, true, false),
-                        DataGenerator.generatePassword(passwordRange.max() + 1),
+                        usernameRange.max() + 1,
+                        passwordRange.max() + 1,
                         new String[]{USERNAME_PATTERN_ERROR_MESSAGE, PASSWORD_PATTERN_ERROR_MESSAGE}),
                 Arguments.of("max + 10",
-                        FAKE.lorem().characters(usernameRange.max() + 10),
-                        DataGenerator.generatePassword(passwordRange.max() + 10),
-                        new String[]{USERNAME_PATTERN_ERROR_MESSAGE, PASSWORD_PATTERN_ERROR_MESSAGE}),
+                        usernameRange.max() + 10,
+                        passwordRange.max() + 10,
+                        new String[]{USERNAME_PATTERN_ERROR_MESSAGE, PASSWORD_PATTERN_ERROR_MESSAGE}));
+    }
+
+    static Stream<Arguments> invalidUsernamePattern() {
+        return Stream.of(
                 Arguments.of("username starts and ends with valid special symbol",
                         "." + FAKE.internet().username() + "-",
-                        DataGenerator.generatePassword(),
-                        new String[]{USERNAME_PATTERN_ERROR_MESSAGE}),
+                        USERNAME_PATTERN_ERROR_MESSAGE),
                 Arguments.of("username contains multiple specials in a row",
                         insertTextInRandomPlace(FAKE.internet().username(), randomValidSpecialsForUsername(), false),
-                        DataGenerator.generatePassword(),
-                        new String[]{USERNAME_PATTERN_ERROR_MESSAGE}),
+                        USERNAME_PATTERN_ERROR_MESSAGE),
                 Arguments.of("username contains invalid special",
                         insertTextInRandomPlace(FAKE.internet().username(), randomInvalidSpecialForUsername(), false),
-                        DataGenerator.generatePassword(),
-                        new String[]{USERNAME_PATTERN_ERROR_MESSAGE}),
+                        USERNAME_PATTERN_ERROR_MESSAGE)
+        );
+    }
+
+    static Stream<Arguments> invalidPasswordPattern() {
+        return Stream.of(
                 Arguments.of("password not contains uppercase symbols",
-                        FAKE.internet().username(),
                         DataGenerator.generatePassword().toLowerCase(),
-                        new String[]{PASSWORD_PATTERN_ERROR_MESSAGE}),
+                        PASSWORD_PATTERN_ERROR_MESSAGE),
                 Arguments.of("password not contains lowercase symbols",
-                        FAKE.internet().username(),
                         DataGenerator.generatePassword().toUpperCase(),
-                        new String[]{PASSWORD_PATTERN_ERROR_MESSAGE}),
+                        PASSWORD_PATTERN_ERROR_MESSAGE),
                 Arguments.of("password not contains special symbols",
-                        FAKE.internet().username(),
                         DataGenerator.generatePassword(true),
-                        new String[]{PASSWORD_PATTERN_ERROR_MESSAGE})
+                        PASSWORD_PATTERN_ERROR_MESSAGE)
         );
     }
 

@@ -100,7 +100,7 @@ class MuseumGrpcTest {
         var result = museumService.findById(UUID.randomUUID());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check museum not found by unknown id");
 
     }
 
@@ -125,7 +125,7 @@ class MuseumGrpcTest {
         var result = museumService.findByTitle(new Faker().detectiveConan().characters());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check museum not found by unknown title");
 
     }
 
@@ -138,7 +138,7 @@ class MuseumGrpcTest {
         var result = museumService.findAll();
 
         // Assertions
-        assertTrue(containsMuseums(museums, result, false));
+        assertTrue(containsMuseums(museums, result, false), "Check expected museums exists in findAll request");
 
     }
 
@@ -207,7 +207,7 @@ class MuseumGrpcTest {
         museumService.delete(museum.getId());
 
         // Assertions
-        assertTrue(museumService.findById(museum.getId()).isEmpty());
+        assertTrue(museumService.findById(museum.getId()).isEmpty(), "Check museum not found by id after removing");
 
     }
 

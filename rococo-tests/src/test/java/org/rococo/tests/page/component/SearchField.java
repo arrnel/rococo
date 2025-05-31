@@ -1,5 +1,6 @@
 package org.rococo.tests.page.component;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -11,6 +12,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public class SearchField extends BaseComponent<SearchField> {
 
+    private static final Long TIMEOUT_AFTER_SEARCH = 300L;
     private final SelenideElement input = self.$("input").as("Search input");
     private final SelenideElement searchIcon = self.$("button").as("Search submit icon");
 
@@ -26,6 +28,7 @@ public class SearchField extends BaseComponent<SearchField> {
         input.click();
         input.setValue(text);
         searchIcon.click();
+        Selenide.sleep(TIMEOUT_AFTER_SEARCH);
     }
 
     @Override

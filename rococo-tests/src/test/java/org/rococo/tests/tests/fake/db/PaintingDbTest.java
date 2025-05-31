@@ -121,7 +121,7 @@ class PaintingDbTest {
         var result = paintingService.findById(UUID.randomUUID());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check painting not found by unknown id");
 
     }
 
@@ -152,7 +152,7 @@ class PaintingDbTest {
         var result = paintingService.findByTitle(new Faker().detectiveConan().characters());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check painting not found by unknown title");
 
     }
 
@@ -170,7 +170,7 @@ class PaintingDbTest {
         var result = paintingService.findAllByArtistId(artist.getId());
 
         // Assertions
-        assertTrue(containsPaintings(paintings, result, false));
+        assertTrue(containsPaintings(paintings, result, false), "Check expected museums exists in findAllByArtistId request");
 
     }
 
@@ -183,7 +183,7 @@ class PaintingDbTest {
         var result = paintingService.findAll();
 
         // Assertions
-        assertTrue(containsPaintings(paintings, result, false));
+        assertTrue(containsPaintings(paintings, result, false), "Check expected paintings exists in findAll request");
 
     }
 
@@ -268,7 +268,7 @@ class PaintingDbTest {
         paintingService.delete(painting.getId());
 
         // Assertions
-        assertTrue(paintingService.findById(painting.getId()).isEmpty());
+        assertTrue(paintingService.findById(painting.getId()).isEmpty(), "Check painting not found by id after removing");
 
     }
 

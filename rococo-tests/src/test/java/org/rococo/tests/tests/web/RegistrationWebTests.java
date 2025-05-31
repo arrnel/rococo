@@ -60,9 +60,13 @@ class RegistrationWebTests {
 
 
     @ParameterizedTest(name = "Case: [{0}]")
-    @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validRegistrationData")
+    @MethodSource("org.rococo.tests.tests.web.data.DataProvider#validRegistrationDataLength")
     @DisplayName("Check user creates if username length is valid")
-    void shouldRegisterUserIfRegistrationDataIsValidTest(String caseName, String username, String password) {
+    void shouldRegisterUserIfRegistrationDataIsValidTest(String caseName, int usernameLength, int passwordLength) {
+        // Data
+        var username = DataGenerator.generateUsername(usernameLength);
+        var password = DataGenerator.generatePassword(passwordLength);
+
         // Steps
         open(RegisterPage.URL, RegisterPage.class)
                 .register(username, password);
@@ -73,15 +77,54 @@ class RegistrationWebTests {
 
     @ApiLogin(@User)
     @ParameterizedTest(name = "Case: [{0}]")
-    @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidRegistrationData")
-    @DisplayName("Check errors displayed if registration data is invalid")
-    void shouldDisplayErrorsIfRegistrationDataIsInvalidTest(String caseName, String username, String password, String[] errors) {
+    @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidRegistrationDataLength")
+    @DisplayName("Check errors displayed if registration data has invalid length")
+    void shouldDisplayErrorsIfRegistrationDataLengthIsInvalidTest(String caseName,
+                                                                  int usernameLength,
+                                                                  int passwordLength,
+                                                                  String[] errors
+    ) {
+        var username = DataGenerator.generateUsername(usernameLength);
+        var password = DataGenerator.generatePassword(passwordLength);
+
         // Steps
         open(RegisterPage.URL, RegisterPage.class)
                 .registerWithError(username, password);
 
         // Assertions
         registerPage.shouldHaveErrors(errors);
+    }
+
+    @ApiLogin(@User)
+    @ParameterizedTest(name = "Case: [{0}]")
+    @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidUsernamePattern")
+    @DisplayName("Check errors displayed if username has invalid pattern")
+    void shouldDisplayErrorsIfUsernameHasInvalidPatternTest(String caseName,
+                                                            String username,
+                                                            String usernameError
+    ) {
+        // Steps
+        open(RegisterPage.URL, RegisterPage.class)
+                .registerWithError(username, DataGenerator.generatePassword());
+
+        // Assertions
+        registerPage.shouldHaveUsernameError(usernameError);
+    }
+
+    @ApiLogin(@User)
+    @ParameterizedTest(name = "Case: [{0}]")
+    @MethodSource("org.rococo.tests.tests.web.data.DataProvider#invalidPasswordPattern")
+    @DisplayName("Check errors displayed if password has invalid pattern")
+    void shouldDisplayErrorsIfPasswordHasInvalidPatternTest(String caseName,
+                                                            String password,
+                                                            String passwordError
+    ) {
+        // Steps
+        open(RegisterPage.URL, RegisterPage.class)
+                .registerWithError(DataGenerator.generateUsername(), password);
+
+        // Assertions
+        registerPage.shouldHavePasswordError(passwordError);
     }
 
     @User

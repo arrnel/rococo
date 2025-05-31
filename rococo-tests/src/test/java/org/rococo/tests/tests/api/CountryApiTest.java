@@ -51,7 +51,7 @@ class CountryApiTest {
         var result = countryService.findById(UUID.randomUUID());
 
         // Assertions
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty(), "Check country not found by unknown id");
 
     }
 
@@ -68,6 +68,18 @@ class CountryApiTest {
                 () -> assertEquals(country.getId(), result.getId()),
                 () -> assertEquals(country.getName(), result.getName())
         );
+
+    }
+
+    @Test
+    @DisplayName("Returns Optional.empty() if search country by unknown country code")
+    void canGetEmptyCountryByUnknownCountryCodeTest() {
+
+        // Steps
+        var result = assertThrows(IllegalArgumentException.class, () -> countryService.findByCode(CountryCode.EMPTY));
+
+        // Assertions
+        assertEquals("Country code cannot be empty", result.getMessage());
 
     }
 
@@ -91,7 +103,7 @@ class CountryApiTest {
         var result = countryService.findAll();
 
         // Assertions
-        assertEquals(251, result.size());
+        assertEquals(251, result.size(), "Check countries service has expected count of countries");
 
     }
 
