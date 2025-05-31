@@ -1,8 +1,10 @@
 package org.rococo.tests.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
+import org.rococo.tests.ex.PaintingNotFoundException;
 import org.rococo.tests.model.PaintingDTO;
 import org.rococo.tests.page.component.ItemsListComponent;
 import org.rococo.tests.page.component.SearchField;
@@ -22,19 +24,33 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
 
     public static final String URL = BASE_URL + "/painting";
 
-    private final SelenideElement title = root.$("h2").as("Paintings page title"),
+    private final SelenideElement pageTitle = root.$("h2").as("Paintings page title"),
             addNewPaintingButton = root.$(byText("Добавить картину")).as("Add new painting button"),
-            searchFieldContainer = root.$(byAttribute("data-testid", "search")),
+            searchFieldElement = root.$(byAttribute("data-testid", "search")),
             paintingListContainer = root.$(byAttribute("data-testid", "paintings-list")).as("Painting list component"),
             emptyPaintingListContainer = root.$(byAttribute("data-testid", "empty-paintings-list")).as("Empty painting list component");
 
     private final PaintingPage paintingPage = new PaintingPage();
     private final PaintingForm paintingForm = new PaintingForm();
-    private final ItemsListComponent paintingsList = new ItemsListComponent(PAINTING, paintingListContainer, searchFieldContainer);
+    private final ItemsListComponent paintingsList = new ItemsListComponent(PAINTING, paintingListContainer);
+    private final SearchField searchField = new SearchField(searchFieldElement);
 
-    @Step("Open painting by name: [{paintingTitle}]")
+    @Step("Search for painting by title: {paintingTitle}")
+    private void searchPainting(String paintingTitle) {
+        log.info("Searching painting by title: {}", paintingTitle);
+        searchField.search(paintingTitle);
+    }
+
+
+    @Step("Open painting by title: {paintingTitle}")
     public PaintingPage openPainting(String paintingTitle) {
-        paintingsList.getByName(paintingTitle).$("a").click();
+        searchPainting(paintingTitle);
+        Allure.step("Click on painting [%s] link".formatted(paintingTitle), () ->
+                paintingsList.getItemByName(paintingTitle)
+                        .orElseThrow(() -> new PaintingNotFoundException(paintingTitle))
+                        .$("a")
+                        .click()
+        );
         return new PaintingPage();
     }
 
@@ -75,58 +91,89 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
         return new PaintingForm();
     }
 
-    @Step("Check painting exists: [{paintingTitle}]")
-    public PaintingsPage shouldExistPainting(String paintingTitle) {
-        log.info("Check painting exists: [{}]", paintingTitle);
-        paintingListContainer.shouldBe(visible);
-        paintingsList.shouldContainsItem(paintingTitle);
+    @Step("Check painting found: {paintingTitle}")
+    public PaintingsPage shouldFoundPainting(String paintingTitle) {
+        log.info("Check painting exists: {}", paintingTitle);
+        searchPainting(paintingTitle);
+        paintingsList.getItemByName(paintingTitle)
+                .orElseThrow(() -> new AssertionError("Painting with title = [%s] not found".formatted(paintingTitle)));
         return this;
     }
 
-    @Step("Check painting not exists: [{paintingTitle}]")
-    public PaintingsPage shouldNotExistPainting(String paintingTitle) {
-        log.info("Check painting not exists: [{}]", paintingTitle);
-        paintingListContainer.shouldBe(visible);
-        paintingsList.shouldNotContainItem(paintingTitle);
+    @Step("Check painting not found: {paintingTitle}")
+    public PaintingsPage shouldNotFoundPainting(String paintingTitle) {
+        log.info("Check painting not exists: {}", paintingTitle);
+        searchPainting(paintingTitle);
+        paintingsList.getItemByName(paintingTitle)
+                .ifPresent(element -> element.shouldNot(exist));
         return this;
     }
 
-    @Step("Check paintings exists: [{paintingTitle}]")
-    public PaintingsPage shouldExistPaintings(List<String> paintingsName) {
-        log.info("Check paintings exists: [{}]", paintingsName);
-        paintingListContainer.shouldBe(visible);
-        paintingsList.shouldContainItems(paintingsName);
+    @Step("Check paintings exists: {paintingTitle}")
+    public PaintingsPage shouldFoundPaintings(List<String> paintingsTitle) {
+        log.info("Check paintings found: {}", paintingsTitle);
+        var notFoundPaintings = paintingsTitle.stream()
+                .filter(title -> {
+                    try {
+                        shouldNotFoundPainting(title);
+                        return false;
+                    } catch (AssertionError e) {
+                        return true;
+                    }
+                })
+                .toList();
+        if (!notFoundPaintings.isEmpty())
+            throw new AssertionError("The following paintings do not exist: " + notFoundPaintings);
         return this;
     }
 
-    @Step("Check paintings not exists: [{paintingTitle}]")
-    public PaintingsPage shouldNotExistPaintings(List<String> paintingsName) {
-        log.info("Check paintings not exists: [{}]", paintingsName);
-        paintingListContainer.shouldBe(visible);
-        paintingsList.shouldNotContainItems(paintingsName);
+    @Step("Check paintings not found")
+    public PaintingsPage shouldNotFoundPaintings(List<String> paintingsTitle) {
+        log.info("Check paintings not found: {}", paintingsTitle);
+        var foundPaintings = paintingsTitle.stream()
+                .filter(title -> {
+                    try {
+                        shouldFoundPainting(title);
+                        return false;
+                    } catch (AssertionError e) {
+                        return true;
+                    }
+                })
+                .toList();
+        if (!foundPaintings.isEmpty())
+            throw new AssertionError("The following paintings do not exist: " + foundPaintings);
         return this;
     }
 
-    @Step("Check paintings founded in search by query: [{paintingTitle}]")
-    public PaintingsPage shouldContainsPaintingsInQuerySearch(String query, List<String> paintingsName) {
-        log.info("Check paintings not exists: [{}]", paintingsName);
-        paintingListContainer.shouldBe(visible);
-        paintingsList.shouldContainsItemsByQuery(query, paintingsName);
+    @Step("Check paintings founded in search by query: {paintingsTitle}")
+    public PaintingsPage shouldFoundPaintings(String query, List<String> paintingsTitle) {
+        log.info("Check paintings found in search results by query: {}. Paintings title list: {}", query, paintingsTitle);
+        searchPainting(query);
+        Allure.step("Verify search result by query [%s] contains paintings: [%s]".formatted(query, paintingsTitle), () -> {
+            var missedPaintingsTitle = paintingsList.getMissedItemsName(paintingsTitle);
+            if (!missedPaintingsTitle.isEmpty())
+                throw new AssertionError("The following paintings do not exist: " + missedPaintingsTitle);
+        });
         return this;
     }
 
-    @Step("Check paintings not founded in search by query: [{paintingTitle}]")
-    public PaintingsPage shouldNotContainsItemsByQuery(String query, List<String> paintingsName) {
-        log.info("Check paintings not exists: [{}]", paintingsName);
-        paintingListContainer.shouldBe(visible);
-        paintingsList.shouldNotContainsItemsByQuery(query, paintingsName);
+    @Step("Check paintings not founded in search by query: {paintingsTitle}")
+    public PaintingsPage shouldNotFoundPaintings(String query, List<String> paintingsTitle) {
+        log.info("Check paintings not found in search results by query: {}. Paintings title list: {}", query, paintingsTitle);
+        searchPainting(query);
+        Allure.step("Verify search result by query [%s] not contains paintings: [%s]".formatted(query, paintingsTitle), () -> {
+            var foundPaintingsTitle = paintingsList.getFoundItemsName(paintingsTitle);
+            if (!foundPaintingsTitle.isEmpty())
+                throw new AssertionError("The following paintings found: " + foundPaintingsTitle);
+        });
         return this;
     }
 
     @Step("Check add new painting button not exists")
-    public void shouldNotExistsAddNewPaintingButton() {
+    public PaintingsPage shouldNotExistsAddNewPaintingButton() {
         log.info("Check add new painting button not exists");
         addNewPaintingButton.shouldNot(exist);
+        return this;
     }
 
     @Step("Check painting empty list is displayed without filtering")
@@ -137,25 +184,18 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
         return this;
     }
 
-    @Step("Check painting empty list is displayed with filtering")
-    public PaintingsPage shouldHaveEmptySearchResult() {
-        log.info("Check empty list is displayed with filtering");
+    @Step("Check shows painting empty list by search: {query}")
+    public PaintingsPage shouldHaveEmptySearchResult(String query) {
+        log.info("Check shows painting empty list by search: {}", query);
+        searchPainting(query);
         paintingListContainer.shouldNot(exist);
-        paintingsList.shouldBeEmpty();
+        paintingsList.shouldVisibleNoSearchResultMessage();
         return this;
-    }
-
-    @Step("Check museums empty list is displayed with filtering")
-    public void shouldHaveEmptySearchResultByQuery(String query) {
-        log.info("Check empty list is displayed with filtering");
-        new SearchField().search(query);
-        paintingListContainer.shouldNot(exist);
-        paintingsList.shouldBeEmpty();
     }
 
     @Override
     public PaintingsPage shouldVisiblePage() {
-        title.shouldBe(visible).shouldHave(text("Картины"));
+        pageTitle.shouldBe(visible).shouldHave(text("Картины"));
         return this;
     }
 }

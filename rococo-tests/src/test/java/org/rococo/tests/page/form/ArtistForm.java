@@ -2,6 +2,7 @@ package org.rococo.tests.page.form;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.tests.conditions.ScreenshotCondition;
@@ -56,10 +57,15 @@ public final class ArtistForm extends BaseComponent<ArtistForm> {
         submitUpdating();
     }
 
+    @Step("Fill artist form")
     private void fillForm(ArtistDTO artist) {
-        nameInput.setValue(artist.getName());
-        bioInput.setValue(artist.getBiography());
-        photoInput.uploadFromClasspath(CFG.originalPhotoBaseDir() + artist.getPathToPhoto());
+        var artistAvatarPath = CFG.originalPhotoBaseDir() + artist.getPathToPhoto();
+        Allure.step("Set artist name: %s".formatted(artist.getName()),
+                () -> nameInput.setValue(artist.getName()));
+        Allure.step("Set artist bio: %s".formatted(artist.getName()),
+                () -> bioInput.setValue(artist.getBiography()));
+        Allure.step("Upload artist photo from path: %s".formatted(artistAvatarPath),
+                () -> photoInput.uploadFromClasspath(artistAvatarPath));
     }
 
     @Step("Press add button")

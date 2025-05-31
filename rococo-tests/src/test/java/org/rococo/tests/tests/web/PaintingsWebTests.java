@@ -58,7 +58,7 @@ class PaintingsWebTests {
                 .addNewPainting(painting);
 
         // Assertions
-        paintingsPage.shouldExistPainting(painting.getTitle());
+        paintingsPage.shouldFoundPainting(painting.getTitle());
     }
 
     @Test
@@ -97,7 +97,7 @@ class PaintingsWebTests {
                 .addNewPainting(painting);
 
         // Assertions
-        paintingsPage.shouldExistPainting(paintingTitle);
+        paintingsPage.shouldFoundPainting(paintingTitle);
     }
 
     @ApiLogin(@User)
@@ -278,7 +278,7 @@ class PaintingsWebTests {
     void shouldFindPaintingsWithFilterTest(List<PaintingDTO> paintings) {
         // Steps & Assertion
         open(PaintingsPage.URL, PaintingsPage.class)
-                .shouldContainsPaintingsInQuerySearch("vAn", paintings.stream()
+                .shouldFoundPaintings("vAn", paintings.stream()
                         .map(PaintingDTO::getTitle)
                         .toList());
     }
@@ -288,7 +288,7 @@ class PaintingsWebTests {
     void shouldDisplayPaintingAfterFilteringByNameTest() {
         // Steps & Assertion
         open(PaintingsPage.URL, PaintingsPage.class)
-                .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
+                .shouldHaveEmptySearchResult(FAKE.lorem().paragraph());
     }
 
     @DisabledByIssue(issueId = "32")

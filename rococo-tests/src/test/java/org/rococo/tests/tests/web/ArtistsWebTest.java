@@ -52,7 +52,7 @@ class ArtistsWebTest {
                 .addNewArtist(artist);
 
         // Assertions
-        artistsPage.shouldExistArtist(artist.getName());
+        artistsPage.shouldFoundArtist(artist.getName());
     }
 
     @Test
@@ -63,7 +63,7 @@ class ArtistsWebTest {
                 .shouldVisiblePage();
 
         // Assertions
-        artistsPage.shouldNotExistsAddNewArtistButton();
+        artistsPage.shouldNotExistAddNewArtistButton();
     }
 
     @ApiLogin(@User)
@@ -83,7 +83,7 @@ class ArtistsWebTest {
                 .addNewArtist(artist);
 
         // Assertions
-        artistsPage.shouldExistArtist(artistName);
+        artistsPage.shouldFoundArtist(artistName);
     }
 
     @ApiLogin(@User)
@@ -245,7 +245,7 @@ class ArtistsWebTest {
 
         // Steps & Assertion
         open(ArtistsPage.URL, ArtistsPage.class)
-                .shouldContainsArtistsInQuerySearch(query, expectedArtistNames);
+                .shouldFoundArtists(query, expectedArtistNames);
     }
 
     @Test
@@ -253,7 +253,7 @@ class ArtistsWebTest {
     void shouldDisplayArtistAfterFilteringByNameTest() {
         // Steps & Assertion
         open(ArtistsPage.URL, ArtistsPage.class)
-                .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
+                .shouldHaveEmptySearchResult(FAKE.lorem().paragraph());
     }
 
     @DisabledByIssue(issueId = "32")

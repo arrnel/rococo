@@ -1,8 +1,10 @@
 package org.rococo.tests.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
+import org.rococo.tests.ex.MuseumNotFoundException;
 import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.page.component.ItemsListComponent;
 import org.rococo.tests.page.component.SearchField;
@@ -31,14 +33,27 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
             searchFieldElement = root.$(byAttribute("data-testid", "search")).as("Search field"),
             museumFormContainer = $(byAttribute("data-testid", "modal-component")).as("Edit museum form");
 
-    private final ItemsListComponent museumsList = new ItemsListComponent(MUSEUM, museumListContainer, searchFieldElement);
     private final MuseumPage museumPage = new MuseumPage();
     private final MuseumForm museumForm = new MuseumForm(museumFormContainer);
+    private final ItemsListComponent museumsList = new ItemsListComponent(MUSEUM, museumListContainer);
+    private final SearchField searchField = new SearchField(searchFieldElement);
+
+    @Step("Search for museum by title: [{museumTitle}]")
+    private void searchMuseum(String museumTitle) {
+        log.info("Searching museum by title: {}", museumTitle);
+        searchField.search(museumTitle);
+    }
 
     @Step("Open museum by title: [{museumTitle}]")
     public MuseumPage openMuseum(String museumTitle) {
-        museumsList.getByName(museumTitle).$("a").click();
-        return new MuseumPage();
+        searchMuseum(museumTitle);
+        Allure.step("Click on museum [%s] link".formatted(museumTitle), () ->
+                museumsList.getItemByName(museumTitle)
+                        .orElseThrow(() -> new MuseumNotFoundException(museumTitle))
+                        .$("a")
+                        .click()
+        );
+        return museumPage;
     }
 
     @Step("Add new museum: {museum.title}")
@@ -82,65 +97,101 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
         return new MuseumForm();
     }
 
-    @Step("Check museum exists: [{museumTitle}]")
-    public MuseumsPage shouldExistMuseum(String museumTitle) {
-        log.info("Check museum exists: [{}]", museumTitle);
-        museumListContainer.shouldBe(visible);
-        museumsList.shouldContainsItem(museumTitle);
+    @Step("Check museum found: [{museumTitle}]")
+    public MuseumsPage shouldFoundMuseum(String museumTitle) {
+        log.info("Check museum found: [{}]", museumTitle);
+        museumsList.getItemByName(museumTitle)
+                .orElseThrow(() -> new AssertionError("Museum with title [%s] not found".formatted(museumTitle)))
+                .shouldBe(visible);
         return this;
     }
 
-    @Step("Check museum not exists: [{museumTitle}]")
-    public MuseumsPage shouldNotExistMuseum(String museumTitle) {
-        log.info("Check museum not exists: [{}]", museumTitle);
-        museumListContainer.shouldBe(visible);
-        museumsList.shouldNotContainItem(museumTitle);
+    @Step("Check museum not found: [{museumTitle}]")
+    public MuseumsPage shouldNotFoundMuseum(String museumTitle) {
+        log.info("Check museum not found: [{}]", museumTitle);
+        museumsList.getItemByName(museumTitle)
+                .ifPresent(element -> {
+                    throw new AssertionError("Museum with title [" + museumTitle + "] exists");
+                });
         return this;
     }
 
-    @Step("Check museums exists: [{museumTitle}]")
-    public MuseumsPage shouldExistMuseums(List<String> museumsName) {
-        log.info("Check museums exists: [{}]", museumsName);
-        museumListContainer.shouldBe(visible);
-        museumsList.shouldContainItems(museumsName);
+    @Step("Check museums found: [{museumTitle}]")
+    public MuseumsPage shouldFoundMuseums(List<String> museumsTitle) {
+        log.info("Check museums found: [{}]", museumsTitle);
+        var notFoundMuseums = museumsTitle.stream()
+                .filter(title -> {
+                            try {
+                                shouldNotFoundMuseum(title);
+                                return false;
+                            } catch (AssertionError e) {
+                                return true;
+                            }
+                        }
+                )
+                .toList();
+        if (!notFoundMuseums.isEmpty())
+            throw new AssertionError("The following museums do not exist: " + notFoundMuseums);
         return this;
     }
 
-    @Step("Check museums not exists: [{museumTitle}]")
-    public MuseumsPage shouldNotExistMuseums(List<String> museumsName) {
-        log.info("Check museums not exists: [{}]", museumsName);
-        museumListContainer.shouldBe(visible);
-        museumsList.shouldNotContainItems(museumsName);
+    @Step("Check museums not found")
+    public MuseumsPage shouldNotFoundMuseums(List<String> museumsTitle) {
+        log.info("Check museums not found: [{}]", museumsTitle);
+        var foundMuseums = museumsTitle.stream()
+                .filter(title -> {
+                            try {
+                                shouldFoundMuseum(title);
+                                return false;
+                            } catch (AssertionError e) {
+                                return true;
+                            }
+                        }
+                )
+                .toList();
+        if (!foundMuseums.isEmpty())
+            throw new AssertionError("The following museums do not exist: " + foundMuseums);
         return this;
     }
 
-    @Step("Check museums founded in search by query: [{museumTitle}]")
-    public MuseumsPage shouldContainsMuseumsInQuerySearch(String query, List<String> museumsName) {
-        log.info("Check museums not exists: [{}]", museumsName);
-        museumListContainer.shouldBe(visible);
-        museumsList.shouldContainsItemsByQuery(query, museumsName);
+    @Step("Check museums found in search by query: [{query}]")
+    public MuseumsPage shouldFoundMuseums(String query, List<String> museumsTitle) {
+
+        log.info("Check museums found by query: {}. Museums: [{}]", query, museumsTitle);
+
+        searchMuseum(query);
+
+        Allure.step("Verify search result by query [%s] contains museums: [%s]".formatted(query, museumsTitle), () -> {
+            var missedMuseumsTitle = museumsList.getMissedItemsName(museumsTitle);
+            if (!missedMuseumsTitle.isEmpty())
+                throw new AssertionError("The following museums do not exist: " + missedMuseumsTitle);
+        });
+
         return this;
+
     }
 
-    @Step("Check museums not founded in search by query: [{museumTitle}]")
-    public MuseumsPage shouldNotContainsMuseumsByQuery(String query, List<String> museumsName) {
-        log.info("Check museums not exists: [{}]", museumsName);
-        museumListContainer.shouldBe(visible);
-        museumsList.shouldNotContainsItemsByQuery(query, museumsName);
+    @Step("Check museums not found in search by query: [{query}]")
+    public MuseumsPage shouldNotFoundMuseums(String query, List<String> museumsTitle) {
+
+        log.info("Check museums not found by query: {}. Museums[{}]", query, museumsTitle);
+
+        searchMuseum(query);
+
+        Allure.step("Verify search result by query [%s] not contains museums: [%s]".formatted(query, museumsTitle), () -> {
+            var foundMuseumsTitle = museumsList.getFoundItemsName(museumsTitle);
+            if (!foundMuseumsTitle.isEmpty())
+                throw new AssertionError("The following museums exists: " + foundMuseumsTitle);
+        });
+
         return this;
+
     }
 
     @Step("Check add new museum button not exists")
-    public MuseumsPage shouldNotExistsAddNewMuseumButton() {
+    public MuseumsPage shouldNotExistAddNewMuseumButton() {
         log.info("Check add new museum button not exists");
         museumListContainer.shouldBe(visible);
-        addNewMuseumButton.shouldNot(exist);
-        return this;
-    }
-
-    @Step("Check add artist button not exists")
-    public MuseumsPage shouldNotExistsAddNewArtistButton() {
-        log.info("Check add artist button not exists");
         addNewMuseumButton.shouldNot(exist);
         return this;
     }
@@ -149,16 +200,16 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     public MuseumsPage shouldVisibleDefaultEmptyMuseumsList() {
         log.info("Check empty list is displayed without filtering");
         museumListContainer.shouldNot(exist);
-        emptyMuseumListContainer.should(visible);
+        museumsList.shouldVisibleInitialEmptyListMessage();
         return this;
     }
 
     @Step("Check museums empty list is displayed with filtering")
-    public MuseumsPage shouldHaveEmptySearchResultByQuery(String query) {
-        log.info("Check empty list is displayed with filtering");
-        new SearchField().search(query);
+    public MuseumsPage shouldHaveEmptySearchResult(String query) {
+        log.info("Check shows museum empty list by search: {}", query);
+        searchMuseum(query);
         museumListContainer.shouldNot(exist);
-        museumsList.shouldBeEmpty();
+        museumsList.shouldVisibleNoSearchResultMessage();
         return this;
     }
 

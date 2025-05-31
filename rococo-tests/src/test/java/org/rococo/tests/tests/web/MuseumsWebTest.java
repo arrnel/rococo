@@ -52,7 +52,7 @@ class MuseumsWebTest {
                 .addNewMuseum(museum);
 
         // Assertions
-        museumsPage.shouldExistMuseum(museum.getTitle());
+        museumsPage.shouldFoundMuseum(museum.getTitle());
     }
 
     @Test
@@ -63,7 +63,7 @@ class MuseumsWebTest {
                 .shouldVisiblePage();
 
         // Assertions
-        museumsPage.shouldNotExistsAddNewMuseumButton();
+        museumsPage.shouldNotExistAddNewMuseumButton();
     }
 
     @ApiLogin(@User)
@@ -86,7 +86,7 @@ class MuseumsWebTest {
                 .addNewMuseum(museum);
 
         // Assertions
-        museumsPage.shouldExistMuseum(museumTitle);
+        museumsPage.shouldFoundMuseum(museumTitle);
     }
 
     @ApiLogin(@User)
@@ -249,7 +249,7 @@ class MuseumsWebTest {
     void shouldFindMuseumsWithFilterTest(List<MuseumDTO> museums) {
         // Steps & Assertion
         open(MuseumsPage.URL, MuseumsPage.class)
-                .shouldContainsMuseumsInQuerySearch("vAn", museums.stream()
+                .shouldFoundMuseums("vAn", museums.stream()
                         .map(MuseumDTO::getTitle)
                         .toList());
     }
@@ -259,7 +259,7 @@ class MuseumsWebTest {
     void shouldDisplayMuseumAfterFilteringByNameTest() {
         // Steps & Assertion
         open(MuseumsPage.URL, MuseumsPage.class)
-                .shouldHaveEmptySearchResultByQuery(FAKE.lorem().paragraph());
+                .shouldHaveEmptySearchResult(FAKE.lorem().paragraph());
     }
 
     @DisabledByIssue(issueId = "32")
