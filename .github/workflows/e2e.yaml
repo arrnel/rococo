@@ -136,9 +136,9 @@ jobs:
             | 📈 Pass Rate | ${stats.passedPercentage}% |
             `;
             
-            const message = isPassed ?
-              `✅ TEST RUN PASSED ✅\n${statsMessage}\nThere is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})` :
-              `🔴 TEST RUN FAILED 🔴\n${statsMessage}\nThere is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})`;
+            const message = isPassed
+              ? `✅ TEST RUN PASSED ✅\n${statsMessage}\nThere is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})`
+              : `🔴 TEST RUN FAILED 🔴\n${statsMessage}\nThere is the [report](${reportUrl})\n🕓 All reports [history](${historyUrl})`;
             
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
