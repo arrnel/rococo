@@ -1,5 +1,6 @@
 package org.rococo.tests.data.dao.impl.springJdbc;
 
+import io.qameta.allure.Step;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.data.dao.AuthorityDao;
 import org.rococo.tests.data.entity.AuthorityEntity;
@@ -23,6 +24,7 @@ public class AuthorityDaoSpringJdbc implements AuthorityDao {
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
 
     @Override
+    @Step("[DB] Add new authorities request")
     public void create(AuthorityEntity... authority) {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
@@ -48,8 +50,10 @@ public class AuthorityDaoSpringJdbc implements AuthorityDao {
         );
     }
 
+    @Nonnull
     @Override
-    public @Nonnull Optional<AuthorityEntity> findById(UUID id) {
+    @Step("[DB] Send find authority by id request")
+    public Optional<AuthorityEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         try {
             // QueryForObject not returns null if not found object. Method throws EmptyResultDataAccessException
@@ -67,8 +71,10 @@ public class AuthorityDaoSpringJdbc implements AuthorityDao {
         }
     }
 
+    @Nonnull
     @Override
-    public @Nonnull List<AuthorityEntity> findByUserId(UUID userId) {
+    @Step("[DB] Send find all user authorities request")
+    public List<AuthorityEntity> findByUserId(UUID userId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         return jdbcTemplate.query(
                 """
@@ -80,8 +86,10 @@ public class AuthorityDaoSpringJdbc implements AuthorityDao {
         );
     }
 
+    @Nonnull
     @Override
-    public @Nonnull List<AuthorityEntity> findAll() {
+    @Step("[DB] Send find all authorities request")
+    public List<AuthorityEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         return jdbcTemplate.query(
                 """
@@ -92,6 +100,7 @@ public class AuthorityDaoSpringJdbc implements AuthorityDao {
     }
 
     @Override
+    @Step("[DB] Send authorities request")
     public void update(AuthorityEntity... authority) {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
@@ -122,6 +131,7 @@ public class AuthorityDaoSpringJdbc implements AuthorityDao {
     }
 
     @Override
+    @Step("[DB] Send delete artist request")
     public void remove(AuthorityEntity... authority) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         jdbcTemplate.batchUpdate(

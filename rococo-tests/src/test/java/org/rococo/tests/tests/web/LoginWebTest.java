@@ -6,6 +6,7 @@ import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.rococo.tests.config.Config;
 import org.rococo.tests.jupiter.annotation.ApiLogin;
 import org.rococo.tests.jupiter.annotation.User;
 import org.rococo.tests.jupiter.annotation.meta.WebTest;
@@ -25,6 +26,7 @@ import static com.codeborne.selenide.Selenide.open;
 @ParametersAreNonnullByDefault
 class LoginWebTest {
 
+    private static final Config CFG = Config.getInstance();
     private static final String BAD_CREDENTIALS_ERROR_MESSAGE = "Неверные учетные данные пользователя";
     private static final String SESSION_TIMEOUT_MESSAGE = "Сессия завершена";
 
@@ -34,7 +36,7 @@ class LoginWebTest {
     @Test
     @DisplayName("Should login by correct credentials")
     void shouldLoginWithCorrectCredentialsTest(UserDTO user) {
-        open(MainPage.URL, MainPage.class)
+        open(CFG.frontUrl(), MainPage.class)
                 .getHeader()
                 .goToSignInPage()
                 .login(user.getUsername(), user.getTestData().getPassword())
@@ -45,7 +47,7 @@ class LoginWebTest {
     @Test
     @DisplayName("Should not login by incorrect credentials")
     void shouldDisplayBadCredentialsErrorIfPasswordIsIncorrectTest(UserDTO user) {
-        open(MainPage.URL, MainPage.class)
+        open(CFG.frontUrl(), MainPage.class)
                 .getHeader()
                 .goToSignInPage()
                 .loginWithError(user.getUsername(), DataGenerator.generatePassword())
@@ -55,7 +57,7 @@ class LoginWebTest {
     @Test
     @DisplayName("Should display bad credentials error, if sign in with unknown username")
     void shouldDisplayBadCredentialsErrorIfUsernameUnknownTest() {
-        open(MainPage.URL, MainPage.class)
+        open(CFG.frontUrl(), MainPage.class)
                 .getHeader()
                 .goToSignInPage()
                 .loginWithError(FAKE.internet().username(), DataGenerator.generatePassword())
@@ -66,7 +68,7 @@ class LoginWebTest {
     @Test
     @DisplayName("Should log out")
     void canLogOutTest() {
-        open(MainPage.URL, MainPage.class)
+        open(CFG.frontUrl(), MainPage.class)
                 .getHeader()
                 .signOut()
                 .shouldVisibleNotification(NotificationStatus.INFO, SESSION_TIMEOUT_MESSAGE);

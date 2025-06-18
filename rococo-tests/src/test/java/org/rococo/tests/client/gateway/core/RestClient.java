@@ -142,6 +142,7 @@ public abstract class RestClient {
     }
 
     public static final class EmptyClient extends RestClient {
+
         public EmptyClient(String baseUrl) {
             super(baseUrl);
         }
@@ -169,6 +170,7 @@ public abstract class RestClient {
         public EmptyClient(String baseUrl, boolean followRedirect, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel, @Nonnull Interceptor... interceptors) {
             super(baseUrl, followRedirect, converterFactory, loggingLevel, interceptors);
         }
+
     }
 
 }

@@ -2,6 +2,7 @@ package org.rococo.tests.jupiter.extension;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
+import io.qameta.allure.Allure;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -20,7 +21,7 @@ import java.util.Optional;
 
 import static org.rococo.tests.enums.CookieType.JSESSIONID;
 
-public class ApiLoginExtension implements BeforeEachCallback {
+public class ApiLoginExtension extends BaseExtension implements BeforeEachCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ApiLoginExtension.class);
 
@@ -71,14 +72,16 @@ public class ApiLoginExtension implements BeforeEachCallback {
                                     .setJSessionId(jSessionId)
                                     .setPassword(password));
 
-                            Selenide.open(MainPage.URL);
 
-                            Selenide.localStorage().setItem("id_token", idToken);
-                            WebDriverRunner.getWebDriver().manage().addCookie(new Cookie(CookieType.JSESSIONID.name(), jSessionId));
-
-                            Selenide.open(MainPage.URL, MainPage.class)
-                                    .shouldVisiblePage();
-
+                            MainPage mainPage = new MainPage();
+                            Allure.step("Start browser on main page with authorization", () -> {
+                                Allure.step("Start browser on [Main] page: %s".formatted(CFG.frontUrl()), mainPage::open);
+                                Allure.step("Set id_token in local storage", () -> {
+                                    Selenide.localStorage().setItem("id_token", idToken);
+                                    WebDriverRunner.getWebDriver().manage().addCookie(new Cookie(CookieType.JSESSIONID.name(), jSessionId));
+                                });
+                                Allure.step("Reopen [Main] page: %s".formatted(CFG.frontUrl()), mainPage::open);
+                            });
                         }
                 );
 

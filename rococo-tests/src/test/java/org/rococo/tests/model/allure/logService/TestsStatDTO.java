@@ -57,4 +57,5 @@ public record TestsStatDTO(
                 	"passed_percentage": %s
                 }""".formatted(id, failed, broken, skipped, passed, unknown, total);
     }
+
 }

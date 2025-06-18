@@ -9,6 +9,7 @@ import org.rococo.tests.model.RestPage;
 import org.springframework.data.domain.Page;
 import retrofit2.Response;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
@@ -27,7 +28,8 @@ public class PaintingsApiClient extends RestClient {
         this.paintingsApi = create(PaintingsApi.class);
     }
 
-    @Step("Send request POST:[rococo-paintings]/api/painting")
+    @Nonnull
+    @Step("Send add painting request. POST:[rococo-paintings]/api/painting")
     public PaintingDTO add(String bearerToken,
                            PaintingDTO requestBody
     ) {
@@ -58,6 +60,7 @@ public class PaintingsApiClient extends RestClient {
         }
     }
 
+    @Nonnull
     @Step("Send request GET:[rococo-paintings]/api/painting")
     public Optional<PaintingDTO> findById(UUID id) {
         var call = paintingsApi.findById(id);
@@ -82,7 +85,8 @@ public class PaintingsApiClient extends RestClient {
         }
     }
 
-    @Step("Send request GET:[rococo-paintings]/api/painting")
+    @Nonnull
+    @Step("Send find all artist with partial title request. GET:[rococo-paintings]/api/painting")
     public Page<PaintingDTO> findAll(@Nullable String title, int page, int size) {
         var call = title == null
                 ? paintingsApi.findAll(page, size)
@@ -101,7 +105,8 @@ public class PaintingsApiClient extends RestClient {
         }
     }
 
-    @Step("Send request GET:[rococo-paintings]/api/painting")
+    @Nonnull
+    @Step("Send find all artist paintings request. GET:[rococo-paintings]/api/painting")
     public Page<PaintingDTO> findAll(UUID artistId, int page, int size) {
         var call = paintingsApi.findAll(artistId, page, size);
         Response<RestPage<PaintingDTO>> response = null;
@@ -118,7 +123,8 @@ public class PaintingsApiClient extends RestClient {
         }
     }
 
-    @Step("Send request PATCH:[rococo-paintings]/api/painting")
+    @Nonnull
+    @Step("Send update painting request. PATCH:[rococo-paintings]/api/painting")
     public PaintingDTO update(String bearerToken, PaintingDTO requestBody) {
         var call = paintingsApi.update(bearerToken, requestBody);
         Response<PaintingDTO> response = null;
@@ -152,7 +158,7 @@ public class PaintingsApiClient extends RestClient {
 
     }
 
-    @Step("Send request DELETE:[rococo-paintings]/api/painting")
+    @Step("Send delete painting request. DELETE:[rococo-paintings]/api/painting")
     public void delete(String bearerToken, UUID id) {
         var call = paintingsApi.delete(bearerToken, id);
         Response<Void> response = null;

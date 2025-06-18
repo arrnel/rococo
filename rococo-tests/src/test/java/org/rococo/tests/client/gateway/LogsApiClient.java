@@ -8,6 +8,7 @@ import org.rococo.tests.model.ServiceName;
 import org.rococo.tests.model.allure.logService.TestsStatDTO;
 import retrofit2.Call;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
 import java.io.IOException;
@@ -30,23 +31,25 @@ public class LogsApiClient extends RestClient {
         this.logsApi = create(LogsApi.class);
     }
 
-    @Step("Send request GET:[rococo-logs]/api/logs/service/{{service_name}}")
+    @Nonnull
+    @Step("[API] Send download [serviceName] logs request GET:[rococo-logs]/api/logs/service/{{service_name}}")
     public File downloadServiceLogs(ServiceName serviceName) {
         var name = serviceName.getServiceName();
         return downloadLogFile(logsApi.getServiceLogs(name), name, LOG_EXT);
     }
 
-    @Step("Send request GET:[rococo-logs]/api/logs/service/all")
+    @Nonnull
+    @Step("[API] Send download all services logs request. GET:[rococo-logs]/api/logs/service/all")
     public File downloadAllServicesLogs() {
         return downloadLogFile(logsApi.getAllServicesLogs(), ALL_SERVICES_LOG_FILENAME, ARCHIVE_EXT);
     }
 
-    @Step("Send request DELETE:[rococo-logs]/api/logs/service")
+    @Step("[API] Send clear all services logs request. DELETE:[rococo-logs]/api/logs/service")
     public void clearLogs() {
         logsApi.clearLogs();
     }
 
-    @Step("Send request POST:[rococo-logs]/api/stat/tests")
+    @Step("[API] Send request POST:[rococo-logs]/api/stat/tests")
     public void addNewTestsStat(TestsStatDTO testsStat) {
         try {
             logsApi.addNewTestsStat(testsStat).execute();
@@ -55,6 +58,7 @@ public class LogsApiClient extends RestClient {
         }
     }
 
+    @Nonnull
     private File downloadLogFile(Call<ResponseBody> call, String fileName, String suffix) {
 
         try {

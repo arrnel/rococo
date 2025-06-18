@@ -18,8 +18,6 @@ import org.rococo.tests.util.DataGenerator;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static com.codeborne.selenide.Selenide.open;
-
 @WebTest
 @Feature("WEB")
 @Story("[WEB] Museums tests")
@@ -48,22 +46,22 @@ class MuseumsWebTest {
                 .setPathToPhoto(IMG_1);
 
         // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .addNewMuseum(museum);
+        museumsPage.open()
+                .addNewMuseum(museum)
 
-        // Assertions
-        museumsPage.shouldFoundMuseum(museum.getTitle());
+                // Assertions
+                .shouldFoundMuseum(museum.getTitle());
     }
 
     @Test
     @DisplayName("Check add new museum button not exists without authorization")
     void shouldNotAvailableAddMuseumWithoutAuthorizationTest() {
         // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .shouldVisiblePage();
+        museumsPage.open()
+                .shouldVisiblePage()
 
-        // Assertions
-        museumsPage.shouldNotExistAddNewMuseumButton();
+                // Assertions
+                .shouldNotExistAddNewMuseumButton();
     }
 
     @ApiLogin(@User)
@@ -82,11 +80,11 @@ class MuseumsWebTest {
                 .setDescription(museumDescription);
 
         // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .addNewMuseum(museum);
+        museumsPage.open()
+                .addNewMuseum(museum)
 
-        // Assertions
-        museumsPage.shouldFoundMuseum(museumTitle);
+                // Assertions
+                .shouldFoundMuseum(museumTitle);
     }
 
     @ApiLogin(@User)
@@ -110,11 +108,11 @@ class MuseumsWebTest {
                 .setCity(city);
 
         // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .addNewMuseumWithError(museum);
+        museumsPage.open()
+                .addNewMuseumWithError(museum)
 
-        // Assertions
-        museumForm.shouldHaveErrors(errors);
+                // Assertions
+                .shouldHaveErrors(errors);
     }
 
     @ApiLogin(@User)
@@ -126,11 +124,11 @@ class MuseumsWebTest {
                 .setPathToPhoto(ILLEGAL_FORMAT_IMG);
 
         // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .addNewMuseumWithError(museum);
+        museumsPage.open()
+                .addNewMuseumWithError(museum)
 
-        // Assertions
-        museumForm.shouldHaveErrors("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
+                // Assertions
+                .shouldHaveErrors("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
     }
 
     @ApiLogin(@User)
@@ -143,8 +141,8 @@ class MuseumsWebTest {
                 .setPathToPhoto(IMG_2);
 
         // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .updateMuseum(museum.getTitle(), newMuseum)
+        museumPage.open(museum.getId())
+                .updateMuseum(newMuseum)
                 .notificationClose();
 
         // Assertions
@@ -156,12 +154,9 @@ class MuseumsWebTest {
     @Test
     @DisplayName("Check update museum button not exists without authorization")
     void shouldNotAvailableUpdateMuseumWithoutAuthorizationTest(MuseumDTO museum) {
-        // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .openMuseum(museum.getTitle());
-
-        // Assertions
-        museumPage.shouldNotExistsUpdateMuseumButton();
+        // Steps & Assertions
+        museumPage.open(museum.getId())
+                .shouldNotExistsUpdateMuseumButton();
     }
 
     @ApiLogin(@User)
@@ -182,11 +177,11 @@ class MuseumsWebTest {
                 .setDescription(museumDescription);
 
         // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .updateMuseum(museum.getTitle(), newMuseum);
+        museumPage.open(museum.getId())
+                .updateMuseum(newMuseum)
 
-        // Assertions
-        museumPage.shouldHaveTitle(newMuseum.getTitle())
+                // Assertions
+                .shouldHaveTitle(newMuseum.getTitle())
                 .shouldHaveDescription(newMuseum.getDescription());
     }
 
@@ -213,11 +208,11 @@ class MuseumsWebTest {
         newMuseum.getLocation().setCity(city);
 
         // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .updateMuseumWithError(museum.getTitle(), newMuseum);
+        museumPage.open(museum.getId())
+                .updateMuseumWithError(newMuseum)
 
-        // Assertions
-        museumForm.shouldHaveErrors(errors);
+                // Assertions
+                .shouldHaveErrors(errors);
     }
 
 
@@ -225,17 +220,16 @@ class MuseumsWebTest {
     @Museum
     @Test
     @DisplayName("Check error displayed on update museum form when uploading image with invalid format")
-    void shouldDisplayErrorOnUpdateMuseumFormWhenUploadingInvalidImageFormat() {
+    void shouldDisplayErrorOnUpdateMuseumFormWhenUploadingInvalidImageFormat(MuseumDTO museum) {
         // Data
-        var museum = DataGenerator.generateMuseum()
-                .setPathToPhoto(ILLEGAL_FORMAT_IMG);
+        museum.setPathToPhoto(ILLEGAL_FORMAT_IMG);
 
         // Steps
-        open(MuseumsPage.URL, MuseumsPage.class)
-                .addNewMuseumWithError(museum);
+        museumPage.open(museum.getId())
+                .updateMuseumWithError(museum)
 
-        // Assertions
-        museumForm.shouldHaveErrors("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
+                // Assertions
+                .shouldHaveErrors("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
     }
 
     @ApiLogin(@User)
@@ -247,8 +241,8 @@ class MuseumsWebTest {
     @Test
     @DisplayName("Check museums found by filtered search")
     void shouldFindMuseumsWithFilterTest(List<MuseumDTO> museums) {
-        // Steps & Assertion
-        open(MuseumsPage.URL, MuseumsPage.class)
+        // Steps & Assertions
+        museumsPage.open()
                 .shouldFoundMuseums("vAn", museums.stream()
                         .map(MuseumDTO::getTitle)
                         .toList());
@@ -257,8 +251,8 @@ class MuseumsWebTest {
     @Test
     @DisplayName("Check displayed empty filtered list container if museum not founded by query")
     void shouldDisplayMuseumAfterFilteringByNameTest() {
-        // Steps & Assertion
-        open(MuseumsPage.URL, MuseumsPage.class)
+        // Steps & Assertions
+        museumsPage.open()
                 .shouldHaveEmptySearchResult(FAKE.lorem().paragraph());
     }
 
@@ -266,8 +260,8 @@ class MuseumsWebTest {
     @Test
     @DisplayName("Check displayed default empty list if museum not exists")
     void shouldDisplayEmptyListWhenMuseumsNotExistsTest() {
-        // Steps & Assertion
-        open(MuseumsPage.URL, MuseumsPage.class)
+        // Steps & Assertions
+        museumsPage.open()
                 .shouldVisibleDefaultEmptyMuseumsList();
     }
 

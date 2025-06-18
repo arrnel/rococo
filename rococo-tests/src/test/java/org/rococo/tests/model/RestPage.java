@@ -20,6 +20,7 @@ public class RestPage<T> extends PageImpl<T> {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PageMetadata {
+
         private final int size;
         private final int number;
         private final long totalElements;
@@ -33,6 +34,7 @@ public class RestPage<T> extends PageImpl<T> {
             this.number = number != null ? number : 0;
             this.totalElements = totalElements != null ? totalElements : 0;
         }
+
     }
 
     public RestPage(List<T> content, Pageable pageable, long total) {

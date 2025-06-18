@@ -11,4 +11,5 @@ public abstract class BaseComponent<T extends BaseComponent<T>> {
     public abstract T shouldVisibleComponent();
 
     public abstract void shouldNotVisibleComponent();
+
 }

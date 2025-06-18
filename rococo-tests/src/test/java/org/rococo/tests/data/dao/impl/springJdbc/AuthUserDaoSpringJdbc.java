@@ -1,5 +1,6 @@
 package org.rococo.tests.data.dao.impl.springJdbc;
 
+import io.qameta.allure.Step;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.data.dao.AuthUserDao;
 import org.rococo.tests.data.entity.AuthUserEntity;
@@ -26,8 +27,10 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
 
+    @Nonnull
     @Override
-    public @Nonnull AuthUserEntity create(AuthUserEntity user) {
+    @Step("[DB] Send create new auth user request")
+    public AuthUserEntity create(AuthUserEntity user) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -65,8 +68,10 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
     }
 
+    @Nonnull
     @Override
-    public @Nonnull Optional<AuthUserEntity> findById(UUID id) {
+    @Step("[DB] Send find auth user by id request")
+    public Optional<AuthUserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         try {
             return Optional.ofNullable(
@@ -82,8 +87,10 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         }
     }
 
+    @Nonnull
     @Override
-    public @Nonnull Optional<AuthUserEntity> findByUsername(String username) {
+    @Step("[DB] Send find auth user by username request")
+    public Optional<AuthUserEntity> findByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         try {
             return Optional.ofNullable(
@@ -100,8 +107,10 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         }
     }
 
+    @Nonnull
     @Override
-    public @Nonnull List<AuthUserEntity> findAll() {
+    @Step("[DB] Send find all auth users request")
+    public List<AuthUserEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         return jdbcTemplate.query("""
                         SELECT *
@@ -110,8 +119,10 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         );
     }
 
+    @Nonnull
     @Override
-    public @Nonnull AuthUserEntity update(AuthUserEntity user) {
+    @Step("[DB] Send update auth user request")
+    public AuthUserEntity update(AuthUserEntity user) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
             jdbcTemplate.update(connection -> {
@@ -146,6 +157,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     }
 
     @Override
+    @Step("[DB] Send delete auth user request")
     public void remove(AuthUserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         jdbcTemplate.update(

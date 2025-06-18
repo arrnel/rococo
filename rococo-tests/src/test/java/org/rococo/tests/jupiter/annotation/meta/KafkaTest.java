@@ -21,4 +21,5 @@ import java.lang.annotation.Target;
         UsersExtension.class
 })
 public @interface KafkaTest {
+
 }

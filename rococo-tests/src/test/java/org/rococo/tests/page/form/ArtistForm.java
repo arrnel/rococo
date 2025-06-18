@@ -145,4 +145,5 @@ public final class ArtistForm extends BaseComponent<ArtistForm> {
     public void shouldNotVisibleComponent() {
         header.shouldNot(or("", visible, exist));
     }
+
 }

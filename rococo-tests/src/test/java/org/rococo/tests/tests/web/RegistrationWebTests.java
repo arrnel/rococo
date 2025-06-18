@@ -16,7 +16,6 @@ import org.rococo.tests.util.DataGenerator;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.codeborne.selenide.Selenide.open;
 import static org.rococo.tests.util.DataGenerator.generatePassword;
 import static org.rococo.tests.util.DataGenerator.generateUsername;
 
@@ -40,7 +39,7 @@ class RegistrationWebTests {
         var user = DataGenerator.generateUser();
 
         // Steps
-        open(RegisterPage.URL, RegisterPage.class)
+        registerPage.open()
                 .register(user.getUsername(), user.getTestData().getPassword());
 
         // Assertions
@@ -51,11 +50,11 @@ class RegistrationWebTests {
     @DisplayName("Should not register if password and confirmation password not equals")
     void shouldNotRegisterIfPasswordAndConfirmationPasswordNotEqualsTest() {
         // Steps
-        open(RegisterPage.URL, RegisterPage.class)
-                .registerWithError(generateUsername(), generatePassword(), generatePassword());
+        registerPage.open()
+                .registerWithError(generateUsername(), generatePassword(), generatePassword())
 
-        // Assertions
-        registerPage.shouldHaveConfirmationPasswordError(PASSWORDS_SHOULD_BE_EQUAL_MESSAGE);
+                // Assertions
+                .shouldHaveConfirmationPasswordError(PASSWORDS_SHOULD_BE_EQUAL_MESSAGE);
     }
 
 
@@ -68,7 +67,7 @@ class RegistrationWebTests {
         var password = DataGenerator.generatePassword(passwordLength);
 
         // Steps
-        open(RegisterPage.URL, RegisterPage.class)
+        registerPage.open()
                 .register(username, password);
 
         // Assertions
@@ -88,11 +87,11 @@ class RegistrationWebTests {
         var password = DataGenerator.generatePassword(passwordLength);
 
         // Steps
-        open(RegisterPage.URL, RegisterPage.class)
-                .registerWithError(username, password);
+        registerPage.open()
+                .registerWithError(username, password)
 
-        // Assertions
-        registerPage.shouldHaveErrors(errors);
+                // Assertions
+                .shouldHaveErrors(errors);
     }
 
     @ApiLogin(@User)
@@ -104,11 +103,11 @@ class RegistrationWebTests {
                                                             String usernameError
     ) {
         // Steps
-        open(RegisterPage.URL, RegisterPage.class)
-                .registerWithError(username, DataGenerator.generatePassword());
+        registerPage.open()
+                .registerWithError(username, DataGenerator.generatePassword())
 
-        // Assertions
-        registerPage.shouldHaveUsernameError(usernameError);
+                // Assertions
+                .shouldHaveUsernameError(usernameError);
     }
 
     @ApiLogin(@User)
@@ -120,19 +119,22 @@ class RegistrationWebTests {
                                                             String passwordError
     ) {
         // Steps
-        open(RegisterPage.URL, RegisterPage.class)
-                .registerWithError(DataGenerator.generateUsername(), password);
+        registerPage.open()
+                .registerWithError(DataGenerator.generateUsername(), password)
 
-        // Assertions
-        registerPage.shouldHavePasswordError(passwordError);
+                // Assertions
+                .shouldHavePasswordError(passwordError);
     }
 
     @User
     @Test
     @DisplayName("Check displayed error if register by exists username")
     void shouldNotRegisterIfUsernameExistsTest(UserDTO user) {
-        open(RegisterPage.URL, RegisterPage.class)
+        // Steps
+        registerPage.open()
                 .registerWithError(user.getUsername(), generatePassword())
+
+                // Assertions
                 .shouldHaveUsernameError(USERNAME_ALREADY_EXISTS_ERROR_MESSAGE_TPL.formatted(user.getUsername()));
     }
 

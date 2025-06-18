@@ -1,5 +1,6 @@
 package org.rococo.tests.data.dao.impl.springJdbc;
 
+import io.qameta.allure.Step;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.data.dao.ArtistDao;
 import org.rococo.tests.data.entity.ArtistEntity;
@@ -29,6 +30,7 @@ public class ArtistDaoSpringJdbc implements ArtistDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send add artist request")
     public ArtistEntity create(ArtistEntity artist) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(ARTISTS_JDBC_URL));
@@ -59,6 +61,7 @@ public class ArtistDaoSpringJdbc implements ArtistDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find artist by id request")
     public Optional<ArtistEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(ARTISTS_JDBC_URL));
         try {
@@ -79,6 +82,7 @@ public class ArtistDaoSpringJdbc implements ArtistDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find artist by name request")
     public Optional<ArtistEntity> findByName(String name) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(ARTISTS_JDBC_URL));
         try {
@@ -101,6 +105,7 @@ public class ArtistDaoSpringJdbc implements ArtistDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all artists with partial name request")
     public List<ArtistEntity> findAllByPartialName(String name) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(ARTISTS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -114,6 +119,7 @@ public class ArtistDaoSpringJdbc implements ArtistDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all artists with ids request")
     public List<ArtistEntity> findAllByIds(List<UUID> ids) {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DataSources.dataSource(ARTISTS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -129,6 +135,7 @@ public class ArtistDaoSpringJdbc implements ArtistDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all artists request")
     public List<ArtistEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(ARTISTS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -140,6 +147,7 @@ public class ArtistDaoSpringJdbc implements ArtistDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send update artist request")
     public ArtistEntity update(ArtistEntity artist) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(ARTISTS_JDBC_URL));
@@ -166,6 +174,7 @@ public class ArtistDaoSpringJdbc implements ArtistDao {
     }
 
     @Override
+    @Step("[DB] Send delete artist request")
     public void remove(ArtistEntity artist) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(ARTISTS_JDBC_URL));
         jdbcTemplate.update("""

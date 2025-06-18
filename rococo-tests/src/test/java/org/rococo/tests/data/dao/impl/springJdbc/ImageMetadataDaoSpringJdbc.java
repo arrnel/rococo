@@ -1,5 +1,6 @@
 package org.rococo.tests.data.dao.impl.springJdbc;
 
+import io.qameta.allure.Step;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.data.dao.ImageMetadataDao;
 import org.rococo.tests.data.entity.ImageMetadataEntity;
@@ -28,6 +29,7 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send create new image metadata request")
     public ImageMetadataEntity create(ImageMetadataEntity artist) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -58,6 +60,7 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find entity type and by id image metadata request")
     public Optional<ImageMetadataEntity> findByEntityTypeAndEntityId(EntityType entityType, UUID entityId) {
         try {
             NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
@@ -94,6 +97,7 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all images metadata by entity type request")
     public List<ImageMetadataEntity> findAllByEntityTypeAndEntitiesId(EntityType entityType, List<UUID> entityIds) {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         return jdbcTemplate.query("""
@@ -123,6 +127,7 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send update image metadata request")
     public ImageMetadataEntity update(ImageMetadataEntity artist) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         jdbcTemplate.update(connection -> {
@@ -151,6 +156,7 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
     }
 
     @Override
+    @Step("[DB] Send delete image metadata request")
     public void remove(ImageMetadataEntity artist) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         jdbcTemplate.update("""
@@ -164,6 +170,7 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
     }
 
     @Override
+    @Step("[DB] Send truncate image metadata table request")
     public void remove(EntityType entityType) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         jdbcTemplate.update("""
@@ -177,6 +184,7 @@ public class ImageMetadataDaoSpringJdbc implements ImageMetadataDao {
     }
 
     @Override
+    @Step("[DB] Send truncate images metadata table request")
     public void removeAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         jdbcTemplate.update(

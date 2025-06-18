@@ -2,6 +2,7 @@ package org.rococo.tests.client.grpc;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.qameta.allure.Step;
 import org.rococo.grpc.common.type.IdType;
 import org.rococo.grpc.common.type.NameType;
 import org.rococo.grpc.museums.MuseumsServiceGrpc;
@@ -14,6 +15,7 @@ import org.rococo.tests.model.MuseumDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
@@ -34,6 +36,8 @@ public class MuseumsGrpcClient extends GrpcClient {
         museumsServiceStub = MuseumsServiceGrpc.newBlockingStub(channel);
     }
 
+    @Nonnull
+    @Step("[GRPC] Send add museum request")
     public MuseumDTO add(MuseumDTO requestDTO) {
         try {
             var museum = museumsServiceStub.add(MuseumMapper.toGrpcRequest(requestDTO));
@@ -47,6 +51,8 @@ public class MuseumsGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find museum by id request")
     public Optional<MuseumDTO> findById(UUID id) {
         try {
             return Optional.of(
@@ -62,6 +68,8 @@ public class MuseumsGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find museum by title request")
     public Optional<MuseumDTO> findByTitle(String title) {
         try {
             return Optional.of(
@@ -78,6 +86,8 @@ public class MuseumsGrpcClient extends GrpcClient {
 
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find all museums request")
     public Page<MuseumDTO> findAll(@Nullable String name, Pageable pageable) {
         try {
             return MuseumMapper.toPageDTO(museumsServiceStub.findAll(
@@ -87,6 +97,8 @@ public class MuseumsGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send update museum request")
     public MuseumDTO update(MuseumDTO requestDTO) {
 
         try {
@@ -107,6 +119,7 @@ public class MuseumsGrpcClient extends GrpcClient {
 
     }
 
+    @Step("[GRPC] Send delete museum request")
     public void delete(UUID id) {
         try {
             museumsServiceStub.removeById(

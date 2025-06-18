@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * EXTENSION HAS GLOBAL REGISTRATION TYPE
+ */
 public class InjectServiceExtension implements TestInstancePostProcessor {
 
     private static final ServiceType DEFAULT_SERVICE_TYPE = EnumUtils.getEnumIgnoreCase(

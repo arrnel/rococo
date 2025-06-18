@@ -18,8 +18,6 @@ import org.rococo.tests.util.DataGenerator;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static com.codeborne.selenide.Selenide.open;
-
 @WebTest
 @Feature("WEB")
 @Story("[WEB] Artists tests")
@@ -48,7 +46,7 @@ class ArtistsWebTest {
                 .setPathToPhoto(IMG_1);
 
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
+        artistsPage.open()
                 .addNewArtist(artist);
 
         // Assertions
@@ -59,7 +57,7 @@ class ArtistsWebTest {
     @DisplayName("Check add new artist button not exists without authorization")
     void shouldNotAvailableAddArtistWithoutAuthorizationTest() {
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
+        artistsPage.open()
                 .shouldVisiblePage();
 
         // Assertions
@@ -79,7 +77,7 @@ class ArtistsWebTest {
                 .setBiography(artistBio);
 
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
+        artistsPage.open()
                 .addNewArtist(artist);
 
         // Assertions
@@ -103,7 +101,7 @@ class ArtistsWebTest {
                 .setBiography(artistBio);
 
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
+        artistsPage.open()
                 .addNewArtistWithError(artist);
 
         // Assertions
@@ -119,7 +117,7 @@ class ArtistsWebTest {
                 .setPathToPhoto(ILLEGAL_FORMAT_IMG);
 
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
+        artistsPage.open()
                 .addNewArtistWithError(artist);
 
         // Assertions
@@ -136,8 +134,8 @@ class ArtistsWebTest {
                 .setPathToPhoto(IMG_2);
 
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
-                .updateArtist(artist.getName(), newArtist);
+        artistPage.open(artist.getId())
+                .updateArtist(newArtist);
 
         // Assertions
         artistPage.shouldHaveName(newArtist.getName())
@@ -150,7 +148,7 @@ class ArtistsWebTest {
     @DisplayName("Check update artist button not exists without authorization")
     void shouldNotAvailableUpdateArtistWithoutAuthorizationTest(ArtistDTO artist) {
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
+        artistsPage.open()
                 .openArtist(artist.getName());
 
         // Assertions
@@ -175,7 +173,7 @@ class ArtistsWebTest {
                 .setBiography(artistBio);
 
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
+        artistsPage.open()
                 .updateArtist(artist.getName(), newArtist);
 
         // Assertions
@@ -203,7 +201,7 @@ class ArtistsWebTest {
                 .setBiography(artistBio);
 
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
+        artistsPage.open()
                 .updateArtistWithError(artist.getName(), newArtist);
 
         // Assertions
@@ -221,7 +219,7 @@ class ArtistsWebTest {
                 .setPathToPhoto(ILLEGAL_FORMAT_IMG);
 
         // Steps
-        open(ArtistsPage.URL, ArtistsPage.class)
+        artistsPage.open()
                 .addNewArtistWithError(artist);
 
         // Assertions
@@ -243,16 +241,16 @@ class ArtistsWebTest {
                 .map(ArtistDTO::getName)
                 .toList();
 
-        // Steps & Assertion
-        open(ArtistsPage.URL, ArtistsPage.class)
+        // Steps & Assertions
+        artistsPage.open()
                 .shouldFoundArtists(query, expectedArtistNames);
     }
 
     @Test
     @DisplayName("Check displayed empty filtered list container if artist not founded by query")
     void shouldDisplayArtistAfterFilteringByNameTest() {
-        // Steps & Assertion
-        open(ArtistsPage.URL, ArtistsPage.class)
+        // Steps & Assertions
+        artistsPage.open()
                 .shouldHaveEmptySearchResult(FAKE.lorem().paragraph());
     }
 
@@ -260,8 +258,8 @@ class ArtistsWebTest {
     @Test
     @DisplayName("Check displayed default empty list if artist not exists")
     void shouldDisplayEmptyListWhenArtistsNotExistsTest() {
-        // Steps & Assertion
-        open(ArtistsPage.URL, ArtistsPage.class)
+        // Steps & Assertions
+        artistsPage.open()
                 .shouldVisibleDefaultEmptyMuseumsList();
     }
 

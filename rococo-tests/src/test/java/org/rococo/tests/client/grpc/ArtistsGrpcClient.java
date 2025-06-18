@@ -2,6 +2,7 @@ package org.rococo.tests.client.grpc;
 
 import io.grpc.Status.Code;
 import io.grpc.StatusRuntimeException;
+import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.grpc.artists.ArtistsServiceGrpc;
 import org.rococo.grpc.common.type.IdType;
@@ -16,6 +17,7 @@ import org.rococo.tests.model.ArtistDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
@@ -36,6 +38,8 @@ public class ArtistsGrpcClient extends GrpcClient {
         artistsServiceStub = ArtistsServiceGrpc.newBlockingStub(channel);
     }
 
+    @Nonnull
+    @Step("[GRPC] Send add artist request")
     public ArtistDTO add(ArtistDTO requestDTO) {
         try {
             return ArtistMapper.toDTO(
@@ -49,6 +53,8 @@ public class ArtistsGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find artist by id request")
     public Optional<ArtistDTO> findById(UUID id) {
         try {
             return Optional.of(
@@ -68,6 +74,8 @@ public class ArtistsGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find artist by name request")
     public Optional<ArtistDTO> findByName(String name) {
         try {
             final var artistResponse = artistsServiceStub.findByName(
@@ -82,6 +90,8 @@ public class ArtistsGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find all artists request")
     public Page<ArtistDTO> findAll(@Nullable String name, Pageable pageable) {
         try {
             return ArtistMapper.toPageDTO(
@@ -92,6 +102,8 @@ public class ArtistsGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send update artist request")
     public ArtistDTO update(ArtistDTO requestDTO) {
         try {
             return ArtistMapper.toDTO(
@@ -107,6 +119,7 @@ public class ArtistsGrpcClient extends GrpcClient {
 
     }
 
+    @Step("[GRPC] Send delete artist request")
     public void delete(UUID id) {
         try {
             artistsServiceStub.removeById(

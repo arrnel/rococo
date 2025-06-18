@@ -2,6 +2,7 @@ package org.rococo.tests.client.grpc;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.grpc.common.type.IdType;
 import org.rococo.grpc.common.type.NameType;
@@ -13,6 +14,7 @@ import org.rococo.tests.model.CountryDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +31,8 @@ public class CountriesGrpcClient extends GrpcClient {
         countriesServiceStub = CountriesServiceGrpc.newBlockingStub(channel);
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find country by id request")
     public Optional<CountryDTO> findById(UUID id) {
         try {
             return Optional.of(
@@ -47,6 +51,8 @@ public class CountriesGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find country by code request")
     public Optional<CountryDTO> findByCode(CountryCode code) {
         if (code == CountryCode.EMPTY) throw new IllegalArgumentException("Country code cannot be empty");
         try {
@@ -66,6 +72,8 @@ public class CountriesGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find all countries request")
     public Page<CountryDTO> findAll(Pageable pageable) {
         try {
             return CountryMapper.toPageDTO(

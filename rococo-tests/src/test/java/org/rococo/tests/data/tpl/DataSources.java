@@ -14,6 +14,7 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DataSources {
+
     private DataSources() {
     }
 
@@ -48,4 +49,5 @@ public class DataSources {
                 }
         );
     }
+
 }

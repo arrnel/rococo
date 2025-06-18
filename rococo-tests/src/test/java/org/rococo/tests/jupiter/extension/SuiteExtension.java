@@ -29,4 +29,5 @@ public interface SuiteExtension extends BeforeAllCallback {
 
     default void afterSuite() {
     }
+
 }

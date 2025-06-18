@@ -1,5 +1,6 @@
 package org.rococo.tests.data.dao.impl.springJdbc;
 
+import io.qameta.allure.Step;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.data.dao.ImageContentDao;
 import org.rococo.tests.data.entity.ImageContentEntity;
@@ -24,6 +25,7 @@ public class ImageContentDaoSpringJdbc implements ImageContentDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send create new image content request")
     public ImageContentEntity create(ImageContentEntity artist) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -50,6 +52,7 @@ public class ImageContentDaoSpringJdbc implements ImageContentDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find image content by id request")
     public Optional<ImageContentEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         return Optional.ofNullable(
@@ -66,6 +69,7 @@ public class ImageContentDaoSpringJdbc implements ImageContentDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all images content request")
     public List<ImageContentEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         return jdbcTemplate.query("""
@@ -77,6 +81,7 @@ public class ImageContentDaoSpringJdbc implements ImageContentDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send update image content request")
     public ImageContentEntity update(ImageContentEntity artist) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         jdbcTemplate.update(connection -> {
@@ -99,6 +104,7 @@ public class ImageContentDaoSpringJdbc implements ImageContentDao {
     }
 
     @Override
+    @Step("[DB] Send delete image content request")
     public void remove(ImageContentEntity artist) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         jdbcTemplate.update("""
@@ -112,6 +118,7 @@ public class ImageContentDaoSpringJdbc implements ImageContentDao {
     }
 
     @Override
+    @Step("[DB] Send truncate images contents table request")
     public void removeAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(FILES_JDBC_URL));
         jdbcTemplate.update(

@@ -1,5 +1,6 @@
 package org.rococo.tests.data.dao.impl.springJdbc;
 
+import io.qameta.allure.Step;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.data.dao.UserDao;
 import org.rococo.tests.data.entity.UserEntity;
@@ -25,8 +26,10 @@ public class UserDaoSpringJdbc implements UserDao {
 
     private static final String USERS_JDBC_URL = Config.getInstance().usersJdbcUrl();
 
+    @Nonnull
     @Override
-    public @Nonnull UserEntity create(UserEntity user) {
+    @Step("[DB] Send create user request")
+    public UserEntity create(UserEntity user) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -56,8 +59,10 @@ public class UserDaoSpringJdbc implements UserDao {
 
     }
 
+    @Nonnull
     @Override
-    public @Nonnull Optional<UserEntity> findById(UUID id) {
+    @Step("[DB] Send find user by id request")
+    public Optional<UserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
         try {
             return Optional.ofNullable(
@@ -75,8 +80,10 @@ public class UserDaoSpringJdbc implements UserDao {
         }
     }
 
+    @Nonnull
     @Override
-    public @Nonnull Optional<UserEntity> findByUsername(String username) {
+    @Step("[DB] Send find user by username request")
+    public Optional<UserEntity> findByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
         try {
             return Optional.ofNullable(
@@ -95,8 +102,10 @@ public class UserDaoSpringJdbc implements UserDao {
         }
     }
 
+    @Nonnull
     @Override
-    public @Nonnull List<UserEntity> findAll() {
+    @Step("[DB] Send find all users request")
+    public List<UserEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
         return jdbcTemplate.query("""
                         SELECT *
@@ -105,8 +114,10 @@ public class UserDaoSpringJdbc implements UserDao {
         );
     }
 
+    @Nonnull
     @Override
-    public @Nonnull UserEntity update(UserEntity user) {
+    @Step("[DB] Send update user request")
+    public UserEntity update(UserEntity user) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
             jdbcTemplate.update(connection -> {
@@ -134,6 +145,7 @@ public class UserDaoSpringJdbc implements UserDao {
     }
 
     @Override
+    @Step("[DB] Send delete user request")
     public void remove(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
         jdbcTemplate.update("""
@@ -147,6 +159,7 @@ public class UserDaoSpringJdbc implements UserDao {
     }
 
     @Override
+    @Step("[DB] Truncate users table request")
     public void removeAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERS_JDBC_URL));
         jdbcTemplate.update(

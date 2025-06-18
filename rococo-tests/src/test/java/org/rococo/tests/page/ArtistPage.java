@@ -1,7 +1,9 @@
 package org.rococo.tests.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.tests.model.ArtistDTO;
@@ -12,6 +14,7 @@ import org.rococo.tests.page.form.PaintingForm;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.UUID;
 
 import static com.codeborne.selenide.CollectionCondition.textsInAnyOrder;
 import static com.codeborne.selenide.Condition.*;
@@ -23,6 +26,8 @@ import static org.rococo.tests.conditions.ScreenshotCondition.screenshot;
 @Slf4j
 @ParametersAreNonnullByDefault
 public class ArtistPage extends BasePage<ArtistPage> {
+
+    private static final String URL = BASE_URL + "/artist/%s";
 
     private final SelenideElement nameElement = root.$(byAttribute("data-testid", "artist-name")),
             biographyElement = root.$(byAttribute("data-testid", "artist-biography")),
@@ -40,8 +45,16 @@ public class ArtistPage extends BasePage<ArtistPage> {
     private final ArtistForm artistForm = new ArtistForm(modalComponent);
     private final PaintingForm editPaintingForm = new PaintingForm(modalComponent);
 
+    public ArtistPage open(UUID artistId) {
+        var url = URL.formatted(artistId);
+        var stepText = "Open [Artist] page: %s".formatted(url);
+        log.info(stepText);
+        Allure.step(stepText, () -> Selenide.open(url));
+        return this;
+    }
+
     @Step("Update artist = [{artist.name}]")
-    public ArtistPage editArtist(ArtistDTO artist) {
+    public ArtistPage updateArtist(ArtistDTO artist) {
         log.info("Update artist: {}", artist);
         editButton.click();
         artistForm.updateArtist(artist);

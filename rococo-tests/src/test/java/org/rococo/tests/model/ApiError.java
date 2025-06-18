@@ -37,6 +37,7 @@ public class ApiError implements Serializable {
             List<ErrorItem> errors
 
     ) implements Serializable {
+
     }
 
     public record ErrorItem(
@@ -51,6 +52,7 @@ public class ApiError implements Serializable {
             String itemMessage
 
     ) implements Serializable {
+
     }
 
 }

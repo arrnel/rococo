@@ -28,4 +28,5 @@ import java.lang.annotation.Target;
         BrowserExtension.class
 })
 public @interface WebTest {
+
 }

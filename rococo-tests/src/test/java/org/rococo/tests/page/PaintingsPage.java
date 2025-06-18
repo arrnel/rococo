@@ -1,5 +1,6 @@
 package org.rococo.tests.page;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -22,7 +23,7 @@ import static org.rococo.tests.enums.EntityType.PAINTING;
 @ParametersAreNonnullByDefault
 public class PaintingsPage extends BasePage<PaintingsPage> {
 
-    public static final String URL = BASE_URL + "/painting";
+    private static final String URL = BASE_URL + "/painting";
 
     private final SelenideElement pageTitle = root.$("h2").as("Paintings page title"),
             addNewPaintingButton = root.$(byText("Добавить картину")).as("Add new painting button"),
@@ -35,12 +36,18 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
     private final ItemsListComponent paintingsList = new ItemsListComponent(PAINTING, paintingListContainer);
     private final SearchField searchField = new SearchField(searchFieldElement);
 
+    public PaintingsPage open() {
+        var stepText = "Open [Paintings] page: %s".formatted(URL);
+        log.info(stepText);
+        Allure.step(stepText, () -> Selenide.open(URL));
+        return this;
+    }
+
     @Step("Search for painting by title: {paintingTitle}")
     private void searchPainting(String paintingTitle) {
         log.info("Searching painting by title: {}", paintingTitle);
         searchField.search(paintingTitle);
     }
-
 
     @Step("Open painting by title: {paintingTitle}")
     public PaintingPage openPainting(String paintingTitle) {
@@ -198,4 +205,5 @@ public class PaintingsPage extends BasePage<PaintingsPage> {
         pageTitle.shouldBe(visible).shouldHave(text("Картины"));
         return this;
     }
+
 }

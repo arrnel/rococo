@@ -15,6 +15,9 @@ import java.nio.file.Path;
 import java.util.Base64;
 import java.util.List;
 
+/**
+ * EXTENSION HAS GLOBAL REGISTRATION TYPE
+ */
 @Slf4j
 @ParametersAreNonnullByDefault
 public class AllureDockerExtension implements SuiteExtension {

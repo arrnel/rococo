@@ -62,7 +62,7 @@ class SessionControllerIT {
                                         .expiresAt(expiresAt)
                                         .build())))
 
-                // Assertion
+                // Assertions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(username))
                 .andExpect(jsonPath("$.issuedAt").value(issuedAtText))

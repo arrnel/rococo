@@ -7,6 +7,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * EXTENSION HAS GLOBAL REGISTRATION TYPE
+ */
 @ParametersAreNonnullByDefault
 public class KafkaExtension implements SuiteExtension {
 
@@ -23,4 +26,5 @@ public class KafkaExtension implements SuiteExtension {
     public void afterSuite() {
         kafkaService.shutdown();
     }
+
 }

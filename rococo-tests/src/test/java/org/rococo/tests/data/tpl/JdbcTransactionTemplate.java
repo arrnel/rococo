@@ -64,4 +64,5 @@ public class JdbcTransactionTemplate {
     public <T> T execute(Supplier<T> action) {
         return execute(action, TRANSACTION_READ_COMMITTED);
     }
+
 }

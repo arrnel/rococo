@@ -12,6 +12,7 @@ import org.rococo.tests.client.gateway.LogsApiClient;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.model.ServiceName;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,7 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * EXTENSION HAS GLOBAL REGISTRATION TYPE
+ */
 @Slf4j
+@ParametersAreNonnullByDefault
 public class AllureBackendLogsExtension implements SuiteExtension {
 
     private static final Config CFG = Config.getInstance();

@@ -20,8 +20,6 @@ import org.rococo.tests.util.DataGenerator;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static com.codeborne.selenide.Selenide.open;
-
 @WebTest
 @Feature("WEB")
 @Story("[WEB] Paintings tests")
@@ -54,21 +52,21 @@ class PaintingsWebTests {
                 .setPathToPhoto(IMG_1);
 
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class)
-                .addNewPainting(painting);
+        paintingsPage.open()
+                .addNewPainting(painting)
 
-        // Assertions
-        paintingsPage.shouldFoundPainting(painting.getTitle());
+                // Assertions
+                .shouldFoundPainting(painting.getTitle());
     }
 
     @Test
     @DisplayName("Check add new painting button not exists without authorization")
     void shouldNotAvailableAddPaintingWithoutAuthorizationTest() {
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class);
+        paintingsPage.open()
 
-        // Assertions
-        paintingsPage.shouldNotExistsAddNewPaintingButton();
+                // Assertions
+                .shouldNotExistsAddNewPaintingButton();
     }
 
     @ApiLogin(@User)
@@ -93,11 +91,11 @@ class PaintingsWebTests {
                 .setMuseum(museumDTO);
 
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class)
-                .addNewPainting(painting);
+        paintingsPage.open()
+                .addNewPainting(painting)
 
-        // Assertions
-        paintingsPage.shouldFoundPainting(paintingTitle);
+                // Assertions
+                .shouldFoundPainting(paintingTitle);
     }
 
     @ApiLogin(@User)
@@ -123,11 +121,11 @@ class PaintingsWebTests {
                 .setMuseum(museum);
 
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class)
-                .addNewPaintingWithError(painting);
+        paintingsPage.open()
+                .addNewPaintingWithError(painting)
 
-        // Assertions
-        paintingForm.shouldHaveErrors(errors);
+                // Assertions
+                .shouldHaveErrors(errors);
     }
 
     @ApiLogin(@User)
@@ -143,11 +141,11 @@ class PaintingsWebTests {
                 .setPathToPhoto(ILLEGAL_FORMAT_IMG);
 
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class)
-                .addNewPaintingWithError(painting);
+        paintingsPage.open()
+                .addNewPaintingWithError(painting)
 
-        // Assertions
-        paintingForm.shouldHaveErrors("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
+                // Assertions
+                .shouldHaveErrors("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
     }
 
     @ApiLogin(@User)
@@ -164,12 +162,12 @@ class PaintingsWebTests {
                 .setPathToPhoto(IMG_2);
 
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class)
-                .updatePainting(painting.getTitle(), newPainting)
-                .notificationClose();
+        paintingPage.open(painting.getId())
+                .updatePainting(newPainting)
+                .notificationClose()
 
-        // Assertions
-        paintingPage.shouldHaveTitle(newPainting.getTitle())
+                // Assertions
+                .shouldHaveTitle(newPainting.getTitle())
                 .shouldHaveDescription(newPainting.getDescription());
     }
 
@@ -178,11 +176,10 @@ class PaintingsWebTests {
     @DisplayName("Check update painting button not exists without authorization")
     void shouldNotAvailableUpdatePaintingWithoutAuthorizationTest(PaintingDTO painting) {
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class)
-                .openPainting(painting.getTitle());
+        paintingPage.open(painting.getId())
 
-        // Assertions
-        paintingPage.shouldNotContainsEditButton();
+                // Assertions
+                .shouldNotContainsEditButton();
     }
 
     @ApiLogin(@User)
@@ -209,11 +206,11 @@ class PaintingsWebTests {
                 .setDescription(paintingDescription);
 
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class)
-                .updatePainting(painting.getTitle(), newPainting);
+        paintingPage.open(painting.getId())
+                .updatePainting(newPainting)
 
-        // Assertions
-        paintingPage.shouldHaveTitle(newPainting.getTitle())
+                // Assertions
+                .shouldHaveTitle(newPainting.getTitle())
                 .shouldHaveDescription(newPainting.getDescription());
     }
 
@@ -243,11 +240,11 @@ class PaintingsWebTests {
                 .setMuseum(museum);
 
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class)
-                .updatePaintingWithError(painting.getTitle(), newPainting);
+        paintingPage.open(painting.getId())
+                .updatePaintingWithError(newPainting)
 
-        // Assertions
-        paintingForm.shouldHaveErrors(errors);
+                // Assertions
+                .shouldHaveErrors(errors);
     }
 
 
@@ -260,11 +257,11 @@ class PaintingsWebTests {
         painting.setPathToPhoto(ILLEGAL_FORMAT_IMG);
 
         // Steps
-        open(PaintingsPage.URL, PaintingsPage.class)
-                .updatePaintingWithError(painting.getTitle(), painting);
+        paintingPage.open(painting.getId())
+                .updatePaintingWithError(painting)
 
-        // Assertions
-        paintingForm.shouldPaintingPhotoErrorHaveText("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
+                // Assertions
+                .shouldPaintingPhotoErrorHaveText("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
     }
 
     @ApiLogin(@User)
@@ -276,8 +273,8 @@ class PaintingsWebTests {
     @Test
     @DisplayName("Check paintings found by filtered search")
     void shouldFindPaintingsWithFilterTest(List<PaintingDTO> paintings) {
-        // Steps & Assertion
-        open(PaintingsPage.URL, PaintingsPage.class)
+        // Steps & Assertions
+        paintingsPage.open()
                 .shouldFoundPaintings("vAn", paintings.stream()
                         .map(PaintingDTO::getTitle)
                         .toList());
@@ -286,8 +283,8 @@ class PaintingsWebTests {
     @Test
     @DisplayName("Check displayed empty filtered list container if painting not founded by query")
     void shouldDisplayPaintingAfterFilteringByNameTest() {
-        // Steps & Assertion
-        open(PaintingsPage.URL, PaintingsPage.class)
+        // Steps & Assertions
+        paintingsPage.open()
                 .shouldHaveEmptySearchResult(FAKE.lorem().paragraph());
     }
 
@@ -295,8 +292,8 @@ class PaintingsWebTests {
     @Test
     @DisplayName("Check displayed default empty list if painting not exists")
     void shouldDisplayEmptyListWhenPaintingsNotExistsTest() {
-        // Steps & Assertion
-        open(PaintingsPage.URL, PaintingsPage.class)
+        // Steps & Assertions
+        paintingsPage.open()
                 .shouldVisibleDefaultEmptyPaintingsList();
     }
 

@@ -92,4 +92,5 @@ public class UserDTO implements Serializable {
                         ? null
                         : "\"" + pathToPhoto + "\"");
     }
+
 }
