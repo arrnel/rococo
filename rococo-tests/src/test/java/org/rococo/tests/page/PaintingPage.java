@@ -1,6 +1,8 @@
 package org.rococo.tests.page;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +10,7 @@ import org.rococo.tests.model.PaintingDTO;
 import org.rococo.tests.page.form.PaintingForm;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.UUID;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -18,6 +21,8 @@ import static org.rococo.tests.conditions.ScreenshotCondition.screenshot;
 @ParametersAreNonnullByDefault
 public class PaintingPage extends BasePage<PaintingPage> {
 
+    private static final String URL = BASE_URL + "/painting/%s";
+
     private final SelenideElement photoContainer = root.$(byAttribute("data-testid", "painting-photo")).as("Painting photo"),
             titleLabel = root.$("header").as("Painting title"),
             artistLabel = root.$(byAttribute("data-testid", "artist-name")).as("Painting artist"),
@@ -26,6 +31,14 @@ public class PaintingPage extends BasePage<PaintingPage> {
             editButton = root.$(byAttribute("data-testid", "edit-painting")).as("'Edit painting' button");
 
     private final PaintingForm paintingForm = new PaintingForm();
+
+    public PaintingPage open(UUID paintingId) {
+        var url = URL.formatted(paintingId);
+        var stepText = "Open [Painting] page: %s".formatted(url);
+        log.info(stepText);
+        Allure.step(stepText, () -> Selenide.open(url));
+        return this;
+    }
 
     @Step("Check painting have expected text data")
     public PaintingPage shouldHaveTextData(PaintingDTO painting) {
@@ -147,4 +160,5 @@ public class PaintingPage extends BasePage<PaintingPage> {
             throw new IllegalArgumentException("Painting data can't equals null or be empty. Painting: " + painting);
         }
     }
+
 }

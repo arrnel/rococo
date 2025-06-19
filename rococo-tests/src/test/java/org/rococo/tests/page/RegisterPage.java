@@ -1,6 +1,8 @@
 package org.rococo.tests.page;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +18,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public class RegisterPage extends BasePage<RegisterPage> {
 
-    public static final String URL = AUTH_URL + "/register";
+    private static final String URL = AUTH_URL + "/register";
 
     private final SelenideElement usernameInput = root.$(byName("username")).as("Username input"),
             passwordInput = root.$(byName("password")).as("Username input"),
@@ -29,6 +31,13 @@ public class RegisterPage extends BasePage<RegisterPage> {
             usernameError = $(byAttribute("data-testid", "error-username")).as("Username error label"),
             passwordError = $(byAttribute("data-testid", "error-password")).as("Password error label"),
             confirmationPasswordError = $(byAttribute("data-testid", "error-password-submit")).as("Confirmation password error label");
+
+    public RegisterPage open() {
+        var stepText = "Open [Register] page: %s".formatted(URL);
+        log.info(stepText);
+        Allure.step(stepText, () -> Selenide.open(URL));
+        return this;
+    }
 
     @Nonnull
     @Step("Register new user by login = [{username}] and password = [{password}]")
@@ -104,4 +113,5 @@ public class RegisterPage extends BasePage<RegisterPage> {
         image.shouldHave(attribute("alt", "Ренуар")).shouldBe(visible);
         return this;
     }
+
 }

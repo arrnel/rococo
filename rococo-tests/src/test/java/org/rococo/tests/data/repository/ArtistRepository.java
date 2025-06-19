@@ -36,4 +36,5 @@ public interface ArtistRepository {
     void remove(ArtistEntity user);
 
     void removeAll();
+
 }

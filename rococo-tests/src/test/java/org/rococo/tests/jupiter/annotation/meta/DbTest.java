@@ -27,4 +27,5 @@ import java.lang.annotation.Target;
         PaintingsExtension.class,
 })
 public @interface DbTest {
+
 }

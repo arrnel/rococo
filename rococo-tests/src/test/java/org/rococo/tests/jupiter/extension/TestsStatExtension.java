@@ -5,7 +5,13 @@ import org.rococo.tests.client.gateway.LogsApiClient;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.model.allure.logService.TestsStatDTO;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+/**
+ * EXTENSION HAS GLOBAL REGISTRATION TYPE
+ */
 @Slf4j
+@ParametersAreNonnullByDefault
 public class TestsStatExtension implements SuiteExtension {
 
     public static final Config CFG = Config.getInstance();

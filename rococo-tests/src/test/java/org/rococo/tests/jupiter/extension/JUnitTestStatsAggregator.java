@@ -1,6 +1,5 @@
 package org.rococo.tests.jupiter.extension;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 
@@ -8,7 +7,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Slf4j
+/**
+ * EXTENSION HAS GLOBAL REGISTRATION TYPE
+ */
 @ParametersAreNonnullByDefault
 public class JUnitTestStatsAggregator implements SuiteExtension, TestWatcher {
 

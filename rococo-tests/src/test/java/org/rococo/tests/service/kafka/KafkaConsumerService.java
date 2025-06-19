@@ -74,4 +74,5 @@ public class KafkaConsumerService implements Runnable {
     public void shutdown() {
         isRun.set(false);
     }
+
 }

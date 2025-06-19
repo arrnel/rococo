@@ -32,4 +32,5 @@ public interface ArtistService {
     void delete(UUID id);
 
     void clearAll();
+
 }

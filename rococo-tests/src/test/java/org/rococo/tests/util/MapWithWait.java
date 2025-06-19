@@ -22,6 +22,7 @@ public class MapWithWait<K, V> {
     }
 
     private final class SyncObject {
+
         private final CountDownLatch latch;
         private final K key;
         private V value;
@@ -37,6 +38,7 @@ public class MapWithWait<K, V> {
                 this.latch.countDown();
             }
         }
+
     }
 
 }

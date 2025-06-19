@@ -14,6 +14,9 @@ import org.rococo.tests.service.db.UserServiceDb;
 
 import java.util.stream.Stream;
 
+/**
+ * EXTENSION HAS GLOBAL REGISTRATION TYPE
+ */
 public class DatabasesExtension implements SuiteExtension, AfterEachCallback {
 
     private static final boolean CLEAR_DB = System.getProperty("tests.db_cleanup", "false").equals("true");

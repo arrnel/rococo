@@ -1,5 +1,6 @@
 package org.rococo.tests.data.dao.impl.springJdbc;
 
+import io.qameta.allure.Step;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.data.dao.MuseumDao;
 import org.rococo.tests.data.entity.MuseumEntity;
@@ -29,6 +30,7 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
 
     @Nonnull
     @Override
+    @Step("[GRPC] Send add museum request")
     public MuseumEntity create(MuseumEntity museum) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(MUSEUMS_JDBC_URL));
@@ -61,6 +63,7 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
 
     @Nonnull
     @Override
+    @Step("[GRPC] Send find museum by id request")
     public Optional<MuseumEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(MUSEUMS_JDBC_URL));
         try {
@@ -81,6 +84,7 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
 
     @Nonnull
     @Override
+    @Step("[GRPC] Send find museum by title request")
     public Optional<MuseumEntity> findByTitle(String title) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(MUSEUMS_JDBC_URL));
         try {
@@ -102,6 +106,7 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
 
     @Nonnull
     @Override
+    @Step("[GRPC] Send find all museums by partial titles request")
     public List<MuseumEntity> findAllByPartialTitle(String partialTitle) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(MUSEUMS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -117,6 +122,7 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
 
     @Nonnull
     @Override
+    @Step("[GRPC] Send find all museums by ids request")
     public List<MuseumEntity> findAllByIds(List<UUID> ids) {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DataSources.dataSource(MUSEUMS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -132,6 +138,7 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
 
     @Nonnull
     @Override
+    @Step("[GRPC] Send find all museums")
     public List<MuseumEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(MUSEUMS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -143,6 +150,7 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
 
     @Nonnull
     @Override
+    @Step("[GRPC] Send update museum request")
     public MuseumEntity update(MuseumEntity museum) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(MUSEUMS_JDBC_URL));
@@ -173,6 +181,7 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
     }
 
     @Override
+    @Step("[GRPC] Send delete museum by ids request")
     public void remove(MuseumEntity museum) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(MUSEUMS_JDBC_URL));
         jdbcTemplate.update("""
@@ -186,6 +195,7 @@ public class MuseumDaoSpringJdbc implements MuseumDao {
     }
 
     @Override
+    @Step("[DB] Send truncate museums table request")
     public void removeAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(MUSEUMS_JDBC_URL));
         jdbcTemplate.update(

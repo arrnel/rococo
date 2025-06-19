@@ -7,6 +7,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * EXTENSION HAS GLOBAL REGISTRATION TYPE
+ */
 @ParametersAreNonnullByDefault
 public class DefaultUserExtension implements SuiteExtension {
 
@@ -22,4 +25,5 @@ public class DefaultUserExtension implements SuiteExtension {
         if (!executor.isShutdown())
             executor.shutdownNow();
     }
+
 }

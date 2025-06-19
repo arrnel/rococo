@@ -16,14 +16,14 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public class LoginPage extends BasePage<LoginPage> {
 
-    public static final String URL = AUTH_URL + "/login";
-
     private final SelenideElement usernameInput = root.$(byName("username")).as("'Username' input"),
             passwordInput = root.$(byName("password")).as("'Password' input"),
             submitButton = root.$(byAttribute("type", "submit")).as("Submit button"),
             registerLink = root.$(byText("Зарегистрироваться")).as("Register link"),
             image = $("section img").as("Login page image"),
             error = $(".login__error").as("Login error message");
+
+    // Open Login page by get request not available. Without authorize cookies auth service redirects to main page
 
     @Nonnull
     @Step("Sign in by username = [{username}] and password = [{password}]")
@@ -53,6 +53,7 @@ public class LoginPage extends BasePage<LoginPage> {
         return new RegisterPage();
     }
 
+    @Step("Should visible login error with message: {message}")
     public LoginPage shouldHaveErrorMessage(String message) {
         log.info("Should visible error message: {}", message);
         error.shouldHave(text(message));

@@ -286,4 +286,5 @@ public class ThreadSafeEntityManager implements EntityManager {
     public <T> List<EntityGraph<? super T>> getEntityGraphs(Class<T> entityClass) {
         return threadEm().getEntityGraphs(entityClass);
     }
+
 }

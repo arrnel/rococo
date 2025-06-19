@@ -9,4 +9,5 @@ public class TokenIsEmptyException extends RuntimeException {
     public TokenIsEmptyException() {
         super("Token is empty");
     }
+
 }

@@ -2,6 +2,7 @@ package org.rococo.tests.client.grpc;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.grpc.common.type.IdType;
 import org.rococo.grpc.common.type.NameType;
@@ -32,6 +33,7 @@ public class UsersGrpcClient extends GrpcClient {
     }
 
     @Nonnull
+    @Step("[GRPC] Send add user request")
     public UserDTO add(UserDTO requestDTO) {
         try {
             return UserMapper.toDTO(
@@ -45,6 +47,7 @@ public class UsersGrpcClient extends GrpcClient {
     }
 
     @Nonnull
+    @Step("[GRPC] Send find user by id request")
     public Optional<UserDTO> findById(UUID id) {
         try {
             return Optional.of(
@@ -60,6 +63,8 @@ public class UsersGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find user by username request")
     public Optional<UserDTO> findByUsername(String username) {
         try {
             return Optional.of(
@@ -76,6 +81,7 @@ public class UsersGrpcClient extends GrpcClient {
     }
 
     @Nonnull
+    @Step("[GRPC] Send find all users request")
     public Page<UserDTO> findAll(Pageable pageable) {
         try {
             return UserMapper.toPageDTO(
@@ -87,6 +93,7 @@ public class UsersGrpcClient extends GrpcClient {
     }
 
     @Nonnull
+    @Step("[GRPC] Send update user request")
     public UserDTO update(UserDTO requestDTO) {
         try {
             return UserMapper.toDTO(
@@ -101,6 +108,7 @@ public class UsersGrpcClient extends GrpcClient {
         }
     }
 
+    @Step("[GRPC] Send delete user request")
     public void delete(UUID id) {
         try {
             usersServiceStub.removeById(

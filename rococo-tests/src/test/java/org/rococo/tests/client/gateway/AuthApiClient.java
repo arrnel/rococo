@@ -56,7 +56,7 @@ public class AuthApiClient extends RestClient {
         this.authApi = retrofit.create(AuthApi.class);
     }
 
-    @Step("Send request POST:[rococo-auth]/register")
+    @Step("[API] Send register request. POST:[rococo-auth]/register")
     public UserDTO register(String username, String password) {
         log.info("Register user: username = [{}], password = [{}]", username, password);
         clearCookieStore();
@@ -93,7 +93,7 @@ public class AuthApiClient extends RestClient {
         return token;
     }
 
-    @Step("Send authorize request. GET:[rococo-auth]/oauth2/authorize")
+    @Step("[API] Send authorize request. GET:[rococo-auth]/oauth2/authorize")
     private void authorize(final String codeChallenge) {
         execute(authApi.authorize(
                 RESPONSE_TYPE,
@@ -104,7 +104,7 @@ public class AuthApiClient extends RestClient {
                 CODE_CHALLENGE_METHOD));
     }
 
-    @Step("Send login request. POST:[rococo-auth]/login")
+    @Step("[API] Send login request. POST:[rococo-auth]/login")
     private void login(String username, String password) {
         execute(authApi.login(
                 username,
@@ -113,7 +113,7 @@ public class AuthApiClient extends RestClient {
     }
 
     @Nonnull
-    @Step("Send get token request. POST:[rococo-auth]/oauth2/token")
+    @Step("[API] Send get token request. POST:[rococo-auth]/oauth2/token")
     private String token(String codeVerifier) {
         var code = Objects.requireNonNull(AuthStore.INSTANCE.getCode());
         return "Bearer " + Objects.requireNonNull(execute(
@@ -129,7 +129,7 @@ public class AuthApiClient extends RestClient {
 
     @SneakyThrows
     @Nonnull
-    @Step("Send get cookies request. GET:[rococo-auth]/login")
+    @Step("[API] Send get cookies request. GET:[rococo-auth]/login")
     public Response<ResponseBody> sendGetCookiesRequest() {
         log.info("Send get cookies request. GET:[rococo-auth]/login");
         return authApi.getCookies().execute();
@@ -137,7 +137,7 @@ public class AuthApiClient extends RestClient {
 
     @SneakyThrows
     @Nonnull
-    @Step("Send request POST:[rococo-auth]/register")
+    @Step("[API] Send request POST:[rococo-auth]/register")
     public Response<ResponseBody> sendRegisterUserRequest(String username, String password, String passwordConfirmation, String csrfCookie) {
         log.info("""
                 Send register user request. POST:[rococo-auth]/register
@@ -151,7 +151,7 @@ public class AuthApiClient extends RestClient {
 
     @SneakyThrows
     @Nonnull
-    @Step("Send authorize request. GET:[rococo-auth]/oauth2/authorize")
+    @Step("[API] Send authorize request. GET:[rococo-auth]/oauth2/authorize")
     public Response<Void> sendAuthorizeRequest(
             final String responseType,
             final String clientId,
@@ -175,7 +175,7 @@ public class AuthApiClient extends RestClient {
 
     @SneakyThrows
     @Nonnull
-    @Step("Send login request. POST:[rococo-auth]/login")
+    @Step("[API] Send login request. POST:[rococo-auth]/login")
     public Response<Void> sendLoginRequest(final String username,
                                            final String password,
                                            final String csrfCookie
@@ -192,7 +192,7 @@ public class AuthApiClient extends RestClient {
 
     @SneakyThrows
     @Nonnull
-    @Step("Send get token request. POST:[rococo-auth]/oauth2/token")
+    @Step("[API] Send get token request. POST:[rococo-auth]/oauth2/token")
     public Response<JsonNode> sendGetTokenRequest(final String clientId,
                                                   final String redirectUri,
                                                   final String grantType,

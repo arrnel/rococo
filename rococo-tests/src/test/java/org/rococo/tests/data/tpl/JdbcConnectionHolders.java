@@ -15,4 +15,5 @@ public class JdbcConnectionHolders implements AutoCloseable {
     public void close() {
         holders.forEach(JdbcConnectionHolder::close);
     }
+
 }

@@ -1,5 +1,6 @@
 package org.rococo.tests.page;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -22,7 +23,7 @@ import static org.rococo.tests.enums.EntityType.ARTIST;
 @ParametersAreNonnullByDefault
 public class ArtistsPage extends BasePage<ArtistsPage> {
 
-    public static final String URL = BASE_URL + "/artist";
+    private static final String URL = BASE_URL + "/artist";
     private static final String ARTISTS_PAGE_TITLE = "Художники";
 
     private final SelenideElement header = root.$("h2").as("Artists page title"),
@@ -34,6 +35,13 @@ public class ArtistsPage extends BasePage<ArtistsPage> {
     private final ArtistPage artistPage = new ArtistPage();
     private final ItemsListComponent artistsList = new ItemsListComponent(ARTIST, artistListContainer);
     private final SearchField searchField = new SearchField(searchFieldElement);
+
+    public ArtistsPage open() {
+        var stepText = "Open [Artists] page: %s".formatted(URL);
+        log.info(stepText);
+        Allure.step(stepText, () -> Selenide.open(URL));
+        return this;
+    }
 
     @Step("Search for artist by name: {artistName}")
     private void searchArtist(String artistName) {
@@ -74,7 +82,7 @@ public class ArtistsPage extends BasePage<ArtistsPage> {
     public ArtistPage updateArtist(String artistName, ArtistDTO artist) {
         log.info("Update artist: {}", artistName);
         openArtist(artistName);
-        artistPage.editArtist(artist);
+        artistPage.updateArtist(artist);
         artistForm.shouldNotVisibleComponent();
         return artistPage;
     }
@@ -83,7 +91,7 @@ public class ArtistsPage extends BasePage<ArtistsPage> {
     public ArtistForm updateArtistWithError(String artistName, ArtistDTO artist) {
         log.info("Update artist: {}", artistName);
         openArtist(artistName);
-        artistPage.editArtist(artist);
+        artistPage.updateArtist(artist);
         return artistForm;
     }
 
@@ -201,4 +209,5 @@ public class ArtistsPage extends BasePage<ArtistsPage> {
         header.shouldBe(visible).shouldHave(text(ARTISTS_PAGE_TITLE));
         return this;
     }
+
 }

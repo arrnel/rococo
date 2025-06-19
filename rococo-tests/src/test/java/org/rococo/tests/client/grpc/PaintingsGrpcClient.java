@@ -2,6 +2,7 @@ package org.rococo.tests.client.grpc;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.qameta.allure.Step;
 import org.rococo.grpc.common.type.IdType;
 import org.rococo.grpc.common.type.NameType;
 import org.rococo.grpc.paintings.PaintingsServiceGrpc;
@@ -30,6 +31,7 @@ public class PaintingsGrpcClient extends GrpcClient {
     }
 
     @Nonnull
+    @Step("[GRPC] Send add painting request")
     public PaintingDTO add(PaintingDTO requestDTO) {
         try {
             return PaintingMapper.toDTO(
@@ -48,6 +50,7 @@ public class PaintingsGrpcClient extends GrpcClient {
     }
 
     @Nonnull
+    @Step("[GRPC] Send find by id painting request")
     public Optional<PaintingDTO> findById(UUID id) {
         try {
             return Optional.of(
@@ -64,6 +67,7 @@ public class PaintingsGrpcClient extends GrpcClient {
     }
 
     @Nonnull
+    @Step("[GRPC] Send find by title painting request")
     public Optional<PaintingDTO> findByTitle(String title) {
         try {
             return Optional.of(
@@ -80,6 +84,7 @@ public class PaintingsGrpcClient extends GrpcClient {
     }
 
     @Nonnull
+    @Step("[GRPC] Send update painting request")
     public Page<PaintingDTO> findAll(@Nullable String title,
                                      @Nullable UUID artistId,
                                      Pageable pageable
@@ -96,6 +101,7 @@ public class PaintingsGrpcClient extends GrpcClient {
     }
 
     @Nonnull
+    @Step("[GRPC] Send update painting request")
     public PaintingDTO update(PaintingDTO requestDTO) {
 
         try {
@@ -120,6 +126,7 @@ public class PaintingsGrpcClient extends GrpcClient {
 
     }
 
+    @Step("[GRPC] Send delete painting request")
     public void delete(UUID id) {
         try {
             paintingsServiceStub.removeById(

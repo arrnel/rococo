@@ -9,6 +9,7 @@ import org.rococo.tests.model.UserDTO;
 import org.springframework.data.domain.Page;
 import retrofit2.Response;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.Optional;
@@ -25,7 +26,8 @@ public class UsersApiClient extends RestClient {
         this.usersApi = create(UsersApi.class);
     }
 
-    @Step("Send request POST:[rococo-users]/api/user")
+    @Nonnull
+    @Step("[API] Send create user request. POST:[rococo-users]/api/user")
     public UserDTO createUser(String bearerToken,
                               UserDTO requestBody
     ) {
@@ -56,7 +58,8 @@ public class UsersApiClient extends RestClient {
 
     }
 
-    @Step("Send request GET:[rococo-users]/api/user")
+    @Nonnull
+    @Step("[API] Send get current user request. GET:[rococo-users]/api/user")
     public Optional<UserDTO> currentUser(String bearerToken) {
 
         var call = usersApi.currentUser(bearerToken);
@@ -80,7 +83,8 @@ public class UsersApiClient extends RestClient {
         }
     }
 
-    @Step("Send request GET:[rococo-users]/api/user/all")
+    @Nonnull
+    @Step("[API] Send find all users request. GET:[rococo-users]/api/user/all")
     public Page<UserDTO> findAll(int page, int size) {
         var call = usersApi.findAll(page, size);
         Response<RestPage<UserDTO>> response = null;
@@ -98,7 +102,7 @@ public class UsersApiClient extends RestClient {
         }
     }
 
-    @Step("Send request PATCH:[rococo-users]/api/user")
+    @Step("[API] Send update user request. PATCH:[rococo-users]/api/user")
     public UserDTO updateUser(String bearerToken, UserDTO requestBody) {
 
         var call = usersApi.updateUser(bearerToken, requestBody);
@@ -127,4 +131,5 @@ public class UsersApiClient extends RestClient {
         }
 
     }
+
 }

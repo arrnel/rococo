@@ -63,4 +63,5 @@ public class ArtistEntity {
     public int hashCode() {
         return Objects.hash(id, name, biography);
     }
+
 }

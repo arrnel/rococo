@@ -87,4 +87,5 @@ public class AllureDockerApiClient extends RestClient {
         }
         assertEquals(HttpStatus.OK, response.code());
     }
+
 }

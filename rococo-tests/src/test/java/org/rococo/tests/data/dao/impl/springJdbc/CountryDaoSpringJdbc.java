@@ -1,5 +1,6 @@
 package org.rococo.tests.data.dao.impl.springJdbc;
 
+import io.qameta.allure.Step;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.data.dao.CountryDao;
 import org.rococo.tests.data.entity.CountryEntity;
@@ -26,6 +27,7 @@ public class CountryDaoSpringJdbc implements CountryDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send create new country request")
     public CountryEntity create(CountryEntity country) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(COUNTRIES_JDBC_URL));
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -52,6 +54,7 @@ public class CountryDaoSpringJdbc implements CountryDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find country by id request")
     public Optional<CountryEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(COUNTRIES_JDBC_URL));
         try {
@@ -74,6 +77,7 @@ public class CountryDaoSpringJdbc implements CountryDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find country by code request")
     public Optional<CountryEntity> findByCode(CountryCode code) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(COUNTRIES_JDBC_URL));
         try {
@@ -94,6 +98,7 @@ public class CountryDaoSpringJdbc implements CountryDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all countries request")
     public List<CountryEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(COUNTRIES_JDBC_URL));
         return jdbcTemplate.query("""
@@ -105,6 +110,7 @@ public class CountryDaoSpringJdbc implements CountryDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send update country request")
     public CountryEntity update(CountryEntity country) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(COUNTRIES_JDBC_URL));
         jdbcTemplate.update(connection -> {
@@ -125,6 +131,7 @@ public class CountryDaoSpringJdbc implements CountryDao {
     }
 
     @Override
+    @Step("[DB] Send delete country request")
     public void remove(CountryEntity country) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(COUNTRIES_JDBC_URL));
         jdbcTemplate.update("""

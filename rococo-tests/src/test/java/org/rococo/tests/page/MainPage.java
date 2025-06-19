@@ -1,14 +1,18 @@
 package org.rococo.tests.page;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
+import lombok.extern.slf4j.Slf4j;
 import org.rococo.tests.page.component.HeaderComponent;
 
 import static com.codeborne.selenide.Condition.visible;
 
+@Slf4j
 public class MainPage extends BasePage<MainPage> {
 
-    public static final String URL = BASE_URL;
+    private static final String URL = BASE_URL;
 
     private final SelenideElement nav = root.$("nav"),
             title = nav.$("p").as("'Main page' title"),
@@ -22,8 +26,16 @@ public class MainPage extends BasePage<MainPage> {
             museumsImage = museumsContainer.$("img").as("Museums image"),
             museumsText = museumsContainer.$("div").as("Museums text");
 
+    public MainPage open() {
+        var stepText = "Open [Main] page: %s".formatted(URL);
+        log.info(stepText);
+        Allure.step(stepText, () -> Selenide.open(URL));
+        return this;
+    }
+
     @Step("Go to paintings page")
     public PaintingsPage goToPaintingsPage() {
+        log.info("Open Paintings page");
         paintingsContainer.click();
         return new PaintingsPage();
     }

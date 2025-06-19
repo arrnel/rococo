@@ -1,5 +1,6 @@
 package org.rococo.tests.data.dao.impl.springJdbc;
 
+import io.qameta.allure.Step;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.data.dao.PaintingDao;
 import org.rococo.tests.data.entity.PaintingEntity;
@@ -29,6 +30,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send add painting request")
     public PaintingEntity create(PaintingEntity painting) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
@@ -61,6 +63,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find painting by id request")
     public Optional<PaintingEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
         try {
@@ -82,6 +85,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find painting by title request")
     public Optional<PaintingEntity> findByTitle(String title) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
         try {
@@ -102,6 +106,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all paintings with partial title request")
     public List<PaintingEntity> findAllByPartialTitle(String partialTitle) {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -115,6 +120,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all paintings with artist id request")
     public List<PaintingEntity> findAllByArtistId(UUID artistId) {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -128,6 +134,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all with exact titles request")
     public List<PaintingEntity> findAllByTitles(List<String> titles) {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -141,6 +148,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send find all paintings request")
     public List<PaintingEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
         return jdbcTemplate.query("""
@@ -152,6 +160,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
 
     @Nonnull
     @Override
+    @Step("[DB] Send update painting request")
     public PaintingEntity update(PaintingEntity painting) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
@@ -182,6 +191,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
     }
 
     @Override
+    @Step("[DB] Send delete painting request")
     public void remove(PaintingEntity painting) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
         jdbcTemplate.update("""
@@ -195,6 +205,7 @@ public class PaintingDaoSpringJdbc implements PaintingDao {
     }
 
     @Override
+    @Step("[DB] Send truncate paintings table request")
     public void removeAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(PAINTINGS_JDBC_URL));
         jdbcTemplate.update(

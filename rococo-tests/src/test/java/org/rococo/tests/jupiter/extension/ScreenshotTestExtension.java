@@ -103,4 +103,5 @@ public class ScreenshotTestExtension implements ParameterResolver, TestExecution
             throw new RuntimeException(e);
         }
     }
+
 }

@@ -35,4 +35,5 @@ public class Connections {
     public static void closeAllConnections() {
         holders.values().forEach(JdbcConnectionHolder::closeAllConnections);
     }
+
 }

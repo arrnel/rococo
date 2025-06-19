@@ -1,6 +1,8 @@
 package org.rococo.tests.page;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +11,7 @@ import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.page.form.MuseumForm;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.UUID;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byAttribute;
@@ -19,6 +22,8 @@ import static org.rococo.tests.conditions.ScreenshotCondition.screenshot;
 @ParametersAreNonnullByDefault
 public class MuseumPage extends BasePage<MuseumPage> {
 
+    private static final String URL = BASE_URL + "/museum/%s";
+
     private final SelenideElement titleElement = root.$("header").as("Museum title"),
             locationElement = root.$(byAttribute("data-testid", "museum-geo")).as("Museum location"),
             editButton = root.$(byAttribute("data-testid", "edit-museum")).as("Edit museum button"),
@@ -26,6 +31,14 @@ public class MuseumPage extends BasePage<MuseumPage> {
             photoElement = root.$("img").as("Museum image");
 
     private final MuseumForm museumForm = new MuseumForm();
+
+    public MuseumPage open(UUID museumId) {
+        var url = URL.formatted(museumId);
+        var stepText = "Open [Museum] page: %s".formatted(url);
+        log.info(stepText);
+        Allure.step(stepText, () -> Selenide.open(url));
+        return this;
+    }
 
     @Step("Update museum = [{museum.title}]")
     public MuseumPage updateMuseum(MuseumDTO museum) {

@@ -9,6 +9,7 @@ import org.rococo.tests.model.RestPage;
 import org.springframework.data.domain.Page;
 import retrofit2.Response;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
@@ -29,7 +30,8 @@ public class ArtistsApiClient extends RestClient {
         this.artistsApi = create(ArtistsApi.class);
     }
 
-    @Step("Send request POST:[rococo-artists]/api/artist")
+    @Nonnull
+    @Step("[API] Send add artist request. POST:[rococo-artists]/api/artist")
     public ArtistDTO add(String bearerToken,
                          ArtistDTO requestBody
     ) {
@@ -59,7 +61,8 @@ public class ArtistsApiClient extends RestClient {
         }
     }
 
-    @Step("Send request GET:[rococo-artists]/api/artist")
+    @Nonnull
+    @Step("[API] Send find artist by id request. GET:[rococo-artists]/api/artist")
     public Optional<ArtistDTO> findById(UUID id) {
 
         var call = artistsApi.findById(id);
@@ -83,7 +86,8 @@ public class ArtistsApiClient extends RestClient {
         }
     }
 
-    @Step("Send request GET:[rococo-artists]/api/artist")
+    @Nonnull
+    @Step("[API] Send find all artists request. GET:[rococo-artists]/api/artist")
     public Page<ArtistDTO> findAll(@Nullable String name, int page, int size) {
 
         var call = name == null
@@ -104,7 +108,8 @@ public class ArtistsApiClient extends RestClient {
 
     }
 
-    @Step("Send request PATCH:[rococo-artists]/api/artist")
+    @Nonnull
+    @Step("[API] Send update artist request. PATCH:[rococo-artists]/api/artist")
     public ArtistDTO update(String bearerToken, ArtistDTO requestBody) {
 
         var call = artistsApi.update(bearerToken, requestBody);
@@ -134,7 +139,7 @@ public class ArtistsApiClient extends RestClient {
 
     }
 
-    @Step("Send request DELETE:[rococo-artists]/api/artist")
+    @Step("[API] Send delete artist request. DELETE:[rococo-artists]/api/artist")
     public void delete(String bearerToken, UUID id) {
 
         var call = artistsApi.delete(bearerToken, id);

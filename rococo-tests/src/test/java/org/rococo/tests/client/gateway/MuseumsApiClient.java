@@ -9,6 +9,7 @@ import org.rococo.tests.model.RestPage;
 import org.springframework.data.domain.Page;
 import retrofit2.Response;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
@@ -27,7 +28,8 @@ public class MuseumsApiClient extends RestClient {
         this.museumsApi = create(MuseumsApi.class);
     }
 
-    @Step("Send request POST:[rococo-museums]/api/museum")
+    @Nonnull
+    @Step("[API] Send add museum request. POST:[rococo-museums]/api/museum")
     public MuseumDTO add(String bearerToken,
                          MuseumDTO requestBody
     ) {
@@ -57,7 +59,8 @@ public class MuseumsApiClient extends RestClient {
         }
     }
 
-    @Step("Send request GET:[rococo-museums]/api/museum")
+    @Nonnull
+    @Step("[API] Send find by id museum request. GET:[rococo-museums]/api/museum")
     public Optional<MuseumDTO> findById(UUID id) {
         var call = museumsApi.findById(id);
         Response<MuseumDTO> response = null;
@@ -80,7 +83,8 @@ public class MuseumsApiClient extends RestClient {
         }
     }
 
-    @Step("Send request GET:[rococo-museums]/api/museum")
+    @Nonnull
+    @Step("[API] Send find all museums request. GET:[rococo-museums]/api/museum")
     public Page<MuseumDTO> findAll(@Nullable String title, int page, int size) {
         var call = title == null
                 ? museumsApi.findAll(page, size)
@@ -100,7 +104,8 @@ public class MuseumsApiClient extends RestClient {
 
     }
 
-    @Step("Send request PATCH:[rococo-museums]/api/museum")
+    @Nonnull
+    @Step("[API] Send update museum request. PATCH:[rococo-museums]/api/museum")
     public MuseumDTO update(String bearerToken, MuseumDTO requestBody) {
         var call = museumsApi.update(bearerToken, requestBody);
         Response<MuseumDTO> response = null;
@@ -130,7 +135,7 @@ public class MuseumsApiClient extends RestClient {
         }
     }
 
-    @Step("Send request DELETE:[rococo-museums]/api/museum")
+    @Step("[API] Send delete museum request. DELETE:[rococo-museums]/api/museum")
     public void delete(String bearerToken, UUID id) {
 
         var call = museumsApi.delete(bearerToken, id);

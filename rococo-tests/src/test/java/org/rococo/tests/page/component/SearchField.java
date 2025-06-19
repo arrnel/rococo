@@ -1,5 +1,6 @@
 package org.rococo.tests.page.component;
 
+import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 
@@ -27,7 +28,7 @@ public class SearchField extends BaseComponent<SearchField> {
     public void search(String text) {
         input.click();
         input.setValue(text);
-        searchIcon.click();
+        searchIcon.click(ClickOptions.usingJavaScript());
         Selenide.sleep(TIMEOUT_AFTER_SEARCH);
     }
 

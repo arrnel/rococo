@@ -5,6 +5,7 @@ import io.grpc.ManagedChannelBuilder;
 import org.rococo.tests.client.grpc.interceptor.GrpcConsoleInterceptor;
 import org.rococo.tests.config.Config;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 
 public abstract class GrpcClient implements AutoCloseable {
@@ -20,12 +21,14 @@ public abstract class GrpcClient implements AutoCloseable {
         this.channel = getChannel();
     }
 
+    @Nonnull
     protected ManagedChannel getChannel() {
         return channel == null || channel.isShutdown() || channel.isTerminated()
                 ? getNewChannel()
                 : channel;
     }
 
+    @Nonnull
     private ManagedChannel getNewChannel() {
         return ManagedChannelBuilder
                 .forAddress(host, port)

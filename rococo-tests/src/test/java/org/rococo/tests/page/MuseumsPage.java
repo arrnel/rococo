@@ -1,5 +1,6 @@
 package org.rococo.tests.page;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -23,7 +24,7 @@ import static org.rococo.tests.enums.EntityType.MUSEUM;
 @ParametersAreNonnullByDefault
 public class MuseumsPage extends BasePage<MuseumsPage> {
 
-    public static final String URL = BASE_URL + "/museum";
+    private static final String URL = BASE_URL + "/museum";
     private static final String PAGE_TITLE = "Музеи";
 
     private final SelenideElement pageTitle = root.$("h2").as("Museum title"),
@@ -37,6 +38,13 @@ public class MuseumsPage extends BasePage<MuseumsPage> {
     private final MuseumForm museumForm = new MuseumForm(museumFormContainer);
     private final ItemsListComponent museumsList = new ItemsListComponent(MUSEUM, museumListContainer);
     private final SearchField searchField = new SearchField(searchFieldElement);
+
+    public MuseumsPage open() {
+        var stepText = "Open [Museums] page: %s".formatted(URL);
+        log.info(stepText);
+        Allure.step(stepText, () -> Selenide.open(URL));
+        return this;
+    }
 
     @Step("Search for museum by title: [{museumTitle}]")
     private void searchMuseum(String museumTitle) {

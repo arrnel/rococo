@@ -2,6 +2,7 @@ package org.rococo.tests.client.grpc;
 
 import io.grpc.Status.Code;
 import io.grpc.StatusRuntimeException;
+import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.rococo.grpc.files.EntityTypeGrpc;
 import org.rococo.grpc.files.FilesServiceGrpc;
@@ -12,6 +13,7 @@ import org.rococo.tests.ex.ServiceUnavailableException;
 import org.rococo.tests.mapper.ImageMapper;
 import org.rococo.tests.model.ImageDTO;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,7 @@ public class FilesGrpcClient extends GrpcClient {
         filesServiceStub = FilesServiceGrpc.newBlockingStub(channel);
     }
 
+    @Step("[GRPC] Send add image request")
     public void addImage(EntityType entityType, UUID entityId, String image) {
         try {
             filesServiceStub.addImage(
@@ -39,6 +42,8 @@ public class FilesGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find image request")
     public Optional<ImageDTO> findImage(EntityType entityType, UUID entityId) {
         try {
             return Optional.of(
@@ -52,6 +57,8 @@ public class FilesGrpcClient extends GrpcClient {
         }
     }
 
+    @Nonnull
+    @Step("[GRPC] Send find all images request")
     public List<ImageDTO> findAll(final EntityType entityType, final List<UUID> entityIds) {
 
         try {
@@ -74,6 +81,7 @@ public class FilesGrpcClient extends GrpcClient {
 
     }
 
+    @Step("[GRPC] Send update image request")
     public void update(EntityType entityType, UUID entityId, String image) {
         try {
             filesServiceStub.updateImage(
@@ -85,6 +93,7 @@ public class FilesGrpcClient extends GrpcClient {
         }
     }
 
+    @Step("[GRPC] Send delete image request")
     public void delete(EntityType entityType, UUID entityId) {
         try {
             filesServiceStub.deleteImage(

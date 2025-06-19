@@ -18,6 +18,7 @@ import java.util.UUID;
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ImageDTO implements Serializable {
+
     private UUID entityId;
     private String content;
 

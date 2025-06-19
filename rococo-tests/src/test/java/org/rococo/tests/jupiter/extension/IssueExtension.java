@@ -33,4 +33,5 @@ public class IssueExtension implements ExecutionCondition {
                 () -> ConditionEvaluationResult.enabled("Annotation @DisabledByIssue not found")
         );
     }
+
 }
