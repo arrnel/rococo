@@ -144,7 +144,7 @@
 После установки и запуска docker daemon необходимо убедиться в работе команд docker, например `docker -v`:
 
 ```posh
-~ % docker -v
+docker -v
 Docker version 20.10.14, build a224086
 ```
 
@@ -159,7 +159,7 @@ docker pull confluentinc/cp-kafka:7.3.2
 После `pull` вы увидите спуленный image командой `docker images`
 
 ```posh
-mitriis-MacBook-Pro ~ % docker images            
+docker images            
 REPOSITORY                 TAG              IMAGE ID       CREATED         SIZE
 postgres                   15.1             9f3ec01f884d   10 days ago     379MB
 confluentinc/cp-kafka      7.3.2            db97697f6e28   12 months ago   457MB
@@ -229,7 +229,7 @@ chmod +x init-database.sh
 Версию установленной Java необходимо проверить командой `java -version`
 
 ```posh
-~ % java -version
+java -version
 openjdk version "21.0.1" 2023-10-17 LTS
 OpenJDK Runtime Environment Temurin-21.0.1+12 (build 21.0.1+12-LTS)
 OpenJDK 64-Bit Server VM Temurin-21.0.1+12 (build 21.0.1+12-LTS, mixed mode)
@@ -263,14 +263,14 @@ OpenJDK 64-Bit Server VM Temurin-21.0.1+12 (build 21.0.1+12-LTS, mixed mode)
 #### 1. Перейти в каталог
 
 ```posh
-rococo % cd rococo-frontend
+cd rococo-frontend
 ```
 
 #### 2. Запустить фронтенд в режиме preview (сначала обновить зависимости)
 
 ```posh
-rococo-frontend % npm i
-rococo-frontend % npm run dev
+npm i
+npm run dev
 ```
 
 #### 3. Прописать run конфигурацию для всех сервисов rococo-* - Active profiles local
@@ -283,8 +283,8 @@ rococo-frontend % npm run dev
 - Запустить сервис auth
 
 ```posh
-rococo % cd rococo-auth
-rococo-auth % gradle bootRun --args='--spring.profiles.active=local'
+cd rococo-auth
+gradle bootRun --args='--spring.profiles.active=local'
 ```
 
 Или просто перейдя к main-классу приложения RococoAuthApplication выбрать run в IDEA (предварительно удостовериться что
@@ -357,7 +357,7 @@ Reason: Failed to determine a suitable driver class
 #### 4. Прописать в etc/hosts элиас для Docker-имени
 
 ```posh
-rococo % vi /etc/hosts
+vi /etc/hosts
 ```
 
 ```posh
@@ -379,7 +379,7 @@ rococo % vi /etc/hosts
 #### 5. Перейти в корневой каталог проекта
 
 ```posh
-rococo % cd rococo
+cd rococo
 ```
 
 #### 6. Запустить все сервисы
@@ -443,13 +443,13 @@ chmod +x init-database.sh
 #### 0. Создать volume allure-results
 
 ```posh
-rococo % docker volume allure-results
+docker volume allure-results
 ```
 
 #### 1. Перейти в корневой каталог проекта
 
 ```posh
-rococo % cd rococo
+cd rococo
 ```
 
 #### 2. Запустить все сервисы и тесты:
