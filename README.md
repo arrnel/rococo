@@ -313,13 +313,13 @@ Multiple database creation requested: rococo-artists,rococo-auth,rococo-countrie
   PgAdmin и создать пустые БД микросервисов
 
 ```sql
-   create database "rococo-artists" with owner postgres;
-   create database "rococo-auth" with owner postgres;
-   create database "rococo-countries" with owner postgres;
-   create database "rococo-files" with owner postgres;
-   create database "rococo-museums" with owner postgres;
-   create database "rococo-paintings" with owner postgres;
-   create database "rococo-users" with owner postgres;
+create database "rococo-artists" with owner postgres;
+create database "rococo-auth" with owner postgres;
+create database "rococo-countries" with owner postgres;
+create database "rococo-files" with owner postgres;
+create database "rococo-museums" with owner postgres;
+create database "rococo-paintings" with owner postgres;
+create database "rococo-users" with owner postgres;
 ```
 
 Если при запуске сервисов выходит ошибка:
