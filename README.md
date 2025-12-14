@@ -144,7 +144,7 @@
 После установки и запуска docker daemon необходимо убедиться в работе команд docker, например `docker -v`:
 
 ```posh
-User-MacBook-Pro ~ % docker -v
+~ % docker -v
 Docker version 20.10.14, build a224086
 ```
 
@@ -229,7 +229,7 @@ chmod +x init-database.sh
 Версию установленной Java необходимо проверить командой `java -version`
 
 ```posh
-User-MacBook-Pro ~ % java -version
+~ % java -version
 openjdk version "21.0.1" 2023-10-17 LTS
 OpenJDK Runtime Environment Temurin-21.0.1+12 (build 21.0.1+12-LTS)
 OpenJDK 64-Bit Server VM Temurin-21.0.1+12 (build 21.0.1+12-LTS, mixed mode)
@@ -263,14 +263,14 @@ OpenJDK 64-Bit Server VM Temurin-21.0.1+12 (build 21.0.1+12-LTS, mixed mode)
 #### 1. Перейти в каталог
 
 ```posh
-User-MacBook-Pro rococo % cd rococo-frontend
+rococo % cd rococo-frontend
 ```
 
 #### 2. Запустить фронтенд в режиме preview (сначала обновить зависимости)
 
 ```posh
-User-MacBook-Pro rococo-frontend % npm i
-User-MacBook-Pro rococo-frontend % npm run dev
+rococo-frontend % npm i
+rococo-frontend % npm run dev
 ```
 
 #### 3. Прописать run конфигурацию для всех сервисов rococo-* - Active profiles local
@@ -283,8 +283,8 @@ User-MacBook-Pro rococo-frontend % npm run dev
 - Запустить сервис auth
 
 ```posh
-User-MacBook-Pro rococo % cd rococo-auth
-User-MacBook-Pro rococo-auth % gradle bootRun --args='--spring.profiles.active=local'
+rococo % cd rococo-auth
+rococo-auth % gradle bootRun --args='--spring.profiles.active=local'
 ```
 
 Или просто перейдя к main-классу приложения RococoAuthApplication выбрать run в IDEA (предварительно удостовериться что
@@ -313,20 +313,13 @@ Multiple database creation requested: rococo-artists,rococo-auth,rococo-countrie
   PgAdmin и создать пустые БД микросервисов
 
 ```sql
-   create
-database "rococo-artists" with owner postgres;
-   create
-database "rococo-auth" with owner postgres;
-   create
-database "rococo-countries" with owner postgres;
-   create
-database "rococo-files" with owner postgres;
-   create
-database "rococo-museums" with owner postgres;
-   create
-database "rococo-paintings" with owner postgres;
-   create
-database "rococo-users" with owner postgres;
+   create database "rococo-artists" with owner postgres;
+   create database "rococo-auth" with owner postgres;
+   create database "rococo-countries" with owner postgres;
+   create database "rococo-files" with owner postgres;
+   create database "rococo-museums" with owner postgres;
+   create database "rococo-paintings" with owner postgres;
+   create database "rococo-users" with owner postgres;
 ```
 
 Если при запуске сервисов выходит ошибка:
@@ -364,7 +357,7 @@ Reason: Failed to determine a suitable driver class
 #### 4. Прописать в etc/hosts элиас для Docker-имени
 
 ```posh
-User-MacBook-Pro rococo % vi /etc/hosts
+rococo % vi /etc/hosts
 ```
 
 ```posh
@@ -386,7 +379,7 @@ User-MacBook-Pro rococo % vi /etc/hosts
 #### 5. Перейти в корневой каталог проекта
 
 ```posh
-User-MacBook-Pro rococo % cd rococo
+rococo % cd rococo
 ```
 
 #### 6. Запустить все сервисы
@@ -450,13 +443,13 @@ chmod +x init-database.sh
 #### 0. Создать volume allure-results
 
 ```posh
-User-MacBook-Pro rococo % docker volume allure-results
+rococo % docker volume allure-results
 ```
 
 #### 1. Перейти в корневой каталог проекта
 
 ```posh
-User-MacBook-Pro rococo % cd rococo
+rococo % cd rococo
 ```
 
 #### 2. Запустить все сервисы и тесты:
