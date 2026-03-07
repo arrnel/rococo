@@ -230,7 +230,7 @@ services:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - GITHUB_TOKEN_NAME=${GITHUB_TOKEN_NAME}
     volumes:
-      - ./rococo-tests/.screen-output/screenshots/remote:/rococo/rococo-tests/.screen-output/screenshots/remote
+      - ./workflow-resources/screenshot:/rococo/rococo-tests/.screen-output/screenshots/remote
     depends_on:
       frontend.rococo.dc:
         condition: service_started
