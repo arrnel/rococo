@@ -1,0 +1,34 @@
+name: Pull browser and video-recorder images
+description: Pulls correct browser image (Twilio or Selenoid) and optional video-recorder
+author: arrnel
+
+inputs:
+  browser:
+    description: Browser name (chrome | firefox)
+    required: true
+  version:
+    description: |
+      Browser version.
+      Selenoid: Chrome <= 128.0, Firefox <= 125.0
+      Twilio: Chrome >= 129.0, Firefox >= 126.0
+    required: true
+  channel:
+    description: Browser channel (dev | beta | stable). Used only for twilio browsers.
+    required: false
+    default: "stable"
+  enable_video:
+    description: Pull selenoid video recorder (true | false)
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        chmod +x "${{ github.action_path }}/pull_browser.sh"
+        "${{ github.action_path }}/pull_browser.sh" \
+          "${{ inputs.browser }}" \
+          "${{ inputs.version }}" \
+          "${{ inputs.channel }}" \
+          "${{ inputs.enable_video }}"
