@@ -10,7 +10,67 @@ export GITHUB_TOKEN_NAME="${GITHUB_TOKEN_NAME}"
 export ARCH=$(uname -m)
 
 BROWSER="chrome"
+BROWSER_CHANNEL="stable"
 SKIP_BUILD=false
+
+function pull_browsers_from_browser_json() {
+
+  if [ -f "$BROWSERS_JSON_FILE" ]; then
+
+    BROWSERS=$(grep -o '"image": "[^"]*' "$BROWSERS_JSON_FILE" | awk -F': "' '{print $2}')
+    for IMAGE in $BROWSERS; do
+      if [[ "$(docker images -q $IMAGE 2> /dev/null)" == "" ]]; then
+        echo "Downloading $IMAGE..."
+        docker pull $IMAGE
+      else
+        echo "$IMAGE already exists."
+      fi
+    done
+
+  else
+
+    echo "browsers.json not found! Skipping browser download."
+
+  fi
+
+}
+
+function pull_browser_from_env_variables {
+  IS_NEW_BROWSER=false
+  if [ "$BROWSER_NAME" == "chrome" ]; then
+      awk "BEGIN {exit !($BROWSER_VERSION > 128.0)}" && IS_NEW_BROWSER=true
+  elif [ "$BROWSER_NAME" == "firefox" ]; then
+      awk "BEGIN {exit !($BROWSER_VERSION > 125.0)}" && IS_NEW_BROWSER=true
+  fi
+
+  if [ "$IS_NEW_BROWSER" == "true" ]; then
+      VERSION="${BROWSER_VERSION%%.*}"
+      BROWSER_IMAGE="twilio/selenoid:${BROWSER_NAME}_${BROWSER_CHANNEL}_${VERSION}"
+  else
+      BROWSER_IMAGE="selenoid/vnc_${BROWSER_NAME}:${BROWSER_VERSION}"
+  fi
+
+  echo "### Pull browser image: $BROWSER_IMAGE"
+  docker pull $BROWSER_IMAGE
+
+}
+
+function pull_video_recorder() {
+  if [ "$BROWSER_REMOTE_VIDEO" -ne "false"]; then
+    echo "### Pull selenoid/video-recorder:latest-release"
+    docker pull selenoid/video-recorder:latest-release
+  else
+    echo "Skip pulling selenoid video recorder"
+  fi
+}
+
+function pull_browser() {
+  if [ -z "$BROWSER_NAME" ] && [ -z "$BROWSER_VERSION" ]; then
+    pull_browsers_from_browser_json
+  else
+    pull_browser_from_env_variables
+  fi
+}
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -36,20 +96,8 @@ echo "### Checking and downloading required Selenoid browser images from browser
 
 BROWSERS_FILE="./env/docker/selenoid/browsers.json"
 
-if [ -f "$BROWSERS_FILE" ]; then
-  BROWSERS=$(grep -o '"image": "[^"]*' "$BROWSERS_FILE" | awk -F': "' '{print $2}')
-
-  for IMAGE in $BROWSERS; do
-    if [[ "$(docker images -q $IMAGE 2> /dev/null)" == "" ]]; then
-      echo "Downloading $IMAGE..."
-      docker pull $IMAGE
-    else
-      echo "$IMAGE already exists."
-    fi
-  done
-else
-  echo "browsers.json not found! Skipping browser download."
-fi
+pull_browser
+pull_video_recorder
 
 if [ "$SKIP_BUILD" = false ]; then
   echo "### Stopping and removing old containers ###"
