@@ -216,6 +216,7 @@ services:
       context: ./
       dockerfile: ./rococo-tests/Dockerfile
     environment:
+      - DOCKER_API_VERSION=1.44
       - ALLURE_DOCKER_API=${ALLURE_DOCKER_API}
       - BUILD_URL=${BUILD_URL}
       - HEAD_COMMIT_MESSAGE=${HEAD_COMMIT_MESSAGE}
@@ -268,13 +269,14 @@ services:
     profiles:
       - test
     container_name: selenoid
-    image: aerokube/selenoid:1.11.3
+    image: aerokube/selenoid:latest
     platform: linux/${ARCH}
     volumes:
       - ./env/docker/selenoid:/etc/selenoid
       - /var/run/docker.sock:/var/run/docker.sock
       - ./env/docker/selenoid/browsers.json:/etc/selenoid/browsers.json
     environment:
+      - DOCKER_API_VERSION=1.44
       - TZ=Europe/Moscow
     restart: unless-stopped
     command: [ "-conf", "/etc/selenoid/browsers.json", "-limit", "3", "-video-output-dir", "/opt/selenoid/video", "-log-output-dir", "/opt/selenoid/logs", "-container-network", "rococo_rococo-network" ]
@@ -287,7 +289,7 @@ services:
     profiles:
       - test
     container_name: selenoid-ui
-    image: aerokube/selenoid-ui:1.10.11
+    image: aerokube/selenoid-ui:latest
     depends_on:
       - selenoid
     restart: unless-stopped
