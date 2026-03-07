@@ -137,5 +137,11 @@ test {
     environment(System.getenv())
     testLogging.showStandardStreams = true
     testLogging.exceptionFormat = 'full'
-    useJUnitPlatform()
+    useJUnitPlatform {
+        var includedTags = System.getProperty('includeTags')
+        if (includedTags != null && !includedTags.trim().isEmpty()) {
+            includeTags System.getProperty('includeTags')
+        }
+    }
+
 }

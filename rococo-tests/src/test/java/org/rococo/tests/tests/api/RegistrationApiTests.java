@@ -4,6 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -14,12 +15,14 @@ import org.rococo.tests.enums.HttpStatus;
 import org.rococo.tests.jupiter.annotation.User;
 import org.rococo.tests.jupiter.annotation.meta.ApiTest;
 import org.rococo.tests.model.UserDTO;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.util.DataGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ApiTest
+@Tag(AllureTag.REGISTRATION_TEST)
 @Feature("API")
 @Story("[API] Registration tests")
 @DisplayName("[API] Registration tests")

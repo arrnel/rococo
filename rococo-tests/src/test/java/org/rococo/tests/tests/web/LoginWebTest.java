@@ -5,12 +5,14 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.jupiter.annotation.ApiLogin;
 import org.rococo.tests.jupiter.annotation.User;
 import org.rococo.tests.jupiter.annotation.meta.WebTest;
 import org.rococo.tests.model.UserDTO;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.page.MainPage;
 import org.rococo.tests.page.component.NotificationComponent.NotificationStatus;
 import org.rococo.tests.util.DataGenerator;
@@ -20,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import static com.codeborne.selenide.Selenide.open;
 
 @WebTest
+@Tag(AllureTag.LOGIN_TEST)
 @Feature("WEB")
 @Story("[WEB] Login tests")
 @DisplayName("[WEB] Login tests")

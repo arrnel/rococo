@@ -5,6 +5,7 @@ import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.ex.CountryNotFoundException;
 import org.rococo.tests.ex.MuseumAlreadyExistsException;
@@ -15,6 +16,7 @@ import org.rococo.tests.jupiter.annotation.meta.ApiTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.CountryDTO;
 import org.rococo.tests.model.MuseumDTO;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.service.MuseumService;
 import org.rococo.tests.util.DataGenerator;
 
@@ -29,6 +31,7 @@ import static org.rococo.tests.enums.ServiceType.API;
 import static org.rococo.tests.util.CompareUtil.containsMuseums;
 
 @ApiTest
+@Tag(AllureTag.MUSEUM_TEST)
 @Feature("API")
 @Story("[API] Museums tests")
 @DisplayName("[API] Museums tests")

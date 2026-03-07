@@ -5,6 +5,7 @@ import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.ex.ArtistAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.Artist;
@@ -12,6 +13,7 @@ import org.rococo.tests.jupiter.annotation.Artists;
 import org.rococo.tests.jupiter.annotation.meta.DbTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.ArtistDTO;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.service.ArtistService;
 import org.rococo.tests.util.DataGenerator;
 
@@ -25,6 +27,7 @@ import static org.rococo.tests.enums.ServiceType.DB;
 import static org.rococo.tests.util.CompareUtil.containsArtists;
 
 @DbTest
+@Tag(AllureTag.ARTIST_TEST)
 @Feature("FAKE")
 @Story("[DB] Artists tests")
 @DisplayName("[DB] Artists tests")

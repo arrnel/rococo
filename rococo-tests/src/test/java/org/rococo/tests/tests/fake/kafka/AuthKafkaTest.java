@@ -3,6 +3,7 @@ package org.rococo.tests.tests.fake.kafka;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.client.gateway.AuthApi;
 import org.rococo.tests.client.gateway.core.RestClient;
@@ -10,6 +11,7 @@ import org.rococo.tests.client.gateway.core.store.ThreadSafeCookieStore;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.enums.CookieType;
 import org.rococo.tests.jupiter.annotation.meta.KafkaTest;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.service.kafka.KafkaConsumerService;
 import org.rococo.tests.util.DataGenerator;
 
@@ -29,6 +31,7 @@ class AuthKafkaTest {
 
     private final AuthApi authApi = new RestClient.EmptyClient(CFG.authUrl()).create(AuthApi.class);
 
+    @Tag(AllureTag.USER_TEST)
     @Test
     @DisplayName("Should produce user into Kafka")
     void userShouldBeProducedToKafkaTest() throws Exception {

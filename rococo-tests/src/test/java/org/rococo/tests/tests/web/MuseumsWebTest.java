@@ -4,12 +4,14 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.rococo.tests.jupiter.annotation.*;
 import org.rococo.tests.jupiter.annotation.meta.WebTest;
 import org.rococo.tests.model.MuseumDTO;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.page.MuseumPage;
 import org.rococo.tests.page.MuseumsPage;
 import org.rococo.tests.page.form.MuseumForm;
@@ -19,6 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @WebTest
+@Tag(AllureTag.MUSEUM_TEST)
 @Feature("WEB")
 @Story("[WEB] Museums tests")
 @DisplayName("[WEB] Museums tests")

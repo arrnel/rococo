@@ -4,6 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.ex.UserAlreadyExistsException;
 import org.rococo.tests.jupiter.annotation.User;
@@ -11,6 +12,7 @@ import org.rococo.tests.jupiter.annotation.Users;
 import org.rococo.tests.jupiter.annotation.meta.GrpcTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.UserDTO;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.service.UserService;
 import org.rococo.tests.util.DataGenerator;
 
@@ -25,6 +27,7 @@ import static org.rococo.tests.enums.ServiceType.GRPC;
 import static org.rococo.tests.util.CompareUtil.containsUsers;
 
 @GrpcTest
+@Tag(AllureTag.USER_TEST)
 @Feature("FAKE")
 @Story("[GRPC] Users tests")
 @DisplayName("[GRPC] Users tests")

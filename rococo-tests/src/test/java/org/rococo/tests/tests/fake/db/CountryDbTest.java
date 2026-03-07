@@ -3,6 +3,7 @@ package org.rococo.tests.tests.fake.db;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.enums.CountryCode;
 import org.rococo.tests.enums.ServiceType;
@@ -10,6 +11,7 @@ import org.rococo.tests.jupiter.annotation.Country;
 import org.rococo.tests.jupiter.annotation.meta.DbTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.CountryDTO;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.service.CountryService;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -18,6 +20,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DbTest
+@Tag(AllureTag.COUNTRY_TEST)
 @Feature("FAKE")
 @Story("[DB] Paintings tests")
 @DisplayName("[DB] Paintings tests")
