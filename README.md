@@ -440,12 +440,6 @@ chmod +x init-database.sh
 
 # Запуск тестов в Docker:
 
-#### 0. Создать volume allure-results
-
-```posh
-docker volume allure-results
-```
-
 #### 1. Перейти в корневой каталог проекта
 
 ```posh
@@ -471,9 +465,9 @@ bash docker-compose-e2e.sh firefox --skip-build
 
 #### 3. Allure report будет доступен по адресу: http://localhost:5051/allure-docker-service/projects/rococo-ng/reports/latest/index.html
 
-#### 4. Allure-UI: http://localhost:5051/
+#### 4. Selenoid-UI: http://localhost:5052/
 
-#### 5. Selenoid-UI: http://localhost:5052/
+#### 5. Allure Report: Посмотреть отчет можно выполнив команду в корне проекта `allure serve allure-results`
 
 # Образец отчёта о тестировании
 

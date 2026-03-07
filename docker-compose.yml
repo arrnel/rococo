@@ -230,7 +230,7 @@ services:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - GITHUB_TOKEN_NAME=${GITHUB_TOKEN_NAME}
     volumes:
-      - allure-results:/rococo/rococo-tests/build/allure-results
+      - ./allure-results:/rococo/rococo-tests/build/allure-results
       - ./rococo-tests/.screen-output/screenshots/remote:/rococo/rococo-tests/.screen-output/screenshots/remote
     depends_on:
       frontend.rococo.dc:
@@ -238,34 +238,34 @@ services:
     networks:
       - rococo-network
 
-  allure:
-    profiles: [ test ]
-    container_name: allure
-    image: frankescobar/allure-docker-service:2.27.0
-    depends_on:
-      - rococo-tests
-    environment:
-      - CHECK_RESULTS_EVERY_SECONDS=5
-      - KEEP_HISTORY=1
-    volumes:
-      - allure-results:/app/allure-results
-    ports:
-      - "5050:5050"
-    networks:
-      - rococo-network
-
-  allure-ui:
-    profiles: [ test ]
-    container_name: allure-ui
-    image: frankescobar/allure-docker-service-ui:7.0.3
-    depends_on:
-      - allure
-    environment:
-      - ALLURE_DOCKER_PUBLIC_API_URL=http://localhost:5050
-    ports:
-      - "5051:5252"
-    networks:
-      - rococo-network
+#  allure:
+#    profiles: [ test ]
+#    container_name: allure
+#    image: frankescobar/allure-docker-service:2.27.0
+#    depends_on:
+#      - rococo-tests
+#    environment:
+#      - CHECK_RESULTS_EVERY_SECONDS=5
+#      - KEEP_HISTORY=1
+#    volumes:
+#      - ./allure-results:/app/allure-results
+#    ports:
+#      - "5050:5050"
+#    networks:
+#      - rococo-network
+#
+#  allure-ui:
+#    profiles: [ test ]
+#    container_name: allure-ui
+#    image: frankescobar/allure-docker-service-ui:7.0.3
+#    depends_on:
+#      - allure
+#    environment:
+#      - ALLURE_DOCKER_PUBLIC_API_URL=http://localhost:5050
+#    ports:
+#      - "5051:5252"
+#    networks:
+#      - rococo-network
 
   selenoid:
     profiles:
@@ -304,7 +304,3 @@ services:
 networks:
   rococo-network:
     driver: bridge
-
-volumes:
-  allure-results:
-    external: true
