@@ -63,6 +63,17 @@ jobs:
         if: always()
         continue-on-error: true
 
+      - name: Generate and Deploy Allure Report in GitHub Pages
+        uses: ./.github/actions/generate-and-deploy-allure-report
+        if: always()
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          subfolder: ${{ env.WORKFLOW_REPORT_ID }}
+          report_name: PR ${{ github.event.pull_request.number }} Report
+          allure_results_path: allure-results
+          allure_history_path: allure-history
+          report_branch: gh-pages
+
       - name: Parse Test Statistics
         id: stats
         if: always()
