@@ -48,9 +48,6 @@ jobs:
       BROWSER_PAGE_LOAD_STRATEGY: ${{ vars.BROWSER_PAGE_LOAD_STRATEGY }}
       BROWSER_SIZE: ${{ vars.BROWSER_SIZE }}
 
-      # TEST
-      CLEAR_DB_AFTER_TESTS: ${{ vars.CLEAR_DB_AFTER_TESTS }}
-
       # ---------- OTHER
       PROFILE: docker
       COMPOSE_PROFILES: test
