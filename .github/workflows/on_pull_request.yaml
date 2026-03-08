@@ -10,10 +10,19 @@ jobs:
     env:
       # ---------- IMPORTANT VARS
       WORKFLOW_REPORT_ID: screenshot_test
+      EXPECTED_TESTS_PASSED_RATE: ${{ vars.EXPECTED_TESTS_PASSED_RATE }}
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ vars.GH_REPO }}
+
+      # ----------- BROWSER
+      BROWSER_NAME: ${{ vars.BROWSER_NAME }}
+      BROWSER_VERSION: ${{ vars.BROWSER_VERSION }}
+      BROWSER_TIMEOUT: ${{ vars.BROWSER_TIMEOUT }}
+      BROWSER_PAGE_LOAD_TIMEOUT: ${{ vars.BROWSER_PAGE_LOAD_TIMEOUT }}
+      BROWSER_PAGE_LOAD_STRATEGY: ${{ vars.BROWSER_PAGE_LOAD_STRATEGY }}
+      BROWSER_SIZE: ${{ vars.BROWSER_SIZE }}
 
       # ----------- OTHER
       PROFILE: docker
@@ -21,7 +30,7 @@ jobs:
       PREFIX: arrnel
       ARCH: amd64
       CLEAR_DB_AFTER_TESTS: ${{ vars.CLEAR_DB_AFTER_TESTS }}
-      REWRITE_ALL_IMAGES: ${{ vars.REWRITE_ALL_IMAGES }}
+      REWRITE_ALL_SCREENSHOTS: ${{ vars.REWRITE_ALL_SCREENSHOTS }}
       ADD_SERVICES_LOGS_TO_ALLURE: ${{ vars.ADD_SERVICES_LOGS_TO_ALLURE }}
       TESTS_PASSED_PERCENTAGE: ${{ vars.TESTS_PASSED_PERCENTAGE }}
       BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

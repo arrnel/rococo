@@ -47,6 +47,14 @@ jobs:
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ vars.GH_REPO }}
 
+      # ----------- BROWSER
+      BROWSER_NAME: ${{ vars.BROWSER_NAME }}
+      BROWSER_VERSION: ${{ vars.BROWSER_VERSION }}
+      BROWSER_TIMEOUT: ${{ vars.BROWSER_TIMEOUT }}
+      BROWSER_PAGE_LOAD_TIMEOUT: ${{ vars.BROWSER_PAGE_LOAD_TIMEOUT }}
+      BROWSER_PAGE_LOAD_STRATEGY: ${{ vars.BROWSER_PAGE_LOAD_STRATEGY }}
+      BROWSER_SIZE: ${{ vars.BROWSER_SIZE }}
+
       PROFILE: docker
       COMPOSE_PROFILES: test
       PREFIX: arrnel
@@ -82,7 +90,7 @@ jobs:
           ./gradlew jibDockerBuild -x :rococo-tests:test
 
       - name: Pull browser image
-        if: ${{ github.event.inputs.BROWSER_ENABLED == 'true' }}
+        if: ${{ inputs.BROWSER_ENABLED }}
         uses: ./.github/actions/pull-browser
         with:
           browser: ${{ env.BROWSER_NAME }}
