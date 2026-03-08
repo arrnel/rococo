@@ -9,5 +9,8 @@ COPY ./gradlew ./
 COPY ./build.gradle ./
 COPY ./settings.gradle ./
 COPY ./gradle.properties ./
+COPY ./rococo-tests/entrypoint.sh ./entrypoint.sh
 
-CMD ./gradlew test -Dtest.env=docker -Dtests.db_cleanup=false -Duser.timezone=Europe/Moscow
+RUN chmod +x ./entrypoint.sh ./gradlew
+
+CMD ["./entrypoint.sh"]

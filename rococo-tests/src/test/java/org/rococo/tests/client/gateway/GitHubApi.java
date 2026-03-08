@@ -12,12 +12,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface GitHubApi {
 
-    @GET("/repos/arrnel/rococo/issues/{issue_number}")
+    @GET("/repos/{owner}/{repo}/issues/{issue_number}")
     @Headers({
             "Accept: application/vnd.github+json"
     })
     Call<JsonNode> getIssue(@Header("User-Agent") String userAgent,
                             @Header("Authorization") String bearerToken,
+                            @Path("owner") String owner,
+                            @Path("repo") String repo,
                             @Path("issue_number") String issueNumber);
 
 }

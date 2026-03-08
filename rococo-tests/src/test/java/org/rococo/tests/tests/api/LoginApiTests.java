@@ -3,6 +3,7 @@ package org.rococo.tests.tests.api;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.client.gateway.AuthApiClient;
 import org.rococo.tests.client.gateway.core.store.ThreadSafeCookieStore;
@@ -12,6 +13,7 @@ import org.rococo.tests.enums.HttpStatus;
 import org.rococo.tests.jupiter.annotation.User;
 import org.rococo.tests.jupiter.annotation.meta.ApiTest;
 import org.rococo.tests.model.UserDTO;
+import org.rococo.tests.model.allure.AllureTag;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.rococo.tests.util.DataGenerator.generatePassword;
@@ -19,6 +21,7 @@ import static org.rococo.tests.util.OAuthUtil.generateCodeChallenge;
 import static org.rococo.tests.util.OAuthUtil.generateCodeVerifier;
 
 @ApiTest
+@Tag(AllureTag.LOGIN_TEST)
 @Feature("API")
 @Story("[API] Login tests")
 @DisplayName("[API] Login tests")

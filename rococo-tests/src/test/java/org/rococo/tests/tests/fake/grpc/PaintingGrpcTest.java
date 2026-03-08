@@ -4,6 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.ex.ArtistNotFoundException;
 import org.rococo.tests.ex.MuseumNotFoundException;
@@ -17,6 +18,7 @@ import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.ArtistDTO;
 import org.rococo.tests.model.MuseumDTO;
 import org.rococo.tests.model.PaintingDTO;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.service.PaintingService;
 import org.rococo.tests.util.DataGenerator;
 
@@ -31,6 +33,7 @@ import static org.rococo.tests.enums.ServiceType.GRPC;
 import static org.rococo.tests.util.CompareUtil.containsPaintings;
 
 @GrpcTest
+@Tag(AllureTag.PAINTING_TEST)
 @Feature("FAKE")
 @Story("[GRPC] Paintings tests")
 @DisplayName("[GRPC] Paintings tests")

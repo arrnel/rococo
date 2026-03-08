@@ -216,18 +216,29 @@ services:
       context: ./
       dockerfile: ./rococo-tests/Dockerfile
     environment:
+      - DOCKER_API_VERSION=1.44
+      - TAG_EXPR=${TAG_EXPR:-}
+      - TEST_ARGS=${TEST_ARGS:-}
+      - BROWSER_NAME=${BROWSER_NAME}
+      - BROWSER_VERSION=${BROWSER_VERSION}
+      - BROWSER_TIMEOUT=${BROWSER_TIMEOUT}
+      - BROWSER_PAGE_LOAD_TIMEOUT=${BROWSER_PAGE_LOAD_TIMEOUT}
+      - BROWSER_PAGE_LOAD_STRATEGY=${BROWSER_PAGE_LOAD_STRATEGY}
+      - BROWSER_SIZE=${BROWSER_SIZE}
       - ALLURE_DOCKER_API=${ALLURE_DOCKER_API}
       - BUILD_URL=${BUILD_URL}
       - HEAD_COMMIT_MESSAGE=${HEAD_COMMIT_MESSAGE}
       - EXECUTION_TYPE=${EXECUTION_TYPE}
-      - SELENOID_BROWSER=${SELENOID_BROWSER:-chrome}
-      - CLEAR_DB_AFTER_TESTS=${TESTS_DB_CLEANUP:-false}
+      - CLEAR_DB_AFTER_TESTS=${CLEAR_DB_AFTER_TESTS:-false}
       - REWRITE_ALL_IMAGES=${REWRITE_ALL_IMAGES:-false}
       - ADD_SERVICES_LOGS_TO_ALLURE=${ADD_SERVICES_LOGS_TO_ALLURE:-false}
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
-      - GITHUB_TOKEN_NAME=${GITHUB_TOKEN_NAME}
+      - GH_TOKEN=${GH_TOKEN}
+      - GH_TOKEN_NAME=${GH_TOKEN_NAME}
+      - GH_REPO=${GH_REPO}
+      - GH_OWNER=${GH_OWNER}
     volumes:
-      - ./rococo-tests/.screen-output/screenshots/remote:/rococo/rococo-tests/.screen-output/screenshots/remote
+      - /allure-results:/rococo/rococo-tests/build/allure-results
+      - ./workflow-resources/screenshot:/rococo/rococo-tests/.screen-output/screenshots/remote
     depends_on:
       frontend.rococo.dc:
         condition: service_started
@@ -238,13 +249,14 @@ services:
     profiles:
       - test
     container_name: selenoid
-    image: aerokube/selenoid:1.11.3
+    image: aerokube/selenoid:latest
     platform: linux/${ARCH}
     volumes:
       - ./env/docker/selenoid:/etc/selenoid
       - /var/run/docker.sock:/var/run/docker.sock
       - ./env/docker/selenoid/browsers.json:/etc/selenoid/browsers.json
     environment:
+      - DOCKER_API_VERSION=1.44
       - TZ=Europe/Moscow
     restart: unless-stopped
     command: [ "-conf", "/etc/selenoid/browsers.json", "-limit", "3", "-video-output-dir", "/opt/selenoid/video", "-log-output-dir", "/opt/selenoid/logs", "-container-network", "rococo_rococo-network" ]

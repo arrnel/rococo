@@ -1,0 +1,72 @@
+name: Web test run (without screenshot)
+
+on:
+  workflow_dispatch:
+    inputs:
+
+      TEST_TITLE:
+        description: Test Run Title. Will added in Allure Report Title
+        type: string
+        required: false
+        default: ""
+
+jobs:
+  test-run:
+    runs-on: ubuntu-latest
+    env:
+      # ---------- IMPORTANT VARS
+      WORKFLOW_REPORT_ID: web_test
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
+      GH_OWNER: ${{ github.repository_owner }}
+      GH_REPO: ${{ vars.GH_REPO }}
+
+      PROFILE: docker
+      COMPOSE_PROFILES: test
+      PREFIX: arrnel
+      ARCH: amd64
+      EXECUTION_TYPE: github
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GITHUB_SHA }}
+
+      - name: Set TEST_TITLE
+        uses: ./.github/actions/test-run-title
+        with:
+          test_title: ${{ inputs.TEST_TITLE }}
+
+      - name: Get the last commit message
+        run: |
+          echo "HEAD_COMMIT_MESSAGE=$(git show -s --format=%s)" >> $GITHUB_ENV
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Pull browser image
+        uses: ./.github/actions/pull-browser
+        with:
+          browser: ${{ env.BROWSER_NAME }}
+          version: ${{ env.BROWSER_VERSION }}
+          enable_video: ${{ env.BROWSER_REMOTE_VIDEO }}
+
+      - name: Run WEB tests
+        uses: ./.github/actions/run-tests
+        if: always()
+        continue-on-error: true
+
+      - name: Generate and Deploy Allure Report in GitHub Pages
+        uses: ./.github/actions/generate-and-deploy-allure-report
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          report_name: ${{ env.TEST_TITLE }}
+          allure_results_path: allure-results
+          allure_history_path: allure-history
+          report_branch: gh-pages
+          subfolder: ${{ env.WORKFLOW_REPORT_ID }}

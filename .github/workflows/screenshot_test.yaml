@@ -1,0 +1,149 @@
+name: Screenshot test run
+
+on:
+  workflow_dispatch:
+    inputs:
+
+      TEST_TITLE:
+        description: Test Run Title. Will added in Allure Report Title
+        type: string
+        required: false
+        default: ""
+
+      REWRITE_ALL_SCREENSHOTS:
+        description: Rewrite all screenshots
+        type: boolean
+        required: false
+        default: false
+        
+      RUN_TESTS_WITH_DEBUG_MARKER:
+        description: Run tests with debug marker
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: screenshot-resource
+  cancel-in-progress: true
+
+jobs:
+  test-run:
+    runs-on: ubuntu-latest
+    env:
+      # ---------- IMPORTANT VARS
+      WORKFLOW_REPORT_ID: screenshot_test
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
+      GH_OWNER: ${{ github.repository_owner }}
+      GH_REPO: ${{ vars.GH_REPO }}
+
+      # BROWSER
+      BROWSER_NAME: ${{ vars.BROWSER_NAME }}
+      BROWSER_VERSION: ${{ vars.BROWSER_VERSION }}
+      BROWSER_TIMEOUT: ${{ vars.BROWSER_TIMEOUT }}
+      BROWSER_PAGE_LOAD_TIMEOUT: ${{ vars.BROWSER_PAGE_LOAD_TIMEOUT }}
+      BROWSER_PAGE_LOAD_STRATEGY: ${{ vars.BROWSER_PAGE_LOAD_STRATEGY }}
+      BROWSER_SIZE: ${{ vars.BROWSER_SIZE }}
+
+      # OTHER
+      PROFILE: docker
+      COMPOSE_PROFILES: test
+      PREFIX: arrnel
+      ARCH: amd64
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GITHUB_SHA }}
+
+      - name: Set TEST_TITLE
+        uses: ./.github/actions/test-run-title
+        with:
+          test_title: ${{ inputs.TEST_TITLE }}
+
+      - name: Update PYTEST_MARK_EXPR
+        if: ${{ inputs.RUN_TESTS_WITH_DEBUG_MARKER }}
+        run: |
+          echo "PYTEST_MARK_EXPR=screenshot_test and debug_test" >> $GITHUB_ENV
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Pull browser image
+        uses: ./.github/actions/pull-browser
+        with:
+          browser: ${{ env.BROWSER_NAME }}
+          version: ${{ env.BROWSER_VERSION }}
+          enable_video: ${{ env.BROWSER_REMOTE_VIDEO }}
+
+      - name: Ensure workflow-resources branch exists
+        run: |
+          set -e
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --heads origin workflow-resources > /dev/null; then
+            echo "Branch workflow-resources exists"
+          else
+            echo "Branch workflow-resources does not exist. Creating empty branch..."
+
+            git checkout --orphan workflow-resources
+            git rm -rf .
+
+            git commit --allow-empty -m "chore: initialize workflow-resources branch"
+            git push origin workflow-resources
+
+            git checkout -
+          
+          fi
+
+      - name: Checkout workflow-resources branch
+        uses: actions/checkout@v4
+        with:
+          ref: workflow-resources
+          path: workflow-resources
+
+      - name: Prepare workflow-resources directory
+        run: |
+          set -e
+          mkdir -p workflow-resources/screenshot
+
+      - name: Run SCREENSHOT tests
+        uses: ./.github/actions/run-tests
+        if: always()
+        continue-on-error: true
+
+      - name: Generate and Deploy Allure Report in GitHub Pages
+        uses: ./.github/actions/generate-and-deploy-allure-report
+        if: always()
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          subfolder: ${{ env.WORKFLOW_REPORT_ID }}
+          report_name: PR ${{ github.event.pull_request.number }} Report
+          allure_results_path: allure-results
+          allure_history_path: allure-history
+          report_branch: gh-pages
+
+      - name: Commit workflow-resources changes
+        if: always()
+        run: |
+          set -e
+          cd workflow-resources
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit in workflow-resources"
+            exit 0
+          fi
+
+          git commit -m "chore: update workflow resources (screenshots)"
+          git push origin workflow-resources

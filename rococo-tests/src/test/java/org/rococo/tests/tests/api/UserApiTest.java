@@ -5,12 +5,14 @@ import io.qameta.allure.Story;
 import net.datafaker.Faker;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.rococo.tests.jupiter.annotation.User;
 import org.rococo.tests.jupiter.annotation.Users;
 import org.rococo.tests.jupiter.annotation.meta.ApiTest;
 import org.rococo.tests.jupiter.annotation.meta.InjectService;
 import org.rococo.tests.model.UserDTO;
+import org.rococo.tests.model.allure.AllureTag;
 import org.rococo.tests.service.UserService;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -23,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.rococo.tests.enums.ServiceType.API;
 
 @ApiTest
+@Tag(AllureTag.USER_TEST)
 @Feature("API")
 @Story("[API] Users tests")
 @DisplayName("[API] Users tests")

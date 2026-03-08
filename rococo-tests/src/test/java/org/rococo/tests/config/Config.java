@@ -2,10 +2,12 @@ package org.rococo.tests.config;
 
 import org.apache.commons.lang3.EnumUtils;
 import org.rococo.tests.enums.ServiceType;
+import org.rococo.tests.util.EnvUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 public interface Config {
@@ -19,8 +21,9 @@ public interface Config {
         };
     }
 
-    String PROJECT_NAME = "rococo-arrnel";
+    String PROJECT_NAME = EnvUtil.envVar("PROJECT_NAME", "rococo-arrnel");
 
+    // =============== BACKEND
     String artistsJdbcUrl();
 
     String artistsGrpcHost();
@@ -83,10 +86,20 @@ public interface Config {
 
     String dbPassword();
 
+    // =============== Allure
     String allureDockerUrl();
 
     default Path pathToAllureResults() {
         return Path.of("./rococo-tests/build/allure-results");
+    }
+
+    default boolean addServicesLogsToAllure() {
+        return "true".equalsIgnoreCase(System.getenv("ADD_SERVICES_LOGS_TO_ALLURE"));
+    }
+
+    // =============== Test
+    default ServiceType serviceType() {
+        return EnumUtils.getEnum(ServiceType.class, System.getProperty("services.type", "DB"), ServiceType.DB);
     }
 
     default String originalPhotoBaseDir() {
@@ -96,23 +109,45 @@ public interface Config {
     String screenshotBaseDir();
 
     default boolean rewriteAllImages() {
-        return "true".equalsIgnoreCase(System.getenv("REWRITE_ALL_IMAGES"));
-    }
-
-    default ServiceType serviceType() {
-        return EnumUtils.getEnum(ServiceType.class, System.getProperty("services.type", "DB"), ServiceType.DB);
-    }
-
-    default String gitHubUrl() {
-        return "https://api.github.com";
-    }
-
-    default boolean addServicesLogsToAllure() {
-        return "true".equalsIgnoreCase(System.getenv("ADD_SERVICES_LOGS_TO_ALLURE"));
+        return EnvUtil.envVar("REWRITE_ALL_IMAGES", false);
     }
 
     default int updateTokenTimeoutMillis() {
-        return 60_000;
+        return EnvUtil.envVar("UPDATE_TOKEN_TIMEOUT", 60_000);
+    }
+
+    // ===============  Browser Settings
+
+    default String browserName() {
+        return Optional.ofNullable(System.getenv("BROWSER_NAME"))
+                .orElse("chrome");
+    }
+
+    default String browserVersion() {
+        return Optional.ofNullable(System.getenv("BROWSER_VERSION"))
+                .orElse("127.0");
+    }
+
+    default int timeout() {
+        return EnvUtil.envVar("BROWSER_TIMEOUT", 8_000);
+    }
+
+    default int pageLoadTimeout() {
+        return EnvUtil.envVar("BROWSER_PAGE_LOAD_TIMEOUT", 15_000);
+    }
+
+    default String pageLoadStrategy() {
+        return EnvUtil.envVar("BROWSER_PAGE_LOAD_STRATEGY", "eager");
+    }
+
+    default String browserSize() {
+        return EnvUtil.envVar("BROWSER_SIZE", "1920x1080");
+    }
+
+
+    // =============== GitHub
+    default String gitHubUrl() {
+        return "https://api.github.com";
     }
 
 }

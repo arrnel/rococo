@@ -23,36 +23,34 @@ public class BrowserExtension implements BeforeEachCallback, AfterEachCallback, 
     static {
 
         var env = System.getProperty("test.env");
-        Configuration.browser = "chrome";
-        Configuration.browserVersion = "127.0";
-        Configuration.timeout = 15000;
-        Configuration.pageLoadTimeout = 15000;
-        Configuration.pageLoadStrategy = "eager";
-        Configuration.browserSize = "1920x1080";
+        var browserName = CFG.browserName().toLowerCase();
+        Configuration.browser = CFG.browserName();
+        Configuration.browserVersion = CFG.browserName();
+        Configuration.timeout = CFG.timeout();
+        Configuration.pageLoadTimeout = CFG.pageLoadTimeout();
+        Configuration.pageLoadStrategy = CFG.pageLoadStrategy();
+        Configuration.browserSize = CFG.browserSize();
         Configuration.baseUrl = CFG.frontUrl();
         switch (env) {
             case "local": {
                 Configuration.browserCapabilities = new ChromeOptions()
-                        .setBrowserVersion("127.0")
+                        .setBrowserVersion(CFG.browserVersion())
                         .addArguments("--no-sandbox", "--lang=ru-RU", "--browser-locale=ru-RU", "--accept-lang=ru-RU");
                 break;
             }
             case "docker": {
-                String browser = System.getenv("SELENOID_BROWSER");
                 Configuration.remote = "http://selenoid:4444/wd/hub";
                 Map<String, Boolean> selenoidOptions = new HashMap<>();
                 selenoidOptions.put("enableVNC", true);
                 selenoidOptions.put("enableVideo", false);
                 selenoidOptions.put("enableLog", true);
                 var args = new String[]{"--no-sandbox", "--lang=ru-RU", "--browser-locale=ru-RU", "--accept-lang=ru-RU"};
-                if ("chrome".equals(browser)) {
-                    Configuration.browserVersion = "127.0";
+                if ("chrome".equals(browserName)) {
                     ChromeOptions options = new ChromeOptions();
                     options.addArguments(args)
                             .setCapability("selenoid:options", selenoidOptions);
                     Configuration.browserCapabilities = options;
-                } else if ("firefox".equals(browser)) {
-                    Configuration.browserVersion = "125.0";
+                } else if ("firefox".equals(browserName)) {
                     FirefoxOptions options = new FirefoxOptions();
                     options.addArguments(args)
                             .setCapability("selenoid:options", selenoidOptions);

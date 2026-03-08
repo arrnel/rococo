@@ -4,14 +4,15 @@ import io.qameta.allure.junit5.AllureJunit5;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.rococo.tests.jupiter.extension.*;
+import org.rococo.tests.model.allure.AllureTag;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Tag("Fake")
-@Tag("DB")
+@Tag(AllureTag.FAKE_TEST)
+@Tag(AllureTag.DB_TEST)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @ExtendWith({

@@ -5,14 +5,15 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.rococo.tests.jupiter.extension.UserExtension;
 import org.rococo.tests.jupiter.extension.UsersExtension;
+import org.rococo.tests.model.allure.AllureTag;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Tag("Fake")
-@Tag("Kafka")
+@Tag(AllureTag.FAKE_TEST)
+@Tag(AllureTag.KAFKA_TEST)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @ExtendWith({
