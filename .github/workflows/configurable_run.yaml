@@ -20,7 +20,6 @@ on:
         description: TEST_ARGS
         type: string
         required: false
-        default: -vv
 
       BROWSER_ENABLED:
         description: Enable browser. Uncheck only for API tests
@@ -46,7 +45,10 @@ jobs:
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ vars.GH_REPO }}
+      TAG_EXPR: ${{ vars.TAG_EXPR }}
+      TEST_ARGS: ${{ vars.TEST_ARGS }}
 
+      # ---------- OTHER
       PROFILE: docker
       COMPOSE_PROFILES: test
       PREFIX: arrnel

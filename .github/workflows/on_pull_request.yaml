@@ -14,6 +14,7 @@ jobs:
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ vars.GH_REPO }}
+      TEST_ARGS: ${{ vars.TEST_ARGS }}
 
       # ----------- OTHER
       PROFILE: docker

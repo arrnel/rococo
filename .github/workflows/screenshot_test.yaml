@@ -36,8 +36,10 @@ jobs:
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ vars.GH_REPO }}
+      TAG_EXPR: ${{ vars.TAG_EXPR_SCREENSHOT }}
+      TEST_ARGS: ${{ vars.TEST_ARGS }}
 
-      # BROWSER
+      # ---------- BROWSER
       BROWSER_NAME: ${{ vars.BROWSER_NAME }}
       BROWSER_VERSION: ${{ vars.BROWSER_VERSION }}
       BROWSER_TIMEOUT: ${{ vars.BROWSER_TIMEOUT }}
@@ -45,7 +47,7 @@ jobs:
       BROWSER_PAGE_LOAD_STRATEGY: ${{ vars.BROWSER_PAGE_LOAD_STRATEGY }}
       BROWSER_SIZE: ${{ vars.BROWSER_SIZE }}
 
-      # OTHER
+      # ---------- OTHER
       PROFILE: docker
       COMPOSE_PROFILES: test
       PREFIX: arrnel
@@ -66,7 +68,7 @@ jobs:
       - name: Update TAG
         if: ${{ inputs.RUN_TESTS_WITH_DEBUG_MARKER }}
         run: |
-          echo "TAG_EXPR=screenshot & debug" >> $GITHUB_ENV
+          echo "TAG_EXPR=${{ vars.TAG_EXPR_SCREENSHOT }} & ${{ vars.TAG_EXPR_DEBUG }}" >> $GITHUB_ENV
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
