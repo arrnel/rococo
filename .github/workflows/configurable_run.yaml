@@ -22,7 +22,7 @@ on:
         required: false
 
       BROWSER_ENABLED:
-        description: Enable browser. Uncheck only for API tests
+        description: Enable browser. Should be checked only for UI tags (web, screenshot, ..)
         type: boolean
         required: false
         default: true
