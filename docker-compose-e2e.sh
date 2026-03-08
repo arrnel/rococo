@@ -5,8 +5,6 @@ export PROFILE=docker
 export PREFIX="${IMAGE_PREFIX}"
 export ALLURE_DOCKER_API=${ALLURE_DOCKER_API:-http://allure:5050/}
 export HEAD_COMMIT_MESSAGE="local build"
-export GITHUB_TOKEN="${GITHUB_TOKEN}"
-export GITHUB_TOKEN_NAME="${GITHUB_TOKEN_NAME}"
 export ARCH=$(uname -m)
 
 BROWSER="chrome"

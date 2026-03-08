@@ -90,8 +90,8 @@
 
 | Ключ                    | Значение        |
 |-------------------------|-----------------|
-| * GITHUB_TOKEN_NAME     | _**Имя PAT**_   |
-| * GITHUB_TOKEN          | _**Сам токен**_ |
+| * GH_TOKEN_NAME         | _**Имя PAT**_   |
+| * GH_TOKEN              | _**Сам токен**_ |
 | ROCOCO_DB_PORT          | 5432            |
 | ROCOCO_DB_USER          | postgres        |
 | ROCOCO_DB_PASSWORD      | secret          |
@@ -258,7 +258,7 @@ OpenJDK 64-Bit Server VM Temurin-21.0.1+12 (build 21.0.1+12-LTS, mixed mode)
 #### 0. Добавить необходимые переменные окружения.
 Генерируем Fine-grained personal access token тут: https://github.com/settings/personal-access-tokens с
 минимальными правами на чтение issue.
-Добавляем переменные окружения: **GITHUB_TOKEN_NAME** (имя ключа) и **GITHUB_TOKEN** (сам ключ).
+Добавляем переменные окружения: **GH_TOKEN_NAME** (имя ключа) и **GH_TOKEN** (сам ключ).
 
 #### 1. Перейти в каталог
 
@@ -344,7 +344,7 @@ Reason: Failed to determine a suitable driver class
 #### 0. Добавить необходимые переменные окружения.
 Генерируем Fine-grained personal access token тут: https://github.com/settings/personal-access-tokens с
 минимальными правами на чтение issue.
-Добавляем переменные окружения: **GITHUB_TOKEN_NAME** (имя ключа) и **GITHUB_TOKEN** (сам ключ).
+Добавляем переменные окружения: **GH_TOKEN_NAME** (имя ключа) и **GH_TOKEN** (сам ключ).
 
 #### 1. Создать бесплатную учетную запись на https://hub.docker.com/ (если отсутствует)
 
