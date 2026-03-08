@@ -63,15 +63,16 @@ jobs:
         with:
           test_title: ${{ inputs.TEST_TITLE }}
 
-      - name: Update PYTEST_MARK_EXPR
+      - name: Update TAG
         if: ${{ inputs.RUN_TESTS_WITH_DEBUG_MARKER }}
         run: |
-          echo "PYTEST_MARK_EXPR=screenshot_test and debug_test" >> $GITHUB_ENV
+          echo "TAG_EXPR=screenshot & debug" >> $GITHUB_ENV
 
-      - name: Setup Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          python-version: "${{ env.PYTHON_VERSION }}"
+          java-version: '21'
+          distribution: 'temurin'
 
       - name: Pull browser image
         uses: ./.github/actions/pull-browser

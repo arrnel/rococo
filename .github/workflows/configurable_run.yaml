@@ -10,14 +10,14 @@ on:
         required: false
         default: ""
 
-      PYTEST_MARK_EXPR:
-        description: PYTEST_MARK_EXPRESSION
+      TAG_EXPR:
+        description: TAG_EXPRESSION
         type: string
         required: true
-        default: debug_test
+        default: debug
 
-      PYTEST_ARGS:
-        description: PYTEST_ARGS
+      TEST_ARGS:
+        description: TEST_ARGS
         type: string
         required: false
         default: -vv
@@ -61,8 +61,8 @@ jobs:
 
       - name: Show Manual test run INFO
         run: |
-          echo "PYTEST_MARK_EXPR = [${{ inputs.PYTEST_MARK_EXPR }}]"
-          echo "PYTEST_ARGS = [${{ inputs.PYTEST_ARGS }}]"
+          echo "TAG_EXPR = [${{ inputs.TAG_EXPR }}]"
+          echo "TEST_ARGS = [${{ inputs.TEST_ARGS }}]"
           echo "BROWSER_ENABLED = [${{ inputs.BROWSER_ENABLED }}]"
           echo "BROWSER_PAGE_LOAD_STRATEGY = [${{ inputs.PAGE_LOAD_STRATEGY }}]"
 
@@ -71,10 +71,15 @@ jobs:
         with:
           test_title: ${{ inputs.TEST_TITLE }}
 
-      - name: Setup Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          python-version: "${{ env.PYTHON_VERSION }}"
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build backends
+        run: |
+          ./gradlew jibDockerBuild -x :rococo-tests:test
 
       - name: Pull browser image
         if: ${{ github.event.inputs.BROWSER_ENABLED == 'true' }}
