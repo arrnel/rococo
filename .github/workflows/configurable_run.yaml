@@ -11,7 +11,7 @@ on:
         default: ""
 
       TAG_EXPR:
-        description: TAG_EXPRESSION
+        description: TAG_EXPR
         type: string
         required: true
         default: debug
@@ -45,8 +45,8 @@ jobs:
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ vars.GH_REPO }}
-      TAG_EXPR: ${{ vars.TAG_EXPR }}
-      TEST_ARGS: ${{ vars.TEST_ARGS }}
+      TAG_EXPR: ${{ inputs.TAG_EXPR }}
+      TEST_ARGS: ${{ inputs.TEST_ARGS }}
 
       # ----------- BROWSER
       BROWSER_NAME: ${{ vars.BROWSER_NAME }}
