@@ -83,7 +83,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 echo "### Selected browser: $BROWSER ###"
-export SELENOID_BROWSER=$BROWSER
 
 echo "### Skip build: $SKIP_BUILD ###"
 
