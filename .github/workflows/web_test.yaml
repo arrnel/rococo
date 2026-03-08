@@ -20,6 +20,9 @@ jobs:
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ vars.GH_REPO }}
+      TAG_EXPR: ${{ vars.TAG_EXPR_WEB }}
+      TEST_ARGS: ${{ vars.TEST_ARGS }}
+
 
       PROFILE: docker
       COMPOSE_PROFILES: test

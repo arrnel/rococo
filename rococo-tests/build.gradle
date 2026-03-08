@@ -138,9 +138,14 @@ test {
     testLogging.showStandardStreams = true
     testLogging.exceptionFormat = 'full'
     useJUnitPlatform {
-        var includedTags = System.getProperty('includeTags')
+
+        var includedTags = System.getenv('TAG_EXPR')
         if (includedTags != null && !includedTags.trim().isEmpty()) {
-            includeTags System.getProperty('includeTags')
+
+            includeTags Arrays.stream(includedTags.toLowerCase().split(","))
+                    .map { v -> v.trim() }
+                    .toArray(String[]::new)
+
         }
     }
 

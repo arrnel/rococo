@@ -15,6 +15,7 @@ jobs:
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ vars.GH_REPO }}
+      TEST_ARGS: ${{ vars.TEST_ARGS }}
 
       # ----------- BROWSER
       BROWSER_NAME: ${{ vars.BROWSER_NAME }}
@@ -71,6 +72,17 @@ jobs:
         uses: ./.github/actions/run-tests
         if: always()
         continue-on-error: true
+
+      - name: Generate and Deploy Allure Report in GitHub Pages
+        uses: ./.github/actions/generate-and-deploy-allure-report
+        if: always()
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          subfolder: ${{ env.WORKFLOW_REPORT_ID }}
+          report_name: PR ${{ github.event.pull_request.number }} Report
+          allure_results_path: allure-results
+          allure_history_path: allure-history
+          report_branch: gh-pages
 
       - name: Parse Test Statistics
         id: stats

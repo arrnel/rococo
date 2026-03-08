@@ -23,6 +23,7 @@ jobs:
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ vars.GH_REPO }}
+      TEST_ARGS: ${{ vars.TEST_ARGS }}
 
       # ----------- BROWSER
       BROWSER_NAME: ${{ vars.BROWSER_NAME }}
@@ -32,6 +33,7 @@ jobs:
       BROWSER_PAGE_LOAD_STRATEGY: ${{ vars.BROWSER_PAGE_LOAD_STRATEGY }}
       BROWSER_SIZE: ${{ vars.BROWSER_SIZE }}
 
+      # ---------- OTHER
       PROFILE: docker
       COMPOSE_PROFILES: test
       PREFIX: arrnel
