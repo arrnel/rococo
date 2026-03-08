@@ -48,6 +48,14 @@ jobs:
       TAG_EXPR: ${{ vars.TAG_EXPR }}
       TEST_ARGS: ${{ vars.TEST_ARGS }}
 
+      # ----------- BROWSER
+      BROWSER_NAME: ${{ vars.BROWSER_NAME }}
+      BROWSER_VERSION: ${{ vars.BROWSER_VERSION }}
+      BROWSER_TIMEOUT: ${{ vars.BROWSER_TIMEOUT }}
+      BROWSER_PAGE_LOAD_TIMEOUT: ${{ vars.BROWSER_PAGE_LOAD_TIMEOUT }}
+      BROWSER_PAGE_LOAD_STRATEGY: ${{ vars.BROWSER_PAGE_LOAD_STRATEGY }}
+      BROWSER_SIZE: ${{ vars.BROWSER_SIZE }}
+
       # ---------- OTHER
       PROFILE: docker
       COMPOSE_PROFILES: test
@@ -84,7 +92,7 @@ jobs:
           ./gradlew jibDockerBuild -x :rococo-tests:test
 
       - name: Pull browser image
-        if: ${{ github.event.inputs.BROWSER_ENABLED == 'true' }}
+        if: ${{ inputs.BROWSER_ENABLED }}
         uses: ./.github/actions/pull-browser
         with:
           browser: ${{ env.BROWSER_NAME }}

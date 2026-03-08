@@ -109,7 +109,7 @@ public interface Config {
     String screenshotBaseDir();
 
     default boolean rewriteAllImages() {
-        return EnvUtil.envVar("REWRITE_ALL_IMAGES", false);
+        return EnvUtil.envVar("REWRITE_ALL_SCREENSHOTS", false);
     }
 
     default int updateTokenTimeoutMillis() {

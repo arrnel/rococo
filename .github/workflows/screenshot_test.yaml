@@ -38,6 +38,7 @@ jobs:
       GH_REPO: ${{ vars.GH_REPO }}
       TAG_EXPR: ${{ vars.TAG_EXPR_SCREENSHOT }}
       TEST_ARGS: ${{ vars.TEST_ARGS }}
+      REWRITE_ALL_SCREENSHOTS: ${{ inputs.REWRITE_ALL_SCREENSHOTS }}
 
       # ---------- BROWSER
       BROWSER_NAME: ${{ vars.BROWSER_NAME }}
@@ -46,6 +47,9 @@ jobs:
       BROWSER_PAGE_LOAD_TIMEOUT: ${{ vars.BROWSER_PAGE_LOAD_TIMEOUT }}
       BROWSER_PAGE_LOAD_STRATEGY: ${{ vars.BROWSER_PAGE_LOAD_STRATEGY }}
       BROWSER_SIZE: ${{ vars.BROWSER_SIZE }}
+
+      # TEST
+      CLEAR_DB_AFTER_TESTS: ${{ vars.CLEAR_DB_AFTER_TESTS }}
 
       # ---------- OTHER
       PROFILE: docker
