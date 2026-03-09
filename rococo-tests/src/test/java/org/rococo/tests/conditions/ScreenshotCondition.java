@@ -95,11 +95,13 @@ public final class ScreenshotCondition {
                     String message = percentOfTolerance == 0
                             ? "Expected and actual screenshots not identical"
                             : "Expected and actual screenshots has difference greater then: " + percentOfTolerance;
-                    throw new ScreenshotException(message);
-                }
 
-                if (CFG.rewriteAllImages() || rewriteExpected || isExpectedNotExists)
-                    saveNewExpectedScreenshot(actualScreenshot, expectedScreenshotUrl);
+                    if (CFG.rewriteAllImages() || rewriteExpected || isExpectedNotExists)
+                        saveNewExpectedScreenshot(actualScreenshot, expectedScreenshotUrl);
+
+                    throw new ScreenshotException(message);
+
+                }
 
                 return accepted();
 
