@@ -127,6 +127,7 @@ class ArtistsWebTest {
         artistForm.shouldHaveErrors("Допустимые форматы изображений: '.jpg', '.jpeg', '.png'");
     }
 
+    @Tag(AllureTag.SCREENSHOT_TEST)
     @ApiLogin(@User)
     @Artist
     @Test
