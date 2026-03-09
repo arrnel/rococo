@@ -78,6 +78,10 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Build backends
+        run: |
+          ./gradlew jibDockerBuild -x :rococo-tests:test
+
       - name: Pull browser image
         uses: ./.github/actions/pull-browser
         with:
