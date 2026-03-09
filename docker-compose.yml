@@ -283,7 +283,7 @@ services:
     volumes:
       - ./env/docker/selenoid:/etc/selenoid
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./env/docker/selenoid/browsers.json:/etc/selenoid/browsers.json
+      - ./env/docker/selenoid/docker/browsers.json:/etc/selenoid/browsers.json
     environment:
       - DOCKER_API_VERSION=1.44
       - TZ=Europe/Moscow

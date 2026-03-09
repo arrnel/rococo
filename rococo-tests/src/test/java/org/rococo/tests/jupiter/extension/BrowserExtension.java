@@ -1,6 +1,5 @@
 package org.rococo.tests.jupiter.extension;
 
-import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Allure;
@@ -8,59 +7,15 @@ import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.rococo.tests.config.Config;
+import org.rococo.tests.browser.DriverManager;
 
 import java.io.ByteArrayInputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BrowserExtension implements BeforeEachCallback, AfterEachCallback, TestExecutionExceptionHandler, LifecycleMethodExecutionExceptionHandler {
 
-    private static final Config CFG = Config.getInstance();
 
     static {
-
-        var env = System.getProperty("test.env");
-        var browserName = CFG.browserName().toLowerCase();
-        Configuration.browser = CFG.browserName();
-        Configuration.browserVersion = CFG.browserName();
-        Configuration.timeout = CFG.timeout();
-        Configuration.pageLoadTimeout = CFG.pageLoadTimeout();
-        Configuration.pageLoadStrategy = CFG.pageLoadStrategy();
-        Configuration.browserSize = CFG.browserSize();
-        Configuration.baseUrl = CFG.frontUrl();
-        switch (env) {
-            case "local": {
-                Configuration.browserCapabilities = new ChromeOptions()
-                        .setBrowserVersion(CFG.browserVersion())
-                        .addArguments("--no-sandbox", "--lang=ru-RU", "--browser-locale=ru-RU", "--accept-lang=ru-RU");
-                break;
-            }
-            case "docker": {
-                Configuration.remote = "http://selenoid:4444/wd/hub";
-                Map<String, Boolean> selenoidOptions = new HashMap<>();
-                selenoidOptions.put("enableVNC", true);
-                selenoidOptions.put("enableVideo", false);
-                selenoidOptions.put("enableLog", true);
-                var args = new String[]{"--no-sandbox", "--lang=ru-RU", "--browser-locale=ru-RU", "--accept-lang=ru-RU"};
-                if ("chrome".equals(browserName)) {
-                    ChromeOptions options = new ChromeOptions();
-                    options.addArguments(args)
-                            .setCapability("selenoid:options", selenoidOptions);
-                    Configuration.browserCapabilities = options;
-                } else if ("firefox".equals(browserName)) {
-                    FirefoxOptions options = new FirefoxOptions();
-                    options.addArguments(args)
-                            .setCapability("selenoid:options", selenoidOptions);
-                    Configuration.browserCapabilities = options;
-                }
-                break;
-            }
-            default:
-                throw new IllegalArgumentException("Unknown test environment: %s".formatted(env));
-        }
+        DriverManager.initDriver();
     }
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(BrowserExtension.class);

@@ -183,4 +183,14 @@ enum LocalConfig implements Config {
         return EnvUtil.envVar("ROCOCO_TEST_USER_PASSWORD", "12345");
     }
 
+    @Override
+    public String remoteUrl() {
+        throw new RuntimeException("Unavailable to use remote url in local env");
+    }
+
+    @Override
+    public String browserDownloadDir(){
+        return "${HOME}/Downloads/test_temp_dir";
+    }
+
 }

@@ -179,8 +179,17 @@ enum DockerConfig implements Config {
     }
 
     @Override
+    public String remoteUrl() {
+        return "http://selenoid:4444/wd/hub";
+    }
+
+    @Override
     public String screenshotBaseDir() {
         return "rococo-tests/.screen-output/screenshots/remote/";
     }
 
+    @Override
+    public String browserDownloadDir(){
+        return "/home/selenium/Downloads/test_temp_dir";
+    }
 }

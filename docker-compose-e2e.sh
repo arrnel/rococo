@@ -91,7 +91,7 @@ java --version
 
 echo "### Checking and downloading required Selenoid browser images from browsers.json ###"
 
-BROWSERS_FILE="./env/docker/selenoid/browsers.json"
+BROWSERS_FILE="./env/docker/selenoid/docker/browsers.json"
 
 pull_browser
 pull_video_recorder

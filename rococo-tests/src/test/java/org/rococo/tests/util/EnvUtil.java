@@ -27,7 +27,7 @@ public class EnvUtil {
                         System.getenv(title)
                 )
                 .filter(v -> !v.trim().isEmpty())
-                .map("true"::equals)
+                .map("true"::equalsIgnoreCase)
                 .orElse(defaultValue);
     }
 
