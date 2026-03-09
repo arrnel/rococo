@@ -12,6 +12,7 @@ import java.util.Optional;
 @ParametersAreNonnullByDefault
 public interface Config {
 
+
     static Config getInstance() {
         var env = System.getProperty("test.env", "docker").toLowerCase();
         return switch (env) {
@@ -22,6 +23,7 @@ public interface Config {
     }
 
     String PROJECT_NAME = EnvUtil.envVar("PROJECT_NAME", "rococo-arrnel");
+    String ENV = EnvUtil.envVar("ENV", "docker").trim().toLowerCase();
 
     // =============== BACKEND
     String artistsJdbcUrl();
@@ -86,6 +88,8 @@ public interface Config {
 
     String dbPassword();
 
+    String remoteUrl();
+
     // =============== Allure
     String allureDockerUrl();
 
@@ -120,7 +124,7 @@ public interface Config {
 
     default String browserName() {
         return Optional.ofNullable(System.getenv("BROWSER_NAME"))
-                .orElse("chrome");
+                .orElse("chrome").toLowerCase();
     }
 
     default String browserVersion() {
@@ -144,6 +148,41 @@ public interface Config {
         return EnvUtil.envVar("BROWSER_SIZE", "1920x1080");
     }
 
+    String browserDownloadDir();
+
+    default String browser_remote_attach_id_type() {
+        return EnvUtil.envVar("BROWSER_REMOTE_ATTACH_ID_TYPE", "test_name");
+    }
+
+    default boolean enableVNC() {
+        return EnvUtil.envVar("BROWSER_REMOTE_VNC", true);
+    }
+
+    default boolean enableVideo() {
+        return EnvUtil.envVar("BROWSER_REMOTE_VIDEO", true);
+    }
+
+    default boolean enableLogs() {
+        return EnvUtil.envVar("BROWSER_REMOTE_LOGS", true);
+    }
+
+    default int browserRemoteSessionTimeout(){
+        return 15_000;
+    }
+
+    default boolean isLocal() {
+        return "local".equalsIgnoreCase(EnvUtil.envVar("ENV", "docker").trim());
+    }
+
+    default boolean isTwilioBrowser() {
+
+        var browserVersion = Double.parseDouble(browserVersion());
+        var isChromeTwilio = browserName().equals("chrome") && browserVersion > 128.0;
+        var isFirefoxTwilio = browserName().equals("firefox") && browserVersion > 125.0;
+
+        return isChromeTwilio || isFirefoxTwilio;
+
+    }
 
     // =============== GitHub
     default String gitHubUrl() {

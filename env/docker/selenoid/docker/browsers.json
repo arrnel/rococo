@@ -1,0 +1,42 @@
+{
+  "chrome": {
+    "default": "141.0",
+    "versions": {
+      "141.0": {
+        "image": "twilio/selenoid:chrome_stable_141",
+        "port": "4444",
+        "env": [
+          "TZ=Europe/Moscow"
+        ]
+      },
+      "128.0": {
+        "image": "selenoid/vnc_chrome:128.0",
+        "port": "4444",
+        "env": [
+          "TZ=Europe/Moscow"
+        ]
+      }
+    }
+  },
+  "firefox": {
+    "default": "141.0",
+    "versions": {
+      "141.0": {
+        "image": "twilio/selenoid:firefox_stable_141",
+        "port": "4444",
+        "path": "/wd/hub",
+        "env": [
+          "TZ=Europe/Moscow"
+        ]
+      },
+      "125.0": {
+        "image": "selenoid/vnc_firefox:125.0",
+        "port": "4444",
+        "path": "/wd/hub",
+        "env": [
+          "TZ=Europe/Moscow"
+        ]
+      }
+    }
+  }
+}
