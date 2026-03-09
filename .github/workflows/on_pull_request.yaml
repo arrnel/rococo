@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # ---------- IMPORTANT VARS
-      WORKFLOW_REPORT_ID: screenshot_test
+      WORKFLOW_REPORT_ID: on_pull_request
       EXPECTED_TESTS_PASSED_RATE: ${{ vars.EXPECTED_TESTS_PASSED_RATE }}
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
@@ -90,7 +90,7 @@ jobs:
         run: |
           sudo apt-get install -y jq bc
 
-          HISTORY_TREND_FILE=$(find / -type f -path "*/last-history/history-trend.json" 2>/dev/null -print -quit)
+          HISTORY_TREND_FILE="./allure-history/${{ env.WORKFLOW_REPORT_ID }}/last-history/history-trend.json"
 
           if [ -f "$HISTORY_TREND_FILE" ]; then
 
