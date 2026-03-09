@@ -89,7 +89,7 @@ public class ArtistPage extends BasePage<ArtistPage> {
         return this;
     }
 
-    @Step("Should have name")
+    @Step("Should have bio")
     public ArtistPage shouldHaveBio(String bio) {
         log.info("Artist should have bio: {}", bio);
         biographyElement.shouldHave(text(bio));
