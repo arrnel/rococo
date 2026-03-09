@@ -1,0 +1,80 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset = UTF-8">
+    <script src="https://yastatic.net/jquery/2.2.3/jquery.min.js" crossorigin="anonymous"></script>
+
+    <link href="https://yastatic.net/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://yastatic.net/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <link type="text/css" href="https://yandex.st/highlightjs/8.0/styles/github.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/languages/sql.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <style>
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<h5>SQL Query</h5>
+<div>
+    <pre><code>SELECT
+  m.id as metadata_id,
+  m.entity_type as entity_type,
+  m.entity_id as entity_id,
+  m.format as format,
+  m.content_hash as hash,
+  c.id as content_id,
+  c.data as data,
+  c.thumbnail_data as thumbnail_data,
+  m.created_date as created_date
+FROM
+  rococo.image_metadata m
+  LEFT JOIN rococo.image_content c ON m.content_id = c.id
+WHERE
+  m.entity_type = 'ARTIST'
+  AND m.entity_id IN (
+    'c9be8a8c-1c0b-11f1-a635-c61bf0bf16db',
+    'c9c066cc-1c0b-11f1-9242-c61bf0bf16db',
+    'cbfd01ca-1c0b-11f1-a635-c61bf0bf16db',
+    'cbfe5728-1c0b-11f1-9242-c61bf0bf16db',
+    'cc2e25fc-1c0b-11f1-a635-c61bf0bf16db',
+    '5f3e6202-0236-4a7f-a31e-16128638deae',
+    'cc5d1498-1c0b-11f1-a635-c61bf0bf16db',
+    'cc62de6e-1c0b-11f1-9242-c61bf0bf16db',
+    'cc44449a-1c0b-11f1-9242-c61bf0bf16db',
+    'cc88bb5c-1c0b-11f1-9242-c61bf0bf16db',
+    'cf719302-1c0b-11f1-a635-c61bf0bf16db',
+    'cf797054-1c0b-11f1-9242-c61bf0bf16db',
+    'cf89c01c-1c0b-11f1-a635-c61bf0bf16db',
+    'cfa51a2e-1c0b-11f1-a635-c61bf0bf16db',
+    'cfbe1ca4-1c0b-11f1-a635-c61bf0bf16db',
+    'cfe49bea-1c0b-11f1-9242-c61bf0bf16db',
+    'd02f0fb8-1c0b-11f1-a635-c61bf0bf16db',
+    'd0d29b1a-1c0b-11f1-a635-c61bf0bf16db',
+    'd0edc7a0-1c0b-11f1-a635-c61bf0bf16db',
+    'd113ba96-1c0b-11f1-a635-c61bf0bf16db',
+    'd17eb6ca-1c0b-11f1-9242-c61bf0bf16db',
+    'd18b3274-1c0b-11f1-9242-c61bf0bf16db',
+    'd1d03e8c-1c0b-11f1-9242-c61bf0bf16db',
+    'd1f92cca-1c0b-11f1-9242-c61bf0bf16db',
+    'd222862e-1c0b-11f1-a635-c61bf0bf16db',
+    'd235e214-1c0b-11f1-a635-c61bf0bf16db',
+    'd3589858-1c0b-11f1-a635-c61bf0bf16db',
+    'd3618710-1c0b-11f1-9242-c61bf0bf16db',
+    'd3657d70-1c0b-11f1-96c4-c61bf0bf16db',
+    'd3707590-1c0b-11f1-9242-c61bf0bf16db',
+    'd376c698-1c0b-11f1-a635-c61bf0bf16db',
+    'd37f2c02-1c0b-11f1-a635-c61bf0bf16db',
+    'd38f90e2-1c0b-11f1-9242-c61bf0bf16db',
+    'd3822222-1c0b-11f1-9242-c61bf0bf16db',
+    'd3a36d1a-1c0b-11f1-9242-c61bf0bf16db',
+    'd389f538-1c0b-11f1-a635-c61bf0bf16db'
+  )</code></pre>
+</div>
+
+</body>
+</html>

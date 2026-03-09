@@ -1,0 +1,728 @@
+01:58:37.654 [main] INFO  o.rococo.auth.RococoAuthApplication - Starting RococoAuthApplication using Java 21.0.10 with PID 1 (/app/classes started by root in /)
+
+01:58:38.604 [kafka-producer-network-thread | producer-1] INFO  org.apache.kafka.clients.Metadata - [Producer clientId=producer-1] Cluster ID: EhdtqV8iRGSx8mwb-dgtQw
+
+01:58:43.621 [main] INFO  o.rococo.auth.RococoAuthApplication - The following 1 profile is active: "docker"
+
+01:58:43.650 [main] INFO  o.r.auth.service.PropertiesLogger - ******* systemProperties *******
+
+01:58:43.651 [main] INFO  o.r.auth.service.PropertiesLogger - CONSOLE_LOG_CHARSET=UTF-8
+
+01:58:43.651 [main] INFO  o.r.auth.service.PropertiesLogger - FILE_LOG_CHARSET=UTF-8
+
+01:58:43.651 [main] INFO  o.r.auth.service.PropertiesLogger - LOGGED_APPLICATION_NAME=[rococo-auth] 
+
+01:58:43.651 [main] INFO  o.r.auth.service.PropertiesLogger - PID=1
+
+01:58:43.651 [main] INFO  o.r.auth.service.PropertiesLogger - file.encoding=UTF-8
+
+01:58:43.652 [main] INFO  o.r.auth.service.PropertiesLogger - file.separator=/
+
+01:58:43.652 [main] INFO  o.r.auth.service.PropertiesLogger - java.awt.headless=true
+
+01:58:43.652 [main] INFO  o.r.auth.service.PropertiesLogger - java.class.path=/app/resources:/app/classes:/app/libs/spring-boot-starter-security-3.3.2.jar:/app/libs/spring-boot-starter-oauth2-authorization-server-3.3.2.jar:/app/libs/spring-boot-starter-web-3.3.2.jar:/app/libs/spring-boot-starter-data-jpa-3.3.2.jar:/app/libs/spring-boot-starter-thymeleaf-3.3.2.jar:/app/libs/spring-boot-starter-validation-3.3.2.jar:/app/libs/spring-boot-starter-actuator-3.3.2.jar:/app/libs/spring-cloud-starter-vault-config-4.1.3.jar:/app/libs/flyway-database-postgresql-10.17.1.jar:/app/libs/flyway-core-10.17.1.jar:/app/libs/spring-kafka-3.2.2.jar:/app/libs/logback-kafka-appender-0.2.0-RC2.jar:/app/libs/janino-3.1.12.jar:/app/libs/postgresql-42.7.3.jar:/app/libs/spring-boot-starter-json-3.3.2.jar:/app/libs/spring-boot-starter-aop-3.3.2.jar:/app/libs/spring-boot-starter-jdbc-3.3.2.jar:/app/libs/spring-cloud-vault-config-4.1.3.jar:/app/libs/spring-cloud-starter-4.1.4.jar:/app/libs/spring-boot-starter-3.3.2.jar:/app/libs/spring-security-oauth2-authorization-server-1.3.1.jar:/app/libs/spring-security-config-6.3.1.jar:/app/libs/spring-security-oauth2-resource-server-6.3.1.jar:/app/libs/spring-security-web-6.3.1.jar:/app/libs/spring-webmvc-6.1.11.jar:/app/libs/spring-data-jpa-3.3.2.jar:/app/libs/spring-vault-core-3.1.1.jar:/app/libs/spring-boot-actuator-autoconfigure-3.3.2.jar:/app/libs/spring-boot-autoconfigure-3.3.2.jar:/app/libs/spring-boot-actuator-3.3.2.jar:/app/libs/spring-boot-3.3.2.jar:/app/libs/spring-security-oauth2-jose-6.3.1.jar:/app/libs/spring-security-oauth2-core-6.3.1.jar:/app/libs/spring-security-core-6.3.1.jar:/app/libs/spring-context-6.1.11.jar:/app/libs/spring-aop-6.1.11.jar:/app/libs/spring-boot-starter-tomcat-3.3.2.jar:/app/libs/spring-web-6.1.11.jar:/app/libs/hibernate-core-6.5.2.Final.jar:/app/libs/spring-aspects-6.1.11.jar:/app/libs/thymeleaf-spring6-3.1.2.RELEASE.jar:/app/libs/tomcat-embed-el-10.1.26.jar:/app/libs/hibernate-validator-8.0.1.Final.jar:/app/libs/micrometer-jakarta9-1.13.2.jar:/app/libs/micrometer-core-1.13.2.jar:/app/libs/micrometer-observation-1.13.2.jar:/app/libs/httpclient5-5.3.1.jar:/app/libs/httpcore5-h2-5.2.5.jar:/app/libs/httpcore5-5.2.5.jar:/app/libs/jackson-datatype-jsr310-2.17.2.jar:/app/libs/jackson-datatype-jdk8-2.17.2.jar:/app/libs/jackson-module-parameter-names-2.17.2.jar:/app/libs/jackson-databind-2.17.2.jar:/app/libs/jackson-core-2.17.2.jar:/app/libs/jackson-annotations-2.17.2.jar:/app/libs/jackson-dataformat-toml-2.17.2.jar:/app/libs/gson-2.10.1.jar:/app/libs/spring-messaging-6.1.11.jar:/app/libs/spring-orm-6.1.11.jar:/app/libs/spring-jdbc-6.1.11.jar:/app/libs/spring-tx-6.1.11.jar:/app/libs/spring-retry-2.0.7.jar:/app/libs/kafka-clients-3.7.1.jar:/app/libs/HikariCP-5.1.0.jar:/app/libs/spring-data-commons-3.3.2.jar:/app/libs/thymeleaf-3.1.2.RELEASE.jar:/app/libs/spring-boot-starter-logging-3.3.2.jar:/app/libs/logback-classic-1.5.6.jar:/app/libs/log4j-to-slf4j-2.23.1.jar:/app/libs/jul-to-slf4j-2.0.13.jar:/app/libs/slf4j-api-2.0.13.jar:/app/libs/commons-compiler-3.1.12.jar:/app/libs/checker-qual-3.42.0.jar:/app/libs/jakarta.annotation-api-2.1.1.jar:/app/libs/spring-beans-6.1.11.jar:/app/libs/spring-expression-6.1.11.jar:/app/libs/spring-core-6.1.11.jar:/app/libs/snakeyaml-2.2.jar:/app/libs/nimbus-jose-jwt-9.39.3.jar:/app/libs/tomcat-embed-websocket-10.1.26.jar:/app/libs/tomcat-embed-core-10.1.26.jar:/app/libs/aspectjweaver-1.9.22.1.jar:/app/libs/jakarta.persistence-api-3.1.0.jar:/app/libs/jakarta.transaction-api-2.0.1.jar:/app/libs/jboss-logging-3.5.3.Final.jar:/app/libs/hibernate-commons-annotations-6.0.6.Final.jar:/app/libs/jandex-3.1.2.jar:/app/libs/classmate-1.7.0.jar:/app/libs/byte-buddy-1.14.18.jar:/app/libs/jaxb-runtime-4.0.5.jar:/app/libs/jaxb-core-4.0.5.jar:/app/libs/jakarta.xml.bind-api-4.0.2.jar:/app/libs/jakarta.inject-api-2.0.1.jar:/app/libs/antlr4-runtime-4.13.0.jar:/app/libs/jakarta.validation-api-3.0.2.jar:/app/libs/micrometer-commons-1.13.2.jar:/app/libs/spring-cloud-context-4.1.4.jar:/app/libs/spring-cloud-commons-4.1.4.jar:/app/libs/spring-security-rsa-1.1.3.jar:/app/libs/zstd-jni-1.5.6-3.jar:/app/libs/lz4-java-1.8.0.jar:/app/libs/snappy-java-1.1.10.5.jar:/app/libs/spring-jcl-6.1.11.jar:/app/libs/spring-security-crypto-6.3.1.jar:/app/libs/angus-activation-2.0.2.jar:/app/libs/jakarta.activation-api-2.1.3.jar:/app/libs/attoparser-2.0.7.RELEASE.jar:/app/libs/unbescape-1.1.6.RELEASE.jar:/app/libs/HdrHistogram-2.2.2.jar:/app/libs/LatencyUtils-2.0.3.jar:/app/libs/bcprov-jdk18on-1.78.jar:/app/libs/logback-core-1.5.6.jar:/app/libs/log4j-api-2.23.1.jar:/app/libs/txw2-4.0.5.jar:/app/libs/istack-commons-runtime-4.1.2.jar
+
+01:58:43.652 [main] INFO  o.r.auth.service.PropertiesLogger - java.class.version=65.0
+
+01:58:43.652 [main] INFO  o.r.auth.service.PropertiesLogger - java.home=/opt/java/openjdk
+
+01:58:43.652 [main] INFO  o.r.auth.service.PropertiesLogger - java.io.tmpdir=/tmp
+
+01:58:43.653 [main] INFO  o.r.auth.service.PropertiesLogger - java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+
+01:58:43.653 [main] INFO  o.r.auth.service.PropertiesLogger - java.runtime.name=OpenJDK Runtime Environment
+
+01:58:43.653 [main] INFO  o.r.auth.service.PropertiesLogger - java.runtime.version=21.0.10+7-LTS
+
+01:58:43.653 [main] INFO  o.r.auth.service.PropertiesLogger - java.specification.name=Java Platform API Specification
+
+01:58:43.653 [main] INFO  o.r.auth.service.PropertiesLogger - java.specification.vendor=Oracle Corporation
+
+01:58:43.654 [main] INFO  o.r.auth.service.PropertiesLogger - java.specification.version=21
+
+01:58:43.654 [main] INFO  o.r.auth.service.PropertiesLogger - java.vendor=Eclipse Adoptium
+
+01:58:43.654 [main] INFO  o.r.auth.service.PropertiesLogger - java.vendor.url=https://adoptium.net/
+
+01:58:43.654 [main] INFO  o.r.auth.service.PropertiesLogger - java.vendor.url.bug=https://github.com/adoptium/adoptium-support/issues
+
+01:58:43.654 [main] INFO  o.r.auth.service.PropertiesLogger - java.vendor.version=Temurin-21.0.10+7
+
+01:58:43.655 [main] INFO  o.r.auth.service.PropertiesLogger - java.version=21.0.10
+
+01:58:43.655 [main] INFO  o.r.auth.service.PropertiesLogger - java.version.date=2026-01-20
+
+01:58:43.655 [main] INFO  o.r.auth.service.PropertiesLogger - java.vm.compressedOopsMode=Zero based
+
+01:58:43.655 [main] INFO  o.r.auth.service.PropertiesLogger - java.vm.info=mixed mode, sharing
+
+01:58:43.655 [main] INFO  o.r.auth.service.PropertiesLogger - java.vm.name=OpenJDK 64-Bit Server VM
+
+01:58:43.655 [main] INFO  o.r.auth.service.PropertiesLogger - java.vm.specification.name=Java Virtual Machine Specification
+
+01:58:43.656 [main] INFO  o.r.auth.service.PropertiesLogger - java.vm.specification.vendor=Oracle Corporation
+
+01:58:43.656 [main] INFO  o.r.auth.service.PropertiesLogger - java.vm.specification.version=21
+
+01:58:43.656 [main] INFO  o.r.auth.service.PropertiesLogger - java.vm.vendor=Eclipse Adoptium
+
+01:58:43.656 [main] INFO  o.r.auth.service.PropertiesLogger - java.vm.version=21.0.10+7-LTS
+
+01:58:43.656 [main] INFO  o.r.auth.service.PropertiesLogger - jdk.debug=release
+
+01:58:43.656 [main] INFO  o.r.auth.service.PropertiesLogger - line.separator=
+
+
+01:58:43.657 [main] INFO  o.r.auth.service.PropertiesLogger - native.encoding=UTF-8
+
+01:58:43.657 [main] INFO  o.r.auth.service.PropertiesLogger - org.jboss.logging.provider=slf4j
+
+01:58:43.657 [main] INFO  o.r.auth.service.PropertiesLogger - os.arch=amd64
+
+01:58:43.657 [main] INFO  o.r.auth.service.PropertiesLogger - os.name=Linux
+
+01:58:43.657 [main] INFO  o.r.auth.service.PropertiesLogger - os.version=6.14.0-1017-azure
+
+01:58:43.657 [main] INFO  o.r.auth.service.PropertiesLogger - path.separator=:
+
+01:58:43.658 [main] INFO  o.r.auth.service.PropertiesLogger - spring.profiles.active=docker
+
+01:58:43.658 [main] INFO  o.r.auth.service.PropertiesLogger - stderr.encoding=UTF-8
+
+01:58:43.658 [main] INFO  o.r.auth.service.PropertiesLogger - stdout.encoding=UTF-8
+
+01:58:43.658 [main] INFO  o.r.auth.service.PropertiesLogger - sun.arch.data.model=64
+
+01:58:43.658 [main] INFO  o.r.auth.service.PropertiesLogger - sun.boot.library.path=/opt/java/openjdk/lib
+
+01:58:43.658 [main] INFO  o.r.auth.service.PropertiesLogger - sun.cpu.endian=little
+
+01:58:43.659 [main] INFO  o.r.auth.service.PropertiesLogger - sun.io.unicode.encoding=UnicodeLittle
+
+01:58:43.659 [main] INFO  o.r.auth.service.PropertiesLogger - sun.java.command=org.rococo.auth.RococoAuthApplication
+
+01:58:43.659 [main] INFO  o.r.auth.service.PropertiesLogger - sun.java.launcher=SUN_STANDARD
+
+01:58:43.659 [main] INFO  o.r.auth.service.PropertiesLogger - sun.jnu.encoding=UTF-8
+
+01:58:43.659 [main] INFO  o.r.auth.service.PropertiesLogger - sun.management.compiler=HotSpot 64-Bit Tiered Compilers
+
+01:58:43.659 [main] INFO  o.r.auth.service.PropertiesLogger - user.country=US
+
+01:58:43.659 [main] INFO  o.r.auth.service.PropertiesLogger - user.dir=/
+
+01:58:43.660 [main] INFO  o.r.auth.service.PropertiesLogger - user.home=/root
+
+01:58:43.660 [main] INFO  o.r.auth.service.PropertiesLogger - user.language=en
+
+01:58:43.660 [main] INFO  o.r.auth.service.PropertiesLogger - user.name=root
+
+01:58:43.660 [main] INFO  o.r.auth.service.PropertiesLogger - user.timezone=Europe/Moscow
+
+01:58:43.660 [main] INFO  o.r.auth.service.PropertiesLogger - ******* systemEnvironment *******
+
+01:58:43.660 [main] INFO  o.r.auth.service.PropertiesLogger - HOME=/root
+
+01:58:43.661 [main] INFO  o.r.auth.service.PropertiesLogger - HOSTNAME=86e80411ca46
+
+01:58:43.661 [main] INFO  o.r.auth.service.PropertiesLogger - JAVA_HOME=/opt/java/openjdk
+
+01:58:43.661 [main] INFO  o.r.auth.service.PropertiesLogger - JAVA_VERSION=jdk-21.0.10+7
+
+01:58:43.661 [main] INFO  o.r.auth.service.PropertiesLogger - LANG=en_US.UTF-8
+
+01:58:43.661 [main] INFO  o.r.auth.service.PropertiesLogger - LANGUAGE=en_US:en
+
+01:58:43.661 [main] INFO  o.r.auth.service.PropertiesLogger - LC_ALL=en_US.UTF-8
+
+01:58:43.661 [main] INFO  o.r.auth.service.PropertiesLogger - PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+01:58:43.662 [main] INFO  o.r.auth.service.PropertiesLogger - ROCOCO_TEST_USERNAME=test_user
+
+01:58:43.662 [main] INFO  o.r.auth.service.PropertiesLogger - ROCOCO_TEST_USER_PASSWORD=12345
+
+01:58:43.662 [main] INFO  o.r.auth.service.PropertiesLogger - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
+01:58:43.662 [main] INFO  o.r.auth.service.PropertiesLogger - TZ=Europe/Moscow
+
+01:58:43.662 [main] INFO  o.r.auth.service.PropertiesLogger - ******* Config resource 'class path resource [application.yaml]' via location 'optional:classpath:/' (document #2) *******
+
+01:58:43.663 [main] INFO  o.r.auth.service.PropertiesLogger - app.user.password=12345
+
+01:58:43.663 [main] INFO  o.r.auth.service.PropertiesLogger - app.user.username=test_user
+
+01:58:43.663 [main] INFO  o.r.auth.service.PropertiesLogger - oauth2.client-id=client
+
+01:58:43.663 [main] INFO  o.r.auth.service.PropertiesLogger - rococo-auth.base-uri=http://auth.rococo.dc:9000
+
+01:58:43.664 [main] INFO  o.r.auth.service.PropertiesLogger - rococo-front.base-uri=http://frontend.rococo.dc
+
+01:58:43.664 [main] INFO  o.r.auth.service.PropertiesLogger - server.port=9000
+
+01:58:43.664 [main] INFO  o.r.auth.service.PropertiesLogger - spring.autoconfigure.exclude[0]=org.springframework.cloud.vault.config.VaultAutoConfiguration
+
+01:58:43.664 [main] INFO  o.r.auth.service.PropertiesLogger - spring.autoconfigure.exclude[1]=org.springframework.cloud.vault.config.VaultObservationAutoConfiguration
+
+01:58:43.664 [main] INFO  o.r.auth.service.PropertiesLogger - spring.autoconfigure.exclude[2]=org.springframework.cloud.vault.config.VaultReactiveAutoConfiguration
+
+01:58:43.665 [main] INFO  o.r.auth.service.PropertiesLogger - spring.config.activate.on-profile=docker
+
+01:58:43.665 [main] INFO  o.r.auth.service.PropertiesLogger - spring.datasource.password=secret
+
+01:58:43.665 [main] INFO  o.r.auth.service.PropertiesLogger - spring.datasource.url=jdbc:postgresql://rococo-db:5432/rococo-auth
+
+01:58:43.665 [main] INFO  o.r.auth.service.PropertiesLogger - spring.datasource.username=postgres
+
+01:58:43.666 [main] INFO  o.r.auth.service.PropertiesLogger - spring.kafka.bootstrap-servers=kafka:9092
+
+01:58:43.666 [main] INFO  o.r.auth.service.PropertiesLogger - ******* Config resource 'class path resource [application.yaml]' via location 'optional:classpath:/' (document #0) *******
+
+01:58:43.666 [main] INFO  o.r.auth.service.PropertiesLogger - logging.level.org.apache.catalina.filters.RequestDumperFilter=INFO
+
+01:58:43.666 [main] INFO  o.r.auth.service.PropertiesLogger - logging.level.org.springframework.boot.autoconfigure=INFO
+
+01:58:43.666 [main] INFO  o.r.auth.service.PropertiesLogger - logging.level.org.springframework.kafka=INFO
+
+01:58:43.666 [main] INFO  o.r.auth.service.PropertiesLogger - logging.level.org.springframework.security=INFO
+
+01:58:43.667 [main] INFO  o.r.auth.service.PropertiesLogger - logging.level.org.springframework.security.oauth2=INFO
+
+01:58:43.667 [main] INFO  o.r.auth.service.PropertiesLogger - logging.level.org.springframework.web=INFO
+
+01:58:43.667 [main] INFO  o.r.auth.service.PropertiesLogger - logging.level.org.springframework.web.cors=INFO
+
+01:58:43.667 [main] INFO  o.r.auth.service.PropertiesLogger - logging.level.root=INFO
+
+01:58:43.667 [main] INFO  o.r.auth.service.PropertiesLogger - server.error.path=/error
+
+01:58:43.668 [main] INFO  o.r.auth.service.PropertiesLogger - server.error.whitelabel.enabled=false
+
+01:58:43.668 [main] INFO  o.r.auth.service.PropertiesLogger - spring.application.name=rococo-auth
+
+01:58:43.668 [main] INFO  o.r.auth.service.PropertiesLogger - spring.datasource.hikari.auto-commit=true
+
+01:58:43.668 [main] INFO  o.r.auth.service.PropertiesLogger - spring.datasource.hikari.connection-timeout=20000
+
+01:58:43.669 [main] INFO  o.r.auth.service.PropertiesLogger - spring.datasource.hikari.idle-timeout=10000
+
+01:58:43.669 [main] INFO  o.r.auth.service.PropertiesLogger - spring.datasource.hikari.max-lifetime=1000
+
+01:58:43.669 [main] INFO  o.r.auth.service.PropertiesLogger - spring.datasource.hikari.maximum-pool-size=30
+
+01:58:43.669 [main] INFO  o.r.auth.service.PropertiesLogger - spring.datasource.hikari.minimum-idle=10
+
+01:58:43.670 [main] INFO  o.r.auth.service.PropertiesLogger - spring.flyway.baseline-on-migrate=true
+
+01:58:43.670 [main] INFO  o.r.auth.service.PropertiesLogger - spring.flyway.baseline-version=0
+
+01:58:43.670 [main] INFO  o.r.auth.service.PropertiesLogger - spring.flyway.enabled=true
+
+01:58:43.670 [main] INFO  o.r.auth.service.PropertiesLogger - spring.flyway.locations=classpath:db/migration/rococo-auth
+
+01:58:43.671 [main] INFO  o.r.auth.service.PropertiesLogger - spring.flyway.schemas=flyway
+
+01:58:43.671 [main] INFO  o.r.auth.service.PropertiesLogger - spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+01:58:43.671 [main] INFO  o.r.auth.service.PropertiesLogger - spring.jpa.generate-ddl=true
+
+01:58:43.671 [main] INFO  o.r.auth.service.PropertiesLogger - spring.jpa.hibernate.ddl-auto=validate
+
+01:58:43.672 [main] INFO  o.r.auth.service.PropertiesLogger - spring.jpa.open-in-view=false
+
+01:58:43.672 [main] INFO  o.r.auth.service.PropertiesLogger - spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+
+01:58:43.672 [main] INFO  o.r.auth.service.PropertiesLogger - spring.jpa.show-sql=false
+
+01:58:43.672 [main] INFO  o.r.auth.service.PropertiesLogger - spring.mvc.log-request-details=true
+
+01:58:43.673 [main] INFO  o.r.auth.service.PropertiesLogger - ******* springCloudClientHostInfo *******
+
+01:58:43.673 [main] INFO  o.r.auth.service.PropertiesLogger - spring.cloud.client.hostname=86e80411ca46
+
+01:58:43.673 [main] INFO  o.r.auth.service.PropertiesLogger - spring.cloud.client.ip-address=172.18.0.6
+
+01:58:44.562 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+
+01:58:44.613 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 44 ms. Found 1 JPA repository interface.
+
+01:58:44.845 [main] INFO  o.s.cloud.context.scope.GenericScope - BeanFactory id=50a64a7f-84c2-300a-824c-7b46a744e383
+
+01:58:45.424 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9000 (http)
+
+01:58:45.434 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9000"]
+
+01:58:45.437 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+
+01:58:45.437 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.26]
+
+01:58:45.493 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+
+01:58:45.495 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1819 ms
+
+01:58:46.025 [main] WARN  com.zaxxer.hikari.HikariConfig - HikariPool-1 - maxLifetime is less than 30000ms, setting to default 1800000ms.
+
+01:58:46.026 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+
+01:58:46.171 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5e360c3b
+
+01:58:46.173 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+
+01:58:46.244 [main] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://rococo-db:5432/rococo-auth (PostgreSQL 16.8)
+
+01:58:46.281 [main] INFO  o.f.c.internal.database.base.Schema - Creating schema "flyway" ...
+
+01:58:46.288 [main] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "flyway"."flyway_schema_history" ...
+
+01:58:46.373 [main] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "flyway": null
+
+01:58:46.421 [main] INFO  o.f.core.internal.command.DbMigrate - Migrating schema "flyway" to version "1 - schema init"
+
+01:58:46.494 [main] INFO  o.f.core.internal.command.DbMigrate - Successfully applied 1 migration to schema "flyway", now at version v1 (execution time 00:00.054s)
+
+01:58:46.701 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+
+01:58:46.770 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.2.Final
+
+01:58:46.941 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+
+01:58:47.485 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+
+01:58:47.541 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+
+01:58:48.456 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+
+01:58:48.542 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+
+01:58:48.979 [main] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name rococoUserDetailsService
+
+01:58:50.339 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+
+01:58:50.489 [main] INFO  o.a.k.c.admin.AdminClientConfig - AdminClientConfig values: 
+	auto.include.jmx.reporter = true
+	bootstrap.controllers = []
+	bootstrap.servers = [kafka:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = rococo-auth-admin-0
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	enable.metrics.push = true
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+
+01:58:50.506 [main] INFO  o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.7.1
+
+01:58:50.506 [main] INFO  o.a.kafka.common.utils.AppInfoParser - Kafka commitId: e2494e6ffb89f828
+
+01:58:50.506 [main] INFO  o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1773097130506
+
+01:58:50.699 [kafka-admin-client-thread | rococo-auth-admin-0] INFO  o.a.kafka.common.utils.AppInfoParser - App info kafka.admin.client for rococo-auth-admin-0 unregistered
+
+01:58:50.703 [kafka-admin-client-thread | rococo-auth-admin-0] INFO  o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+
+01:58:50.703 [kafka-admin-client-thread | rococo-auth-admin-0] INFO  o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+
+01:58:50.704 [kafka-admin-client-thread | rococo-auth-admin-0] INFO  o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+
+01:58:50.708 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9000"]
+
+01:58:50.719 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9000 (http) with context path '/'
+
+01:58:50.745 [main] INFO  o.rococo.auth.RococoAuthApplication - Started RococoAuthApplication in 14.426 seconds (process running for 14.901)
+
+01:58:51.020 [main] INFO  o.a.k.c.producer.ProducerConfig - ProducerConfig values: 
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [kafka:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = rococo-auth-producer-1
+	compression.type = none
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.springframework.kafka.support.serializer.JsonSerializer
+
+
+01:58:51.021 [main] INFO  o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+
+01:58:51.029 [main] INFO  o.a.k.clients.producer.KafkaProducer - [Producer clientId=rococo-auth-producer-1] Instantiated an idempotent producer.
+
+01:58:51.038 [main] INFO  o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.7.1
+
+01:58:51.038 [main] INFO  o.a.kafka.common.utils.AppInfoParser - Kafka commitId: e2494e6ffb89f828
+
+01:58:51.039 [main] INFO  o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1773097131038
+
+01:58:51.048 [kafka-producer-network-thread | rococo-auth-producer-1] INFO  org.apache.kafka.clients.Metadata - [Producer clientId=rococo-auth-producer-1] Cluster ID: EhdtqV8iRGSx8mwb-dgtQw
+
+01:58:51.055 [main] INFO  org.rococo.auth.service.UserService - ### Kafka topic [users] sent message: test_user
+
+01:58:51.071 [kafka-producer-network-thread | rococo-auth-producer-1] INFO  o.a.k.c.p.i.TransactionManager - [Producer clientId=rococo-auth-producer-1] ProducerId set to 0 with epoch 0
+
+01:58:51.082 [main] INFO  o.r.auth.service.TestUserInitializer - Successfully created default user: username = [test_user], password = [12345]
+
+01:58:56.064 [http-nio-9000-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+
+01:58:56.065 [http-nio-9000-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+
+01:58:56.066 [http-nio-9000-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+
+02:00:53.008 [http-nio-9000-exec-3] INFO  org.rococo.auth.service.UserService - ### Kafka topic [users] sent message: numquam.aspernatur.421
+
+02:01:07.702 [http-nio-9000-exec-9] INFO  org.rococo.auth.service.UserService - ### Kafka topic [users] sent message: ea.facere.004
+
+02:06:33.052 [http-nio-9000-exec-9] INFO  org.rococo.auth.service.UserService - ### Kafka topic [users] sent message: quia.quia.426
+
+02:06:33.066 [http-nio-9000-exec-9] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23505
+
+02:06:33.067 [http-nio-9000-exec-9] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ERROR: duplicate key value violates unique constraint "users_username_key"
+  Detail: Key (username)=(quia.quia.426) already exists.
+
+02:06:33.080 [http-nio-9000-exec-9] ERROR o.r.a.controller.RegisterController - ### Error while registration user
+org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERROR: duplicate key value violates unique constraint "users_username_key"
+  Detail: Key (username)=(quia.quia.426) already exists.] [insert into rococo.users (account_non_expired,account_non_locked,credentials_non_expired,enabled,password,username,id) values (?,?,?,?,?,?,?)]; SQL [insert into rococo.users (account_non_expired,account_non_locked,credentials_non_expired,enabled,password,username,id) values (?,?,?,?,?,?,?)]; constraint [users_username_key]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:566)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:795)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:758)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:663)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:413)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:768)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:720)
+	at org.rococo.auth.service.UserService$$SpringCGLIB$$0.registerUser(<generated>)
+	at org.rococo.auth.controller.RegisterController.registerUser(RegisterController.java:63)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.ObservationFilterChainDecorator$FilterObservation$SimpleFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:479)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:340)
+	at org.springframework.security.web.ObservationFilterChainDecorator.lambda$wrapSecured$0(ObservationFilterChainDecorator.java:82)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:128)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.rococo.auth.service.cors.CookieCsrfFilter.doFilterInternal(CookieCsrfFilter.java:28)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:131)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:113)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [ERROR: duplicate key value violates unique constraint "users_username_key"
+  Detail: Key (username)=(quia.quia.426) already exists.] [insert into rococo.users (account_non_expired,account_non_locked,credentials_non_expired,enabled,password,username,id) values (?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.performNonBatchedMutation(AbstractMutationExecutor.java:134)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:55)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55)
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194)
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132)
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:104)
+	at org.hibernate.action.internal.EntityInsertAction.execute(EntityInsertAction.java:110)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:632)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:499)
+	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:371)
+	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1425)
+	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:487)
+	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2324)
+	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1981)
+	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
+	... 152 common frames omitted
+Caused by: org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique constraint "users_username_key"
+  Detail: Key (username)=(quia.quia.426) already exists.
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2412)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:371)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:502)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:419)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194)
+	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:155)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 173 common frames omitted
+
+02:06:36.530 [http-nio-9000-exec-5] INFO  org.rococo.auth.service.UserService - ### Kafka topic [users] sent message: s18851
+
+02:06:42.352 [http-nio-9000-exec-6] INFO  org.rococo.auth.service.UserService - ### Kafka topic [users] sent message: t74987568139296473646467924968
+
+02:06:49.436 [http-nio-9000-exec-10] INFO  org.rococo.auth.service.UserService - ### Kafka topic [users] sent message: voluptas.quam.700
+
