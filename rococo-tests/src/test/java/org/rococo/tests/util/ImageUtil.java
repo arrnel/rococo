@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FilenameUtils;
 import org.openqa.selenium.InvalidArgumentException;
+import org.rococo.tests.ex.ScreenshotException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,6 +32,25 @@ public class ImageUtil {
     }
 
     private static final Random RANDOM = new Random();
+
+    public static void createImage(Path pathToImage, int width, int height, Color color) {
+        try {
+            Files.createDirectories(pathToImage.getParent());
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = image.createGraphics();
+            graphics.setColor(color);
+            graphics.fillRect(0, 0, width, height);
+            graphics.dispose();
+
+            if (Files.notExists(pathToImage))
+                Files.createFile(pathToImage);
+
+            Files.write(pathToImage, ImageUtil.imageToBytes(image));
+
+        } catch (IOException e) {
+            throw new ScreenshotException("Unable to create [%s] image at: %s.%n".formatted(color, pathToImage), e);
+        }
+    }
 
     @Nonnull
     public static byte[] resizeImage(String originalPhoto,
@@ -124,6 +144,15 @@ public class ImageUtil {
             return "data:%s;base64,%s".formatted(mediaType, base64String);
         } catch (IOException e) {
             throw new RuntimeException("Failed to read file: " + path, e);
+        }
+    }
+
+    public static byte[] imageToBytes(BufferedImage image) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            ImageIO.write(image, "png", outputStream);
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
