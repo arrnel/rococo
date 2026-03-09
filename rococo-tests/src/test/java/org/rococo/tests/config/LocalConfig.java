@@ -1,9 +1,10 @@
 package org.rococo.tests.config;
 
+import org.rococo.tests.util.EnvUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static org.rococo.tests.config.PropertyUtil.getEnvVar;
 
 @ParametersAreNonnullByDefault
 enum LocalConfig implements Config {
@@ -24,7 +25,7 @@ enum LocalConfig implements Config {
 
     @Override
     public int artistsPort() {
-        return getEnvVar("ROCOCO_ARTISTS_PORT", 9002);
+        return EnvUtil.envVar("ROCOCO_ARTISTS_PORT", 9002);
     }
 
     @Nonnull
@@ -36,7 +37,7 @@ enum LocalConfig implements Config {
     @Nonnull
     @Override
     public String authUrl() {
-        return "http://127.0.0.1:%d".formatted(getEnvVar("ROCOCO_AUTH_PORT", 9000));
+        return "http://127.0.0.1:%d".formatted(EnvUtil.envVar("ROCOCO_AUTH_PORT", 9000));
     }
 
     @Nonnull
@@ -53,7 +54,7 @@ enum LocalConfig implements Config {
 
     @Override
     public int countriesPort() {
-        return getEnvVar("ROCOCO_COUNTRIES_PORT", 9003);
+        return EnvUtil.envVar("ROCOCO_COUNTRIES_PORT", 9003);
     }
 
     @Nonnull
@@ -70,25 +71,25 @@ enum LocalConfig implements Config {
 
     @Override
     public int filesPort() {
-        return getEnvVar("ROCOCO_FILES_PORT", 9004);
+        return EnvUtil.envVar("ROCOCO_FILES_PORT", 9004);
     }
 
     @Nonnull
     @Override
     public String frontUrl() {
-        return "http://127.0.0.1:%d".formatted(getEnvVar("ROCOCO_FRONT_PORT", 3000));
+        return "http://127.0.0.1:%d".formatted(EnvUtil.envVar("ROCOCO_FRONT_PORT", 3000));
     }
 
     @Nonnull
     @Override
     public String gatewayUrl() {
-        return "http://127.0.0.1:%d".formatted(getEnvVar("ROCOCO_GATEWAY_PORT", 9001));
+        return "http://127.0.0.1:%d".formatted(EnvUtil.envVar("ROCOCO_GATEWAY_PORT", 9001));
     }
 
     @Nonnull
     @Override
     public String logsUrl() {
-        return "http://127.0.0.1:%d".formatted(getEnvVar("ROCOCO_LOGS_PORT", 9008));
+        return "http://127.0.0.1:%d".formatted(EnvUtil.envVar("ROCOCO_LOGS_PORT", 9008));
     }
 
     @Nonnull
@@ -105,7 +106,7 @@ enum LocalConfig implements Config {
 
     @Override
     public int museumsPort() {
-        return getEnvVar("ROCOCO_MUSEUMS_PORT", 9005);
+        return EnvUtil.envVar("ROCOCO_MUSEUMS_PORT", 9005);
     }
 
     @Nonnull
@@ -122,7 +123,7 @@ enum LocalConfig implements Config {
 
     @Override
     public int paintingsPort() {
-        return getEnvVar("ROCOCO_PAINTINGS_PORT", 9006);
+        return EnvUtil.envVar("ROCOCO_PAINTINGS_PORT", 9006);
     }
 
     @Nonnull
@@ -140,24 +141,24 @@ enum LocalConfig implements Config {
     @Nonnull
     @Override
     public String kafkaAddress() {
-        return "127.0.0.1:" + getEnvVar("ROCOCO_KAFKA_PORT", 9092);
+        return "127.0.0.1:" + EnvUtil.envVar("ROCOCO_KAFKA_PORT", 9092);
     }
 
     @Override
     public int usersPort() {
-        return getEnvVar("ROCOCO_USERS_PORT", 9007);
+        return EnvUtil.envVar("ROCOCO_USERS_PORT", 9007);
     }
 
     public int dbPort() {
-        return getEnvVar("ROCOCO_DB_PORT", 5432);
+        return EnvUtil.envVar("ROCOCO_DB_PORT", 5432);
     }
 
     public String dbUser() {
-        return getEnvVar("ROCOCO_DB_USER", "postgres");
+        return EnvUtil.envVar("ROCOCO_DB_USER", "postgres");
     }
 
     public String dbPassword() {
-        return getEnvVar("ROCOCO_DB_PASSWORD", "secret");
+        return EnvUtil.envVar("ROCOCO_DB_PASSWORD", "secret");
     }
 
     @Nonnull
@@ -174,12 +175,12 @@ enum LocalConfig implements Config {
 
     @Nonnull
     public String testUserName() {
-        return getEnvVar("ROCOCO_TEST_USERNAME", "test_user");
+        return EnvUtil.envVar("ROCOCO_TEST_USERNAME", "test_user");
     }
 
     @Nonnull
     public String testUserPassword() {
-        return getEnvVar("ROCOCO_TEST_USER_PASSWORD", "12345");
+        return EnvUtil.envVar("ROCOCO_TEST_USER_PASSWORD", "12345");
     }
 
 }

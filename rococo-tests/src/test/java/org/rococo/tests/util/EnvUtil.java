@@ -1,13 +1,18 @@
 package org.rococo.tests.util;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
+@ParametersAreNonnullByDefault
 public class EnvUtil {
 
+    @Nonnull
     public static String envVar(String title, String defaultValue) {
         return Optional.ofNullable(System.getenv(title)).orElse(defaultValue);
     }
 
+    @Nonnull
     public static Integer envVar(String title, int defaultValue) {
         return Optional.ofNullable(
                         System.getenv(title)
@@ -16,28 +21,13 @@ public class EnvUtil {
                 .orElse(defaultValue);
     }
 
-    public static Double envVar(String title, double defaultValue) {
-        return Optional.ofNullable(
-                        System.getenv(title)
-                )
-                .map(Double::parseDouble)
-                .orElse(defaultValue);
-    }
-
+    @Nonnull
     public static Boolean envVar(String title, boolean defaultValue) {
         return Optional.ofNullable(
                         System.getenv(title)
                 )
                 .filter(v -> !v.trim().isEmpty())
                 .map("true"::equals)
-                .orElse(defaultValue);
-    }
-
-    public static Long envVar(String title, long defaultValue) {
-        return Optional.ofNullable(
-                        System.getenv(title)
-                )
-                .map(Long::parseLong)
                 .orElse(defaultValue);
     }
 
