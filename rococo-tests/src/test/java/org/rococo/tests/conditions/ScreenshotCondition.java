@@ -4,24 +4,24 @@ import com.codeborne.selenide.CheckResult;
 import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebElementCondition;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.qameta.allure.Allure;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
 import org.rococo.tests.config.Config;
 import org.rococo.tests.ex.ExpectedImageNotFoundException;
 import org.rococo.tests.ex.ScreenshotException;
 import org.rococo.tests.model.allure.ScreenDiff;
+import org.rococo.tests.util.AllureUtil;
+import org.rococo.tests.util.ImageUtil;
 import org.rococo.tests.util.ScreenDiffResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,7 +36,6 @@ import static com.codeborne.selenide.CheckResult.accepted;
 public final class ScreenshotCondition {
 
     private static final Config CFG = Config.getInstance();
-    private static final ObjectMapper OM = new ObjectMapper();
     private static final Base64.Encoder encoder = Base64.getEncoder();
     private static final double DEFAULT_PERCENTAGE_TOLERANCE = 0.02;
 
@@ -54,7 +53,6 @@ public final class ScreenshotCondition {
             boolean rewriteExpected
     ) {
 
-        Selenide.sleep(millis);
         var relativeUrl = urlToScreenshot.charAt(0) == '/'
                 ? urlToScreenshot.substring(0, urlToScreenshot.length() - 1)
                 : urlToScreenshot;
@@ -65,6 +63,16 @@ public final class ScreenshotCondition {
             @NotNull
             @Override
             public CheckResult check(Driver driver, WebElement element) {
+
+                if (millis > 0)
+                    Selenide.sleep(millis);
+
+                Dimension size = element.getSize();
+
+                var isExpectedNotExists = Files.notExists(expectedScreenshotUrl);
+                if (isExpectedNotExists)
+                    ImageUtil.createImage(expectedScreenshotUrl, size.getWidth(), size.getHeight(), Color.WHITE);
+
 
                 final BufferedImage expectedScreenshot = getExpectedScreenshot(expectedScreenshotUrl);
                 BufferedImage actualScreenshot = takeElementScreenshot(element);
@@ -77,11 +85,11 @@ public final class ScreenshotCondition {
 
                 if (diff.getAsBoolean()) {
 
-                    addAttachment(
+                    AllureUtil.attachScreenDiff(
                             ScreenDiff.builder()
-                                    .expected("data:image/png;base64," + encoder.encodeToString(imageToBytes(expectedScreenshot)))
-                                    .actual("data:image/png;base64," + encoder.encodeToString(imageToBytes(actualScreenshot)))
-                                    .diff("data:image/png;base64," + encoder.encodeToString(imageToBytes(diff.getDiff().getMarkedImage())))
+                                    .expected("data:image/png;base64," + encoder.encodeToString(ImageUtil.imageToBytes(expectedScreenshot)))
+                                    .actual("data:image/png;base64," + encoder.encodeToString(ImageUtil.imageToBytes(actualScreenshot)))
+                                    .diff("data:image/png;base64," + encoder.encodeToString(ImageUtil.imageToBytes(diff.getDiff().getMarkedImage())))
                                     .build()
                     );
                     String message = percentOfTolerance == 0
@@ -90,7 +98,7 @@ public final class ScreenshotCondition {
                     throw new ScreenshotException(message);
                 }
 
-                if (CFG.rewriteAllImages() || rewriteExpected)
+                if (CFG.rewriteAllImages() || rewriteExpected || isExpectedNotExists)
                     saveNewExpectedScreenshot(actualScreenshot, expectedScreenshotUrl);
 
                 return accepted();
@@ -189,16 +197,7 @@ public final class ScreenshotCondition {
         try {
             Files.write(
                     expectedScreenshotUrl.toAbsolutePath(),
-                    imageToBytes(img));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static byte[] imageToBytes(BufferedImage image) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            ImageIO.write(image, "png", outputStream);
-            return outputStream.toByteArray();
+                    ImageUtil.imageToBytes(img));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -210,18 +209,6 @@ public final class ScreenshotCondition {
             return ImageIO.read(screenshot);
         } catch (IOException e) {
             throw new ScreenshotException("Unable to capture screenshot for element", e);
-        }
-    }
-
-    private static void addAttachment(ScreenDiff screenDiff) {
-        try {
-            Allure.addAttachment(
-                    "Screenshot diff",
-                    "application/vnd.allure.image.diff",
-                    OM.writeValueAsString(screenDiff)
-            );
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
         }
     }
 
