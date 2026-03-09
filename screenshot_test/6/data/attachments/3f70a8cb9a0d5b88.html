@@ -1,0 +1,140 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset = UTF-8">
+    <script src="https://yastatic.net/jquery/2.2.3/jquery.min.js" crossorigin="anonymous"></script>
+
+    <link href="https://yastatic.net/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://yastatic.net/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <link type="text/css" href="https://yandex.st/highlightjs/8.0/styles/github.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/languages/bash.min.js"></script>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/languages/json.min.js"></script>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/languages/xml.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <style>
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+<div><h4>Status code</h4> 
+        <pre><code><b>200</b></code></pre>
+    </div>
+
+
+    <h4>Headers</h4>
+    <div>
+            <div>
+                <pre><code><b>date</b>: Mon, 09 Mar 2026 23:20:31 GMT</code></pre>
+            </div>
+            <div>
+                <pre><code><b>expires</b>: 0</code></pre>
+            </div>
+            <div>
+                <pre><code><b>transfer-encoding</b>: chunked</code></pre>
+            </div>
+            <div>
+                <pre><code><b>vary</b>: Origin; Access-Control-Request-Method; Access-Control-Request-Headers</code></pre>
+            </div>
+            <div>
+                <pre><code><b>x-frame-options</b>: DENY</code></pre>
+            </div>
+            <div>
+                <pre><code><b>pragma</b>: no-cache</code></pre>
+            </div>
+            <div>
+                <pre><code><b>set-cookie</b>: XSRF-TOKEN=7ede9827-96f7-48bf-8f0e-895d994c6caa; Path=/</code></pre>
+            </div>
+            <div>
+                <pre><code><b>keep-alive</b>: timeout=60</code></pre>
+            </div>
+            <div>
+                <pre><code><b>x-content-type-options</b>: nosniff</code></pre>
+            </div>
+            <div>
+                <pre><code><b>x-xss-protection</b>: 0</code></pre>
+            </div>
+            <div>
+                <pre><code><b>x-xsrf-token</b>: 7ede9827-96f7-48bf-8f0e-895d994c6caa</code></pre>
+            </div>
+            <div>
+                <pre><code><b>connection</b>: keep-alive</code></pre>
+            </div>
+            <div>
+                <pre><code><b>content-type</b>: text/html;charset=UTF-8</code></pre>
+            </div>
+            <div>
+                <pre><code><b>cache-control</b>: no-cache, no-store, max-age=0, must-revalidate</code></pre>
+            </div>
+            <div>
+                <pre><code><b>content-language</b>: en-US</code></pre>
+            </div>
+    </div>
+
+    <h4>Body</h4>
+    <div>
+        <pre><code><!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
+<head>
+    <title>Rococo</title>
+    <link rel="icon" href="images/favicon.ico"/>
+    <link href="styles/styles.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<main>
+    <div class="wrapper">
+        <section class="content">
+            <form class="form" action="/login" method="post"><input type="hidden" name="_csrf" value="7ede9827-96f7-48bf-8f0e-895d994c6caa"/>
+                <h1 class="form__header">Ro<span class="form__text_gold">coco</span></h1>
+                
+                
+                <label class="form__element">
+                    <span class="form__label">Имя пользователя</span>
+                    <input class="form__input" type="text" name="username" placeholder="Введите имя пользователя..."
+                           required/>
+                </label>
+                <label class="form__element">
+                    <span class="form__label">Пароль</span>
+                    <input class="form__input" type="password" name="password" placeholder="Введите пароль..."
+                           required/>
+                    <button type="button" class="form__password-button"></button>
+                </label>
+                <button class="form__submit" type="submit">
+                    Войти
+                </button>
+                <p class="form__paragraph">Нет аккаунта? <a href="/register"
+                                                            class="form__link">Зарегистрироваться</a></p>
+            </form>
+            <img class="content__image" src="images/hermitage.jpg" alt="Эрмитаж"/>
+        </section>
+    </div>
+</main>
+<script>
+    const passwordButton = document.querySelector(".form__password-button");
+    const passwordInput = document.querySelector("[name=password]");
+
+    const togglePasswordInputType = (inputType) => {
+        return inputType === "password" ? "text" : "password";
+    }
+
+    const togglePasswordButtonClass = () => {
+        passwordButton.classList.toggle("form__password-button_active");
+    }
+
+    const handlePasswordButtonClick = () => {
+        passwordInput.setAttribute("type", togglePasswordInputType(passwordInput.getAttribute("type")));
+        togglePasswordButtonClass();
+    }
+
+    passwordButton.addEventListener("click", handlePasswordButtonClick);
+</script>
+</body>
+</html>
+</code></pre>
+    </div>
+
+</body>
+</html>

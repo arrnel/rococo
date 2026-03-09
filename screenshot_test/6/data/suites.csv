@@ -1,0 +1,2 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","12388","Should update artist with correct data","","Mon Mar 09 23:20:30 UTC 2026","broken","Mon Mar 09 23:20:43 UTC 2026","","[WEB] Artists tests","org.rococo.tests.tests.web.ArtistsWebTest","shouldUpdateArtistWithCorrectDataTest"
