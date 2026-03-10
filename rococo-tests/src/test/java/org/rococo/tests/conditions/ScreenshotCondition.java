@@ -5,7 +5,6 @@ import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebElementCondition;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
@@ -60,7 +59,7 @@ public final class ScreenshotCondition {
 
         return new WebElementCondition("expected screenshot: [%s]".formatted(expectedScreenshotUrl.toString())) {
 
-            @NotNull
+            @Nonnull
             @Override
             public CheckResult check(Driver driver, WebElement element) {
 
