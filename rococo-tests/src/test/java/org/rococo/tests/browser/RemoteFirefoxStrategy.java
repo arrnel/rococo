@@ -2,7 +2,6 @@ package org.rococo.tests.browser;
 
 import com.codeborne.selenide.Configuration;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.rococo.tests.config.Config;
 import org.rococo.tests.util.ThreadSafeTestNameStore;
 
 import javax.annotation.Nonnull;
@@ -12,11 +11,10 @@ import java.util.Map;
 
 public class RemoteFirefoxStrategy implements BaseStrategy, FirefoxStrategyMixin {
 
-
     @Override
     public void initDriver() {
         initFirefoxDriver(new FirefoxOptions());
-        Configuration.remote = Config.getInstance().remoteUrl();
+        Configuration.remote = CFG.remoteUrl();
     }
 
     @Nonnull
@@ -56,9 +54,4 @@ public class RemoteFirefoxStrategy implements BaseStrategy, FirefoxStrategyMixin
         return prefs;
     }
 
-    @Nonnull
-    @Override
-    public Map<String, Object> capabilities() {
-        return new CapabilitiesBuilder().selenoidCapabilities();
-    }
 }

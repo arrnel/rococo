@@ -1,25 +1,23 @@
 package org.rococo.tests.browser;
 
 import com.codeborne.selenide.Configuration;
-import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.rococo.tests.config.Config;
 import org.rococo.tests.util.ThreadSafeTestNameStore;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RemoteChromeStrategy implements BaseStrategy, ChromeStrategyMixin {
 
-
     @Override
     public void initDriver() {
         initChromeDriver(new ChromeOptions());
-        Configuration.remote = Config.getInstance().remoteUrl();
+        Configuration.remote = CFG.remoteUrl();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<String> chromeArgs() {
         return List.of(
@@ -32,13 +30,13 @@ public class RemoteChromeStrategy implements BaseStrategy, ChromeStrategyMixin {
         );
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<String> chromeExtensions() {
         return List.of();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Map<String, String> experimentalOptions() {
         var testName = ThreadSafeTestNameStore.INSTANCE.getCurrentTestTitle();
@@ -61,9 +59,4 @@ public class RemoteChromeStrategy implements BaseStrategy, ChromeStrategyMixin {
         return experimentalOptions;
     }
 
-    @NotNull
-    @Override
-    public Map<String, Object> capabilities() {
-        return new CapabilitiesBuilder().selenoidCapabilities();
-    }
 }
