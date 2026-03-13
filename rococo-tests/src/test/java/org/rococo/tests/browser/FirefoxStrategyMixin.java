@@ -38,7 +38,7 @@ interface FirefoxStrategyMixin {
     }
 
     default void setCapabilities(FirefoxOptions options) {
-        firefoxPrefs().forEach(options::addPreference);
+        capabilities().forEach(options::addPreference);
     }
 
     default void initFirefoxDriver(FirefoxOptions options) {
