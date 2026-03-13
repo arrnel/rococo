@@ -4,6 +4,7 @@ import org.rococo.tests.config.Config;
 import org.rococo.tests.util.DurationUtil;
 import org.rococo.tests.util.ThreadSafeTestNameStore;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ class CapabilitiesBuilder {
     private static final String SELENOID_OPTIONS_TITLE = "selenoid:options";
     private static final Config CFG = Config.getInstance();
 
+    @Nonnull
     public Map<String, Object> capabilities() {
         var caps = CFG.isLocal()
                 ? localCapabilities()
@@ -21,6 +23,7 @@ class CapabilitiesBuilder {
         return merged;
     }
 
+    @Nonnull
     public Map<String, Object> localCapabilities() {
         return Map.of(
                 "browserName", CFG.browserName(),
@@ -30,6 +33,7 @@ class CapabilitiesBuilder {
         );
     }
 
+    @Nonnull
     public Map<String, Object> selenoidCapabilities() {
 
         var testName = ThreadSafeTestNameStore.INSTANCE.getCurrentTestTitle();
@@ -64,6 +68,7 @@ class CapabilitiesBuilder {
         );
     }
 
+    @Nonnull
     private Map<String, Object> timeoutCapabilities() {
         Map<String, Integer> timeouts = Map.of(
                 "implicit", CFG.timeout(),

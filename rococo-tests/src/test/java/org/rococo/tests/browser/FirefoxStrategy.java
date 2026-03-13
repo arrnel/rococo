@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class FirefoxStrategy implements BaseStrategy, FirefoxStrategyMixin {
 
-
     @Override
     public void initDriver() {
         initFirefoxDriver(new FirefoxOptions());
@@ -53,9 +52,4 @@ public class FirefoxStrategy implements BaseStrategy, FirefoxStrategyMixin {
         return prefs;
     }
 
-    @Nonnull
-    @Override
-    public Map<String, Object> capabilities() {
-        return new CapabilitiesBuilder().localCapabilities();
-    }
 }

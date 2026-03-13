@@ -1,7 +1,6 @@
 package org.rococo.tests.browser;
 
 import com.codeborne.selenide.Configuration;
-import org.apache.commons.lang.NotImplementedException;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import javax.annotation.Nonnull;
@@ -20,7 +19,9 @@ interface ChromeStrategyMixin {
     Map<String, String> experimentalOptions();
 
     @Nonnull
-    Map<String, Object> capabilities();
+    default Map<String, Object> capabilities() {
+        return new CapabilitiesBuilder().capabilities();
+    }
 
     default void setChromeArgs(ChromeOptions options) {
         options.addArguments(chromeArgs());
@@ -44,6 +45,5 @@ interface ChromeStrategyMixin {
         setCapabilities(options);
         Configuration.browserCapabilities = options;
     }
-
 
 }

@@ -12,7 +12,7 @@ public class DriverManager {
     private static final Config CFG = Config.getInstance();
     private static final Map<String, BaseStrategy> STRATEGIES = Map.of(
             "chrome", new ChromeStrategy(),
-            "firefox", new ChromeStrategy(),
+            "firefox", new FirefoxStrategy(),
             REMOTE_PREFIX + "chrome", new RemoteChromeStrategy(),
             REMOTE_PREFIX + "firefox", new RemoteFirefoxStrategy()
     );
@@ -30,6 +30,5 @@ public class DriverManager {
     public static void quit() {
         Selenide.closeWebDriver();
     }
-
 
 }

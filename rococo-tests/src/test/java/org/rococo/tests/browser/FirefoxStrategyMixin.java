@@ -12,16 +12,18 @@ import java.util.Map;
 interface FirefoxStrategyMixin {
 
     @Nonnull
-    abstract List<String> firefoxArgs();
+    List<String> firefoxArgs();
 
     @Nonnull
-    abstract List<String> firefoxExtensions();
+    List<String> firefoxExtensions();
 
     @Nonnull
-    abstract Map<String, String> firefoxPrefs();
+    Map<String, String> firefoxPrefs();
 
     @Nonnull
-    abstract Map<String, Object> capabilities();
+    default Map<String, Object> capabilities() {
+        return new CapabilitiesBuilder().capabilities();
+    }
 
     default void setFirefoxArgs(FirefoxOptions options) {
         options.addArguments(firefoxArgs());
@@ -46,6 +48,5 @@ interface FirefoxStrategyMixin {
         setCapabilities(options);
         Configuration.browserCapabilities = options;
     }
-
 
 }
