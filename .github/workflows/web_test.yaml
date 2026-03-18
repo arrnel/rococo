@@ -73,6 +73,17 @@ jobs:
           version: ${{ env.BROWSER_VERSION }}
           enable_video: ${{ env.BROWSER_REMOTE_VIDEO }}
 
+      - name: Checkout workflow-resources branch
+        uses: actions/checkout@v4
+        with:
+          ref: workflow-resources
+          path: workflow-resources
+
+      - name: Prepare workflow-resources directory
+        run: |
+          set -e
+          mkdir -p workflow-resources/screenshot
+
       - name: Run WEB tests
         uses: ./.github/actions/run-tests
         if: always()

@@ -69,6 +69,17 @@ jobs:
         run: |
           echo "HEAD_COMMIT_MESSAGE=$(git show -s --format=%s)" >> $GITHUB_ENV
 
+      - name: Checkout workflow-resources branch
+        uses: actions/checkout@v4
+        with:
+          ref: workflow-resources
+          path: workflow-resources
+
+      - name: Prepare workflow-resources directory
+        run: |
+          set -e
+          mkdir -p workflow-resources/screenshot
+
       - name: Run tests
         uses: ./.github/actions/run-tests
         if: always()
