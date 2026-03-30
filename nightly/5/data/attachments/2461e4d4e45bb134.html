@@ -1,0 +1,63 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset = UTF-8">
+    <script src="https://yastatic.net/jquery/2.2.3/jquery.min.js" crossorigin="anonymous"></script>
+
+    <link href="https://yastatic.net/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://yastatic.net/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <link type="text/css" href="https://yandex.st/highlightjs/8.0/styles/github.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/languages/sql.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <style>
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<h5>SQL Query</h5>
+<div>
+    <pre><code>SELECT
+  m.id as metadata_id,
+  m.entity_type as entity_type,
+  m.entity_id as entity_id,
+  m.format as format,
+  m.content_hash as hash,
+  c.id as content_id,
+  c.data as data,
+  c.thumbnail_data as thumbnail_data,
+  m.created_date as created_date
+FROM
+  rococo.image_metadata m
+  LEFT JOIN rococo.image_content c ON m.content_id = c.id
+WHERE
+  m.entity_type = 'USER'
+  AND m.entity_id IN (
+    '9469484a-2bf1-11f1-aa60-6a4639bfbb90',
+    '99f159d8-2bf1-11f1-aa60-6a4639bfbb90',
+    '99f4b178-2bf1-11f1-9f77-6a4639bfbb90',
+    '9e777866-2bf1-11f1-aa60-6a4639bfbb90',
+    'fcacdbfe-d13a-4bac-b5f9-e93201ddbd0a',
+    '9ece1306-2bf1-11f1-aa60-6a4639bfbb90',
+    '9ed172b2-2bf1-11f1-9f77-6a4639bfbb90',
+    '9f1a9dac-2bf1-11f1-aa60-6a4639bfbb90',
+    '9f3485a0-2bf1-11f1-aa60-6a4639bfbb90',
+    '9f52646c-2bf1-11f1-aa60-6a4639bfbb90',
+    'a1fea77a-2bf1-11f1-9f77-6a4639bfbb90',
+    'a204bf8e-2bf1-11f1-aa60-6a4639bfbb90',
+    'a225dc46-2bf1-11f1-aa60-6a4639bfbb90',
+    'a22c423e-2bf1-11f1-9f77-6a4639bfbb90',
+    'a2370d40-2bf1-11f1-aa60-6a4639bfbb90',
+    'a2461038-2bf1-11f1-aa60-6a4639bfbb90',
+    'a25a3d10-2bf1-11f1-9f77-6a4639bfbb90',
+    'a2559f26-2bf1-11f1-aa60-6a4639bfbb90',
+    'a2745830-2bf1-11f1-aa60-6a4639bfbb90'
+  )</code></pre>
+</div>
+
+</body>
+</html>
