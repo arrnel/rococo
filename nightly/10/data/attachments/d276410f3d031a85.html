@@ -1,0 +1,64 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset = UTF-8">
+    <script src="https://yastatic.net/jquery/2.2.3/jquery.min.js" crossorigin="anonymous"></script>
+
+    <link href="https://yastatic.net/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://yastatic.net/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <link type="text/css" href="https://yandex.st/highlightjs/8.0/styles/github.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+    <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/languages/sql.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <style>
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<h5>SQL Query</h5>
+<div>
+    <pre><code>SELECT
+  m.id as metadata_id,
+  m.entity_type as entity_type,
+  m.entity_id as entity_id,
+  m.format as format,
+  m.content_hash as hash,
+  c.id as content_id,
+  c.data as data,
+  c.thumbnail_data as thumbnail_data,
+  m.created_date as created_date
+FROM
+  rococo.image_metadata m
+  LEFT JOIN rococo.image_content c ON m.content_id = c.id
+WHERE
+  m.entity_type = 'PAINTING'
+  AND m.entity_id IN (
+    'cd7417da-424b-11f1-9d46-3a99d6210b92',
+    'cd75f6fe-424b-11f1-ba6f-3a99d6210b92',
+    'cdb0d18e-424b-11f1-9d46-3a99d6210b92',
+    'cdfea526-424b-11f1-9d46-3a99d6210b92',
+    'cdc0fd8e-424b-11f1-ba6f-3a99d6210b92',
+    'cee527bc-424b-11f1-9d46-3a99d6210b92',
+    'ceef3afe-424b-11f1-ba6f-3a99d6210b92',
+    'cf156328-424b-11f1-9d46-3a99d6210b92',
+    'cf357762-424b-11f1-9d46-3a99d6210b92',
+    'cf38f428-424b-11f1-ba6f-3a99d6210b92',
+    'cf7c8364-424b-11f1-9d46-3a99d6210b92',
+    '55cea73e-d3ed-42c6-a274-0144e02e7c20',
+    'cfc19c24-424b-11f1-9d46-3a99d6210b92',
+    'cfc1f232-424b-11f1-ba6f-3a99d6210b92',
+    'cfedc31c-424b-11f1-9d46-3a99d6210b92',
+    'd2073cfa-424b-11f1-9d46-3a99d6210b92',
+    'd2167a62-424b-11f1-9d46-3a99d6210b92',
+    'd24d3a3e-424b-11f1-ba6f-3a99d6210b92',
+    'd2480d2a-424b-11f1-9d46-3a99d6210b92',
+    'd2ba93a4-424b-11f1-ba6f-3a99d6210b92'
+  )</code></pre>
+</div>
+
+</body>
+</html>
