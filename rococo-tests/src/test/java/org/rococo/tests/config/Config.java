@@ -22,7 +22,7 @@ public interface Config {
         };
     }
 
-    String PROJECT_NAME = EnvUtil.envVar("PROJECT_NAME", "rococo-arrnel");
+    String PROJECT_NAME = EnvUtil.envVar("PROJECT_NAME", "rococo");
     String ENV = EnvUtil.envVar("ENV", "docker").trim().toLowerCase();
 
     // =============== BACKEND

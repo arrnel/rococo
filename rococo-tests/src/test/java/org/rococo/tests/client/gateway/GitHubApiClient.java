@@ -23,8 +23,8 @@ public class GitHubApiClient extends RestClient {
 
     private static final String GH_TOKEN = System.getenv("GH_TOKEN");
     private static final String GH_TOKEN_NAME = System.getenv("GH_TOKEN_NAME");
-    private static final String GH_REPO = System.getenv("GH_REPO_NAME");
-    private static final String GH_OWNER = System.getenv("GH_ACCOUNT_NAME");
+    private static final String GH_REPO = System.getenv("GH_REPO");
+    private static final String GH_OWNER = System.getenv("GH_OWNER");
 
     private final GitHubApi gitHubApi;
 

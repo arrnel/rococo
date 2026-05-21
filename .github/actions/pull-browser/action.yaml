@@ -1,6 +1,5 @@
 name: Pull browser and video-recorder images
 description: Pulls correct browser image (Twilio or Selenoid) and optional video-recorder
-author: arrnel
 
 inputs:
   browser:

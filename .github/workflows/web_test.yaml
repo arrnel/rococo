@@ -16,6 +16,7 @@ jobs:
     env:
       # ---------- IMPORTANT VARS
       WORKFLOW_REPORT_ID: web_test
+      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
       GH_OWNER: ${{ github.repository_owner }}
@@ -36,7 +37,7 @@ jobs:
       # ---------- OTHER
       PROFILE: docker
       COMPOSE_PROFILES: test
-      PREFIX: arrnel
+      PREFIX: ${{ github.repository_owner }}
       ARCH: amd64
       EXECUTION_TYPE: github
 
