@@ -1,7 +1,6 @@
 #!/bin/bash
-source ./docker.properties
 export PROFILE=docker
-export PREFIX="${IMAGE_PREFIX}"
+export PREFIX="${GH_OWNER}"
 export ARCH=$(uname -m)
 
 echo '### Java version ###'

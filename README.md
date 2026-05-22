@@ -88,29 +88,30 @@
 
 Переменные окружения:
 
-| Ключ                    | Значение        |
-|-------------------------|-----------------|
-| * GH_TOKEN_NAME         | _**Имя PAT**_   |
-| * GH_TOKEN              | _**Сам токен**_ |
-| ROCOCO_DB_PORT          | 5432            |
-| ROCOCO_DB_USER          | postgres        |
-| ROCOCO_DB_PASSWORD      | secret          |
-| ROCOCO_PGADMIN_PORT     | 5433            |
-| ROCOCO_PGADMIN_EMAIL    | mymail@mail.ru  |
-| ROCOCO_PGADMIN_PASSWORD | 12345           |
-| ROCOCO_KAFKA_PORT       | 9092            |
-| ROCOCO_ZOOKEEPER_PORT   | 2181            |
-| ROCOCO_FRONT_PORT       | 3000            |
-| ROCOCO_WIREMOCK_PORT    | 9001            |
-| ROCOCO_AUTH_PORT        | 9000            |
-| ROCOCO_GATEWAY_PORT     | 9001            |
-| ROCOCO_ARTISTS_PORT     | 9002            |
-| ROCOCO_COUNTRIES_PORT   | 9003            |
-| ROCOCO_FILES_PORT       | 9004            |
-| ROCOCO_MUSEUMS_PORT     | 9005            |
-| ROCOCO_PAINTINGS_PORT   | 9006            |
-| ROCOCO_USERS_PORT       | 9007            |
-| ROCOCO_LOGS_PORT        | 9008            |
+| Ключ                    | Значение                            |
+|-------------------------|-------------------------------------|
+| * DOCKER_USERNAME       | _**Имя пользователя в Docker Hub**_ |
+| * GH_TOKEN_NAME         | _**Имя PAT**_                       |
+| * GH_TOKEN              | _**Сам токен**_                     |
+| ROCOCO_DB_PORT          | 5432                                |
+| ROCOCO_DB_USER          | postgres                            |
+| ROCOCO_DB_PASSWORD      | secret                              |
+| ROCOCO_PGADMIN_PORT     | 5433                                |
+| ROCOCO_PGADMIN_EMAIL    | mymail@mail.ru                      |
+| ROCOCO_PGADMIN_PASSWORD | 12345                               |
+| ROCOCO_KAFKA_PORT       | 9092                                |
+| ROCOCO_ZOOKEEPER_PORT   | 2181                                |
+| ROCOCO_FRONT_PORT       | 3000                                |
+| ROCOCO_WIREMOCK_PORT    | 9001                                |
+| ROCOCO_AUTH_PORT        | 9000                                |
+| ROCOCO_GATEWAY_PORT     | 9001                                |
+| ROCOCO_ARTISTS_PORT     | 9002                                |
+| ROCOCO_COUNTRIES_PORT   | 9003                                |
+| ROCOCO_FILES_PORT       | 9004                                |
+| ROCOCO_MUSEUMS_PORT     | 9005                                |
+| ROCOCO_PAINTINGS_PORT   | 9006                                |
+| ROCOCO_USERS_PORT       | 9007                                |
+| ROCOCO_LOGS_PORT        | 9008                                |
 
 | Ключ       | Значение |
 |------------|----------|

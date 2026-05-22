@@ -47,7 +47,7 @@ jib {
         environment = ['TZ': 'Europe/Moscow']
         creationTime = 'USE_CURRENT_TIMESTAMP'
         labels = [
-                'maintainer': 'Romanov Dmitriy @arrnel',
+                'maintainer': 'Romanov Dmitriy',
                 'version'   : "${project.version}".toString()
         ]
     }

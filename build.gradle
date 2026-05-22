@@ -24,7 +24,7 @@ allprojects {
 
 subprojects {
     ext {
-        dockerHubName = "arrnel"
+        dockerHubName = System.getenv("DOCKER_USERNAME")
         apacheCommonsVersion = '3.17.0'
         logbackKafkaAppenderVersion = '0.2.0-RC2'
         janinoVersion = '3.1.12'

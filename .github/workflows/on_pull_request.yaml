@@ -10,6 +10,7 @@ jobs:
     env:
       # ---------- IMPORTANT VARS
       WORKFLOW_REPORT_ID: on_pull_request
+      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
       EXPECTED_TESTS_PASSED_RATE: ${{ vars.EXPECTED_TESTS_PASSED_RATE }}
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       GH_TOKEN_NAME: ${{ vars.GH_TOKEN_NAME }}
@@ -29,7 +30,7 @@ jobs:
       # ----------- OTHER
       PROFILE: docker
       COMPOSE_PROFILES: test
-      PREFIX: arrnel
+      PREFIX: ${{ github.repository_owner }}
       ARCH: amd64
       CLEAR_DB_AFTER_TESTS: ${{ vars.CLEAR_DB_AFTER_TESTS }}
       REWRITE_ALL_SCREENSHOTS: ${{ vars.REWRITE_ALL_SCREENSHOTS }}

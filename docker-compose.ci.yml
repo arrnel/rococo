@@ -67,7 +67,7 @@ services:
     restart: unless-stopped
     environment:
       - ROCOCO_TEST_USERNAME=${ROCOCO_TEST_USERNAME:-test_user}
-      - ROCOCO_TEST_USER_PASSWORD=${ROCOCO_TEST_USERNAME:-12345}
+      - ROCOCO_TEST_USER_PASSWORD=${ROCOCO_TEST_USER_PASSWORD:-12345}
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     healthcheck:
       test: wget --spider http://localhost:9000/actuator/health || exit 1
